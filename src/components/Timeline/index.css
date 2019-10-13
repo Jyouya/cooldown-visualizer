@@ -1,0 +1,25 @@
+.timeline {
+  /* width: 2rem; */
+  width: 100%;
+  position: relative;
+  background: linear-gradient(90.1deg, rgb(161, 87, 181), rgb(189, 115, 209));
+  box-sizing: border-box;
+  border-right: 1px solid purple;
+
+  grid-row: 1;
+}
+
+.timeline:first-child {
+  border-left: 1px solid purple;
+}
+
+.timeline:hover {
+    background: linear-gradient(90.1deg, rgb(174, 100, 194), rgb(202, 128, 222));
+}
+
+.label-icon {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  width: 100%;
+}

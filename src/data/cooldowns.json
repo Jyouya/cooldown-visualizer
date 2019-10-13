@@ -1,0 +1,144 @@
+{
+  "Camouflage": {
+    "img": "./icons/camouflage.png",
+    "duration": 20,
+    "recast": 90
+  },
+  "Rampart": {
+    "img": "./icons/rampart.png",
+    "duration": 20,
+    "recast": 90
+  },
+  "Nebula": {
+    "img": "./icons/nebula.png",
+    "duration": 10,
+    "recast": 120
+  },
+  "Superbolide": {
+    "img": "./icons/superbolide.png",
+    "duration": 8,
+    "recast": 360
+  },
+  "Heart of Stone": {
+    "img": "./icons/heart_of_stone.png",
+    "duration": 7,
+    "recast": 25
+  },
+  "Heart of Light": {
+    "img": "./icons/heart_of_light.png",
+    "duration": 15,
+    "recast": 90,
+    "raid": true
+  },
+  "Aurora": {
+    "img": "./icons/aurora.png",
+    "duration": 18,
+    "recast": 60
+  },
+  "Sentinel": {
+    "img": "./icons/sentinel.png",
+    "duration": 10,
+    "recast": 120
+  },
+  "Hallowed Ground": {
+    "img": "./icons/hallowed_ground.png",
+    "duration": 10,
+    "recast": 420
+  },
+  "Sheltron": {
+    "img": "./icons/sheltron.png",
+    "duration": 6,
+    "recast": 5
+  },
+  "Cover": {
+    "img": "./icons/cover.png",
+    "duration": 12,
+    "recast": 120
+  },
+  "Intervention": {
+    "img": "./icons/intervention.png",
+    "duration": 6,
+    "recast": 10
+  },
+  "Passage of Arms": {
+    "img": "./icons/passage_of_arms.png",
+    "duration": 18,
+    "recast": 120,
+    "raid": true
+  },
+  "Divine Veil": {
+    "img": "./icons/divine_veil.png",
+    "duration": 30,
+    "recast": 90,
+    "raid": true
+  },
+  "The Blackest Night": {
+    "img": "./icons/the_blackest_night.png",
+    "duration": 7,
+    "recast": 15
+  },
+  "Dark Mind": {
+    "img": "./icons/dark_mind.png",
+    "duration": 10,
+    "recast": 60
+  },
+  "Shadow Wall": {
+    "img": "./icons/shadow_wall.png",
+    "duration": 10,
+    "recast": 120
+  },
+  "Living Dead": {
+    "img": "./icons/living_dead.png",
+    "duration": 10,
+    "recast": 300
+  },
+  "Dark Missionary": {
+    "img": "./icons/dark_missionary.png",
+    "duration": 15,
+    "recast": 90,
+    "raid": true
+  },
+  "Raw Intuition": {
+    "img": "./icons/raw_intuition.png",
+    "duration": 5,
+    "recast": 25
+  },
+  "Nascent Flash": {
+    "img": "./icons/nascent_flash.png",
+    "duration": 6,
+    "recast": 25,
+    "shared": "Raw Intuition"
+  },
+  "Thrill of Battle": {
+    "img": "./icons/thrill_of_battle.png",
+    "duration": 10,
+    "recast": 120
+  },
+  "Vengeance": {
+    "img": "./icons/vengeance.png",
+    "duration": 10,
+    "recast": 120
+  },
+  "Holmgang": {
+    "img": "./icons/holmgang.png",
+    "duration": 6,
+    "recast": 240
+  },
+  "Shake It Off": {
+    "img": "./icons/shake_it_off.png",
+    "duration": 15,
+    "recast": 90,
+    "raid": true
+  },
+  "Reprisal": {
+    "img": "./icons/reprisal.png",
+    "duration": 5,
+    "recast": 60,
+    "raid": true
+  },
+  "Arm's Length": {
+    "img": "./icons/arm's_length.png",
+    "duration": 6,
+    "recast": 120
+  }
+}

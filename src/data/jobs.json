@@ -1,0 +1,62 @@
+{
+  "GNB": {
+    "name": "Gunbreaker",
+    "img": "./icons/GNB.png",
+    "cooldowns": [
+      "Rampart",
+      "Reprisal",
+      "Aurora",
+      "Heart of Stone",
+      "Heart of Light",
+      "Nebula",
+      "Camouflage",
+      "Superbolide",
+      "Arm's Length"
+    ]
+  },
+  "WAR": {
+    "name": "Warrior",
+    "img": "./icons/WAR.png",
+    "cooldowns": [
+      "Rampart",
+      "Reprisal",
+      "Raw Intuition",
+      "Nascent Flash",
+      "Thrill of Battle",
+      "Vengeance",
+      "Shake It Off",
+      "Holmgang",
+      "Arm's Length"
+    ]
+  },
+  "DRK": {
+    "name": "Dark Knight",
+    "img": "./icons/DRK.png",
+    "cooldowns": [
+      "Rampart",
+      "Reprisal",
+      "The Blackest Night",
+      "Dark Mind",
+      "Shadow Wall",
+      "Dark Missionary",
+      "Living Dead",
+      "Arm's Length"
+    ]
+  },
+  "PLD": {
+    "name": "Paladin",
+    "img": "./icons/PLD.png",
+    "cooldowns": [
+      "Rampart",
+      "Reprisal",
+      "Sheltron",
+      "Intervention",
+      "Cover",
+      "Sentinel",
+      "Divine Veil",
+      "Passage of Arms",
+      "Hallowed Ground",
+      "Arm's Length"
+    ]
+  }
+}
