@@ -47,15 +47,19 @@ class Timeline extends React.Component {
       )
     );
 
+    const activeTimes = {}; // Holds the time of active cooldowns
+
     // List cooldowns that are active at the clicked time
-    const active = represents.filter(cdName =>
-      this.props.cooldowns.find(
+    const active = represents.filter(cdName => {
+      const cd = this.props.cooldowns.find(
         cd =>
           cd.name === cdName &&
           time > cd.time &&
           time - cd.time < cooldowns[cdName].duration
-      )
-    );
+      );
+      if (cd) activeTimes[cd.name] = cd.time;
+      return cd;
+    });
 
     // List cooldowns available for use
     const available = represents.filter(cooldown => !active.includes(cooldown));
@@ -76,7 +80,6 @@ class Timeline extends React.Component {
             key={i}
             disabled={unavailable.includes(cooldown)}
             onClick={() => {
-              console.log(this.props.who, cooldown, time);
               this.props.functions.addCooldown(
                 this.props.who,
                 cooldown,
@@ -93,10 +96,22 @@ class Timeline extends React.Component {
         {!active.length
           ? null
           : active.map((cooldown, i) => (
-              <Option key={i}>
+              <Option
+                key={i}
+                onClick={() => {
+                  this.props.functions.removeCooldown(
+                    this.props.who,
+                    cooldown,
+                    activeTimes[cooldown],
+                    this.props.contextMenuRef.current.hide
+                  );
+                }}
+              >
                 <img src={cooldowns[cooldown].img} alt="" />
                 <span>{cooldown}</span>
-                <span className="red-x" role="img" aria-label="remove">❌</span>
+                <span className="red-x" role="img" aria-label="remove">
+                  ❌
+                </span>
               </Option>
             ))}
       </>

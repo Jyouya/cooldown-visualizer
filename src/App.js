@@ -89,7 +89,6 @@ class App extends React.Component {
   buildJobTimelines = () => {
     const { party, raidMitigationOnly } = this.state;
     return party
-      .filter(member => member.enabled)
       .map((member, i) => ({
         name: member.job,
         cooldowns: member.cooldowns.filter(
@@ -99,13 +98,13 @@ class App extends React.Component {
           cooldown => !raidMitigationOnly || cooldowns[cooldown].raid
         ),
         who: i
-      }));
+      }))
+      .filter((_, i) => party[i].enabled);
   };
 
   addCooldown = (member, name, time, after) => {
     console.log(member, name, time);
     const party = [...this.state.party];
-    // const timeline = party[member];
 
     party[member].cooldowns = sortedInsert(
       party[member].cooldowns,
@@ -113,28 +112,16 @@ class App extends React.Component {
       (a, b) => (a.time > b.time ? 1 : -1)
     );
 
-    // let index = 0,
-    //   high = timeline.length;
-
-    // while (index < high) {
-    //   const mid = (index + high) >>> 1;
-    //   if (timeline[mid].time < time) index = mid + 1;
-    //   else high = mid;
-    // }
-
-    // party[member] = [
-    //   ...timeline.slice(0, index),
-    //   { name, time },
-    //   ...timeline.slice(index)
-    // ];
-
     this.setState({ party });
     after && after();
   };
 
   removeCooldown = (member, name, time, after) => {
     const party = [...this.state.party];
-    const i = 3; // TODO: get index
+    const i = party[member].cooldowns.findIndex(
+      cd => cd.name === name && cd.time === time
+    );
+
     party[member].cooldowns.splice(i, 1);
     this.setState({ party });
     after && after();
@@ -142,6 +129,10 @@ class App extends React.Component {
 
   render() {
     const { zoom, encounterDuration } = this.state;
+    const functions = {
+      addCooldown: this.addCooldown,
+      removeCooldown: this.removeCooldown
+    };
     return (
       <BrowserRouter>
         <Context.Provider value={this.contextRef}>
@@ -160,7 +151,7 @@ class App extends React.Component {
                         showUnavailable
                         encounterDuration={encounterDuration}
                         zoom={zoom}
-                        functions={{ addCooldown: this.addCooldown }}
+                        functions={functions}
                       />
                     );
                   }}
@@ -172,7 +163,7 @@ class App extends React.Component {
                       timelines={this.buildJobTimelines()}
                       encounterDuration={encounterDuration}
                       zoom={zoom}
-                      functions={{ addCooldown: this.addCooldown }}
+                      functions={functions}
                     />
                   )}
                 />
