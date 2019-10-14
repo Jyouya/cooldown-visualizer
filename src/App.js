@@ -72,7 +72,7 @@ class App extends React.Component {
     zoom: 12000,
     raidMitigationOnly: true,
     snap: true,
-    snapTo: 10
+    snapTo: 25
   };
 
   componentDidMount() {
@@ -145,6 +145,7 @@ class App extends React.Component {
   };
 
   moveCooldown = (member, id, time, after) => {
+    time = this.snap(time);
     const party = [...this.state.party];
     let timeline = party[member].cooldowns;
     const targetIndex = timeline.findIndex(cd => cd.id === id);
@@ -170,8 +171,6 @@ class App extends React.Component {
         time = unavailable.time + recast;
       else time = unavailable.time - recast;
     }
-
-    console.log(time);
 
     // Determine if the timeline needs to be resorted
     if (
@@ -210,6 +209,12 @@ class App extends React.Component {
       ((time % 6000) / 100).toFixed(2).padStart(5, '0')
     );
   };
+
+  snap(time) {
+    if (!this.state.snap) return time;
+    const t = time + this.state.snapTo / 2;
+    return t - (t % this.state.snapTo);
+  }
 
   componentDidUpdate() {
     ReactToolTip.rebuild();
