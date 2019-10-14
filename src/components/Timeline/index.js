@@ -2,6 +2,7 @@ import React from 'react';
 import Cooldown from '../Cooldown';
 import { Option, Separator, Label } from '../ContextMenu';
 import './index.css';
+import { Link } from 'react-router-dom';
 
 import cooldowns from '../../data/cooldowns';
 import jobs from '../../data/jobs';
@@ -135,11 +136,13 @@ class Timeline extends React.Component {
         ref={this.myRef}
         onContextMenu={this.handleContextMenu}
       >
-        <img
-          className="label-icon"
-          src={(cooldowns[this.props.name] || jobs[this.props.name]).img}
-          alt={this.props.name}
-        />
+        <Link to={`/${this.props.who}`}>
+          <img
+            className="label-icon"
+            src={(cooldowns[this.props.name] || jobs[this.props.name]).img}
+            alt={this.props.name}
+          />
+        </Link>
         {this.props.cooldowns.map((cooldown, i) => (
           <Cooldown
             key={i}
