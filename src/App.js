@@ -22,6 +22,8 @@ class App extends React.Component {
     this.contextRef = React.createRef();
   }
 
+  cooldownId = 0;
+
   state = {
     party: [
       {
@@ -70,6 +72,19 @@ class App extends React.Component {
     raidMitigationOnly: true
   };
 
+  componentDidMount() {
+    // add ids to the dummy encounter
+    // ! probably needs to be removed at some point
+    const party = [...this.state.party];
+    party.forEach(member =>
+      member.cooldowns.forEach(cd => {
+        if (!cd.id) cd.id = ++this.cooldownId;
+      })
+    );
+
+    this.setState({ party });
+  }
+
   loadFile = () => {};
 
   buildAbilityTimelines = partyMember => {
@@ -108,7 +123,7 @@ class App extends React.Component {
 
     party[member].cooldowns = sortedInsert(
       party[member].cooldowns,
-      { name, time },
+      { name, time, id: ++this.cooldownId },
       (a, b) => (a.time > b.time ? 1 : -1)
     );
 
@@ -116,14 +131,47 @@ class App extends React.Component {
     after && after();
   };
 
-  removeCooldown = (member, name, time, after) => {
+  removeCooldown = (member, id, after) => {
     const party = [...this.state.party];
-    const i = party[member].cooldowns.findIndex(
-      cd => cd.name === name && cd.time === time
-    );
+
+    const i = party[member].cooldowns.findIndex(cd => cd.id === id);
 
     party[member].cooldowns.splice(i, 1);
     this.setState({ party });
+    after && after();
+  };
+
+  moveCooldown = (member, id, time, after) => {
+    const party = [...this.state.party];
+    const timeline = party[member].cooldowns;
+    let targetIndex = timeline.findIndex(cd => cd.id === id);
+    const target = timeline[targetIndex];
+
+    // Remove target from the party, so we're not comparing it to itself
+    timeline[targetIndex] = {};
+
+    // TODO: calculate closest allowed time for that cooldown
+    // Determine if the cooldown is available
+    const unavailable = timeline.find(
+      cd =>
+        cd.name === target.name &&
+        Math.abs(time - cd.time) > cooldowns[target.name].recast
+    );
+
+    const recast = cooldowns[target.name].recast;
+
+    // ! when adding times before 0, this will need to be changed to the start of the timeline
+    const startOfTime = 0;
+
+    if (unavailable) {
+      if (time > unavailable.time) time = unavailable.time + recast;
+      else if (unavailable.time - recast > startOfTime)
+        time = unavailable.time - recast;
+    }
+
+    // TODO: determine if the timeline needs to be resorted
+
+    // TODO: reinsert target
     after && after();
   };
 

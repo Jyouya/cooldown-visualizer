@@ -48,7 +48,7 @@ class Timeline extends React.Component {
       )
     );
 
-    const activeTimes = {}; // Holds the time of active cooldowns
+    const activeIds = {}; // Holds the time of active cooldowns
 
     // List cooldowns that are active at the clicked time
     const active = represents.filter(cdName => {
@@ -58,7 +58,7 @@ class Timeline extends React.Component {
           time > cd.time &&
           time - cd.time < cooldowns[cdName].duration
       );
-      if (cd) activeTimes[cd.name] = cd.time;
+      if (cd) activeIds[cd.name] = cd.id;
       return cd;
     });
 
@@ -102,8 +102,7 @@ class Timeline extends React.Component {
                 onClick={() => {
                   this.props.functions.removeCooldown(
                     this.props.who,
-                    cooldown,
-                    activeTimes[cooldown],
+                    activeIds[cooldown],
                     this.props.contextMenuRef.current.hide
                   );
                 }}
