@@ -33,15 +33,3 @@ code {
   overflow-y: scroll;
   /* background: #444444aa; */
 }
-
-.timeline-area::before{ 
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  filter: blur(2px);
-  background: url('./connectwork.png');
-  background-attachment: fixed;
-}

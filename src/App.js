@@ -143,7 +143,7 @@ class App extends React.Component {
 
   moveCooldown = (member, id, time, after) => {
     const party = [...this.state.party];
-    const timeline = party[member].cooldowns;
+    let timeline = party[member].cooldowns;
     const targetIndex = timeline.findIndex(cd => cd.id === id);
     const target = timeline[targetIndex];
 
@@ -154,7 +154,7 @@ class App extends React.Component {
     const unavailable = timeline.find(
       cd =>
         cd.name === target.name &&
-        Math.abs(time - cd.time) > cooldowns[target.name].recast
+        Math.abs(time - cd.time) < cooldowns[target.name].recast
     );
 
     const recast = cooldowns[target.name].recast;
@@ -163,10 +163,12 @@ class App extends React.Component {
     const startOfTime = 0;
 
     if (unavailable) {
-      if (time > unavailable.time) time = unavailable.time + recast;
-      else if (unavailable.time - recast > startOfTime)
-        time = unavailable.time - recast;
+      if (time > unavailable.time || unavailable.time - recast < startOfTime)
+        time = unavailable.time + recast;
+      else time = unavailable.time - recast;
     }
+
+    console.log(time);
 
     // Determine if the timeline needs to be resorted
     if (
@@ -177,13 +179,17 @@ class App extends React.Component {
       // Resort timeline
       // Remove targetIndex
       timeline.splice(targetIndex, 1);
-      sortedInsert(timeline, { ...target, time }, (a, b) =>
+      timeline = sortedInsert(timeline, { ...target, time }, (a, b) =>
         a.time > b.time ? 1 : -1
       );
     } else {
       // Reinsert target
       timeline[targetIndex] = { ...target, time };
     }
+
+    party[member].cooldowns = timeline;
+
+    this.setState({ party });
 
     after && after();
   };
@@ -192,7 +198,8 @@ class App extends React.Component {
     const { zoom, encounterDuration } = this.state;
     const functions = {
       addCooldown: this.addCooldown,
-      removeCooldown: this.removeCooldown
+      removeCooldown: this.removeCooldown,
+      moveCooldown: this.moveCooldown
     };
     return (
       <BrowserRouter>

@@ -13,60 +13,105 @@ class Timeline extends React.Component {
     this.myRef = React.createRef();
   }
 
+  state = {
+    dragId: 0,
+    dragOffset: 0
+  };
+
+  componentDidMount() {
+    // Determine what cds go on this timeline
+    if (Array.isArray(this.props.shared)) this.represents = this.props.shared;
+    else this.represents = [this.props.name, this.props.shared].filter(x => x);
+  }
+
   getTime(event) {
     const clientY = event.nativeEvent.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
     const height = this.myRef.current.clientHeight;
     const duration = this.props.encounterDuration;
-    const time =  (timelineY / height) * duration;
+    const time = (timelineY / height) * duration;
 
     return Math.floor(time);
   }
 
-  handleMouseDown = event => {
-    console.log(event);
-  };
-
-  handleContextMenu = event => {
-    // Determine the 'time' of the click
-    let time = this.getTime(event)
-
-    console.log(time);
-
-    // List all cds that this timeline can represent
-    let represents;
-    if (Array.isArray(this.props.shared)) represents = this.props.shared;
-    else represents = [this.props.name, this.props.shared].filter(x => x);
-
-    // TODO: consider charges for availability (e.g. lilies)
-
-    // TODO: account for instant skills (e.g. assize)
-
-    // List cooldowns which are unavailable
-    const unavailable = represents.filter(cdName =>
-      this.props.cooldowns.find(
-        cd =>
-          cd.name === cdName &&
-          Math.abs(time - cd.time) < cooldowns[cdName].recast 
-      )
-    );
-
+  // TODO: account for instant skills (e.g. assize)
+  getActive(time) {
     const activeIds = {}; // Holds the time of active cooldowns
-
+    const activeTimes = {};
     // List cooldowns that are active at the clicked time
-    const active = represents.filter(cdName => {
+    const active = this.represents.filter(cdName => {
       const cd = this.props.cooldowns.find(
         cd =>
           cd.name === cdName &&
           time > cd.time &&
           time - cd.time < cooldowns[cdName].duration
       );
-      if (cd) activeIds[cd.name] = cd.id;
+      if (cd) {
+        activeIds[cd.name] = cd.id;
+        activeTimes[cd.name] = cd.time;
+      }
       return cd;
     });
 
+    return { active, activeIds, activeTimes };
+  }
+
+  handleMouseDown = event => {
+    if (this.state.dragId) return; // Already dragging something
+    const time = this.getTime(event);
+    const { active, activeIds, activeTimes } = this.getActive(time);
+
+    if (!active.length) return; // Nothing was clicked on
+
+    const mostRecent = Object.entries(activeTimes).reduce(
+      (mostRecent, [name, time]) =>
+        mostRecent[1] > time ? mostRecent : [name, time],
+      ['', -Infinity]
+    );
+
+    const dragOffset = mostRecent[1] - time;
+
+    const dragId = activeIds[mostRecent[0]];
+
+    this.setState({ dragId, dragOffset });
+  };
+
+  handleMouseUp = event => {
+    if (this.state.dragId) this.setState({ dragId: 0 });
+  };
+
+  handleMouseMove = event => {
+    if (!this.state.dragId) return;
+
+    const { functions, who } = this.props;
+
+    const time = this.getTime(event) + this.state.dragOffset;
+    functions.moveCooldown(who, this.state.dragId, time);
+  };
+
+  handleContextMenu = event => {
+    // Determine the 'time' of the click
+    let time = this.getTime(event);
+
+    console.log(time);
+
+    // TODO: consider charges for availability (e.g. lilies)
+
+    // List cooldowns which are unavailable
+    const unavailable = this.represents.filter(cdName =>
+      this.props.cooldowns.find(
+        cd =>
+          cd.name === cdName &&
+          Math.abs(time - cd.time) < cooldowns[cdName].recast
+      )
+    );
+
+    const { active, activeIds } = this.getActive(time);
+
     // List cooldowns available for use
-    const available = represents.filter(cooldown => !active.includes(cooldown));
+    const available = this.represents.filter(
+      cooldown => !active.includes(cooldown)
+    );
 
     this.props.contextMenuRef.current.show(
       event,
@@ -76,7 +121,7 @@ class Timeline extends React.Component {
             .toString()
             .padStart(2, '0') +
             ':' +
-            (time % 6000 / 100).toFixed(2).padStart(5, '0')}
+            ((time % 6000) / 100).toFixed(2).padStart(5, '0')}
         </Label>
         <Separator />
         {available.map((cooldown, i) => (
@@ -139,8 +184,8 @@ class Timeline extends React.Component {
         onContextMenu={this.handleContextMenu}
         // TODO: mouseDown mouseUp mouseMove
         onMouseDown={this.handleMouseDown}
-        onMouseUp={() => console.log('up')}
-        onMouseMove={() => console.log('move')}
+        onMouseUp={this.handleMouseUp}
+        onMouseMove={this.handleMouseMove}
       >
         <Link to={`/${this.props.who}`}>
           <img
