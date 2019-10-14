@@ -144,13 +144,12 @@ class App extends React.Component {
   moveCooldown = (member, id, time, after) => {
     const party = [...this.state.party];
     const timeline = party[member].cooldowns;
-    let targetIndex = timeline.findIndex(cd => cd.id === id);
+    const targetIndex = timeline.findIndex(cd => cd.id === id);
     const target = timeline[targetIndex];
 
     // Remove target from the party, so we're not comparing it to itself
     timeline[targetIndex] = {};
 
-    // TODO: calculate closest allowed time for that cooldown
     // Determine if the cooldown is available
     const unavailable = timeline.find(
       cd =>
@@ -169,9 +168,23 @@ class App extends React.Component {
         time = unavailable.time - recast;
     }
 
-    // TODO: determine if the timeline needs to be resorted
+    // Determine if the timeline needs to be resorted
+    if (
+      (targetIndex && timeline[targetIndex - 1].time > time) ||
+      (targetIndex < timeline.length - 2 &&
+        timeline[targetIndex + 1].time < time)
+    ) {
+      // Resort timeline
+      // Remove targetIndex
+      timeline.splice(targetIndex, 1);
+      sortedInsert(timeline, { ...target, time }, (a, b) =>
+        a.time > b.time ? 1 : -1
+      );
+    } else {
+      // Reinsert target
+      timeline[targetIndex] = { ...target, time };
+    }
 
-    // TODO: reinsert target
     after && after();
   };
 

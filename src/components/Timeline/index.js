@@ -134,6 +134,7 @@ class Timeline extends React.Component {
         className="timeline"
         ref={this.myRef}
         onContextMenu={this.handleContextMenu}
+        // TODO: mouseDown mouseUp mouseMove handlers
       >
         <Link to={`/${this.props.who}`}>
           <img
