@@ -32,19 +32,19 @@ class App extends React.Component {
         cooldowns: [
           {
             name: 'Rampart',
-            time: 90
+            time: 9000
           },
           {
             name: 'Aurora',
-            time: 100
+            time: 10000
           },
           {
             name: 'Heart of Light',
-            time: 130
+            time: 13000
           },
           {
             name: 'Rampart',
-            time: 190
+            time: 19000
           }
         ]
       },
@@ -54,21 +54,21 @@ class App extends React.Component {
         cooldowns: [
           {
             name: 'Passage of Arms',
-            time: 40
+            time: 4000
           },
           {
             name: 'Sheltron',
-            time: 50
+            time: 5000
           },
           {
             name: 'Intervention',
-            time: 60
+            time: 6000
           }
         ]
       }
     ],
-    encounterDuration: 600,
-    zoom: 120,
+    encounterDuration: 60000,
+    zoom: 12000,
     raidMitigationOnly: true
   };
 

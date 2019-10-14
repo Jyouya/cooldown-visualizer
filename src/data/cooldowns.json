@@ -1,144 +1,144 @@
 {
   "Camouflage": {
     "img": "./icons/camouflage.png",
-    "duration": 20,
-    "recast": 90
+    "duration": 2000,
+    "recast": 9000
   },
   "Rampart": {
     "img": "./icons/rampart.png",
-    "duration": 20,
-    "recast": 90
+    "duration": 2000,
+    "recast": 9000
   },
   "Nebula": {
     "img": "./icons/nebula.png",
-    "duration": 10,
-    "recast": 120
+    "duration": 1000,
+    "recast": 12000
   },
   "Superbolide": {
     "img": "./icons/superbolide.png",
-    "duration": 8,
-    "recast": 360
+    "duration": 800,
+    "recast": 36000
   },
   "Heart of Stone": {
     "img": "./icons/heart_of_stone.png",
-    "duration": 7,
-    "recast": 25
+    "duration": 700,
+    "recast": 2500
   },
   "Heart of Light": {
     "img": "./icons/heart_of_light.png",
-    "duration": 15,
-    "recast": 90,
+    "duration": 1500,
+    "recast": 9000,
     "raid": true
   },
   "Aurora": {
     "img": "./icons/aurora.png",
-    "duration": 18,
-    "recast": 60
+    "duration": 1800,
+    "recast": 6000
   },
   "Sentinel": {
     "img": "./icons/sentinel.png",
-    "duration": 10,
-    "recast": 120
+    "duration": 1000,
+    "recast": 12000
   },
   "Hallowed Ground": {
     "img": "./icons/hallowed_ground.png",
-    "duration": 10,
-    "recast": 420
+    "duration": 1000,
+    "recast": 42000
   },
   "Sheltron": {
     "img": "./icons/sheltron.png",
-    "duration": 6,
-    "recast": 5
+    "duration": 600,
+    "recast": 500
   },
   "Cover": {
     "img": "./icons/cover.png",
-    "duration": 12,
-    "recast": 120
+    "duration": 1200,
+    "recast": 12000
   },
   "Intervention": {
     "img": "./icons/intervention.png",
-    "duration": 6,
-    "recast": 10
+    "duration": 600,
+    "recast": 1000
   },
   "Passage of Arms": {
     "img": "./icons/passage_of_arms.png",
-    "duration": 18,
-    "recast": 120,
+    "duration": 1800,
+    "recast": 12000,
     "raid": true
   },
   "Divine Veil": {
     "img": "./icons/divine_veil.png",
-    "duration": 30,
-    "recast": 90,
+    "duration": 3000,
+    "recast": 9000,
     "raid": true
   },
   "The Blackest Night": {
     "img": "./icons/the_blackest_night.png",
-    "duration": 7,
-    "recast": 15
+    "duration": 700,
+    "recast": 1500
   },
   "Dark Mind": {
     "img": "./icons/dark_mind.png",
-    "duration": 10,
-    "recast": 60
+    "duration": 1000,
+    "recast": 6000
   },
   "Shadow Wall": {
     "img": "./icons/shadow_wall.png",
-    "duration": 10,
-    "recast": 120
+    "duration": 1000,
+    "recast": 12000
   },
   "Living Dead": {
     "img": "./icons/living_dead.png",
-    "duration": 10,
-    "recast": 300
+    "duration": 1000,
+    "recast": 30000
   },
   "Dark Missionary": {
     "img": "./icons/dark_missionary.png",
-    "duration": 15,
-    "recast": 90,
+    "duration": 1500,
+    "recast": 9000,
     "raid": true
   },
   "Raw Intuition": {
     "img": "./icons/raw_intuition.png",
-    "duration": 5,
-    "recast": 25
+    "duration": 500,
+    "recast": 2500
   },
   "Nascent Flash": {
     "img": "./icons/nascent_flash.png",
-    "duration": 6,
-    "recast": 25,
+    "duration": 600,
+    "recast": 2500,
     "shared": "Raw Intuition"
   },
   "Thrill of Battle": {
     "img": "./icons/thrill_of_battle.png",
-    "duration": 10,
-    "recast": 120
+    "duration": 1000,
+    "recast": 12000
   },
   "Vengeance": {
     "img": "./icons/vengeance.png",
-    "duration": 10,
-    "recast": 120
+    "duration": 1000,
+    "recast": 12000
   },
   "Holmgang": {
     "img": "./icons/holmgang.png",
-    "duration": 6,
-    "recast": 240
+    "duration": 600,
+    "recast": 24000
   },
   "Shake It Off": {
     "img": "./icons/shake_it_off.png",
-    "duration": 15,
-    "recast": 90,
+    "duration": 1500,
+    "recast": 9000,
     "raid": true
   },
   "Reprisal": {
     "img": "./icons/reprisal.png",
-    "duration": 5,
-    "recast": 60,
+    "duration": 500,
+    "recast": 6000,
     "raid": true
   },
   "Arm's Length": {
     "img": "./icons/arm's_length.png",
-    "duration": 6,
-    "recast": 120
+    "duration": 600,
+    "recast": 12000
   }
 }

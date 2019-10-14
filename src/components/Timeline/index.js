@@ -12,22 +12,25 @@ class Timeline extends React.Component {
     super(props);
     this.myRef = React.createRef();
   }
+
+  getTime(event) {
+    const clientY = event.nativeEvent.clientY;
+    const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
+    const height = this.myRef.current.clientHeight;
+    const duration = this.props.encounterDuration;
+    const time =  (timelineY / height) * duration;
+
+    return Math.floor(time);
+  }
+
+  handleMouseDown = event => {
+    console.log(event);
+  };
+
   handleContextMenu = event => {
     // Determine the 'time' of the click
-    let time;
-    {
-      const clientY = event.nativeEvent.clientY;
-      const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
-      const height = this.myRef.current.clientHeight;
-      const duration = this.props.encounterDuration;
-      time = (timelineY / height) * duration;
-    }
+    let time = this.getTime(event)
 
-    // Round time to nearest hundredth of a second
-    {
-      const x = time + 0.00501;
-      time = x - (x % 0.01);
-    }
     console.log(time);
 
     // List all cds that this timeline can represent
@@ -44,7 +47,7 @@ class Timeline extends React.Component {
       this.props.cooldowns.find(
         cd =>
           cd.name === cdName &&
-          Math.abs(time - cd.time) < cooldowns[cdName].recast
+          Math.abs(time - cd.time) < cooldowns[cdName].recast 
       )
     );
 
@@ -69,11 +72,11 @@ class Timeline extends React.Component {
       event,
       <>
         <Label>
-          {Math.floor(time / 60)
+          {Math.floor(time / 6000)
             .toString()
             .padStart(2, '0') +
             ':' +
-            (time % 60).toFixed(2).padStart(5, '0')}
+            (time % 6000 / 100).toFixed(2).padStart(5, '0')}
         </Label>
         <Separator />
         {available.map((cooldown, i) => (
@@ -134,7 +137,10 @@ class Timeline extends React.Component {
         className="timeline"
         ref={this.myRef}
         onContextMenu={this.handleContextMenu}
-        // TODO: mouseDown mouseUp mouseMove handlers
+        // TODO: mouseDown mouseUp mouseMove
+        onMouseDown={this.handleMouseDown}
+        onMouseUp={() => console.log('up')}
+        onMouseMove={() => console.log('move')}
       >
         <Link to={`/${this.props.who}`}>
           <img
