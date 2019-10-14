@@ -211,6 +211,10 @@ class App extends React.Component {
     );
   };
 
+  componentDidUpdate() {
+    ReactToolTip.rebuild();
+  }
+
   render() {
     const { zoom, encounterDuration } = this.state;
     const functions = {
