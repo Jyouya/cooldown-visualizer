@@ -24,6 +24,12 @@ class Timeline extends React.Component {
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
   }
 
+  componentDidUpdate() {
+    // Determine what cds go on this timeline
+    if (Array.isArray(this.props.shared)) this.represents = this.props.shared;
+    else this.represents = [this.props.name, this.props.shared].filter(x => x);
+  }
+
   getTime(event) {
     const clientY = event.nativeEvent.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
