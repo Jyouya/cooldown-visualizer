@@ -1,6 +1,7 @@
 import React from 'react';
 import TimelineContainer from './components/TimelineContainer';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import ReactToolTip from 'react-tooltip';
 import { Menu as ContextMenu, Context } from './components/ContextMenu';
 
 import jobs from './data/jobs';
@@ -69,7 +70,9 @@ class App extends React.Component {
     ],
     encounterDuration: 60000,
     zoom: 12000,
-    raidMitigationOnly: true
+    raidMitigationOnly: true,
+    snap: true,
+    snapTo: 10
   };
 
   componentDidMount() {
@@ -194,6 +197,20 @@ class App extends React.Component {
     after && after();
   };
 
+  getTimestamp = json => {
+    if (!json) return;
+    const cd = JSON.parse(json);
+    const time = this.state.party[cd.who].cooldowns.find(x => x.id === cd.id)
+      .time;
+    return (
+      Math.floor(time / 6000)
+        .toString()
+        .padStart(2, '0') +
+      ':' +
+      ((time % 6000) / 100).toFixed(2).padStart(5, '0')
+    );
+  };
+
   render() {
     const { zoom, encounterDuration } = this.state;
     const functions = {
@@ -236,6 +253,15 @@ class App extends React.Component {
                   )}
                 />
               </Switch>
+              <ReactToolTip
+                id="cooldown"
+                place="right"
+                getContent={this.getTimestamp}
+                overridePosition={(_, __, currentTarget, node) => {
+                  const { right, top } = currentTarget.getClientRects()[0];
+                  return { top: top - node.clientHeight / 2, left: right };
+                }}
+              />
             </div>
           </div>
         </Context.Provider>

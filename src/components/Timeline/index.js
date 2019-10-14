@@ -205,6 +205,8 @@ class Timeline extends React.Component {
             key={i}
             name={cooldown.name}
             time={cooldown.time}
+            id={cooldown.id}
+            who={this.props.who}
             encounterDuration={this.props.encounterDuration}
             showUnavailable={this.props.showUnavailable}
           />
