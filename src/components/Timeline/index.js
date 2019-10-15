@@ -8,7 +8,7 @@ import cooldowns from '../../data/cooldowns';
 import jobs from '../../data/jobs';
 import resources from '../../data/resources';
 
-import sortedInsert from '../../utils/sortedInsert';
+import getResource from '../../utils/getResource';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -41,50 +41,6 @@ class Timeline extends React.Component {
     return Math.floor(time);
   }
 
-  getResource(time, resourceName) {
-    const resource = resources[resourceName];
-    const uses = this.props.cooldowns.filter(
-      ({ name }) => (cooldowns[name].resource = resourceName)
-    );
-    let charges = resource.initial;
-    let chargeTime = 0;
-    let currentCharges;
-
-    // * do the sorted insert
-    // * test if the new timeline is valid
-    // * get the charges at the new cooldown
-
-    const test = sortedInsert(uses, { time }, (a, b) =>
-      a.time > b.time ? 1 : -1
-    );
-
-    for (const use of test) {
-      charges = charges + (use.time - chargeTime) / resource.recharge;
-      // Deal with overcapping on charges
-      if (charges > resource.max) {
-        if (resource.allowOvercharge) {
-          charges -=
-            Math.floor(charges % resource.max) +
-            resource.max * Math.floor((charges - resource.max) / resource.max);
-        } else {
-          charges = resource.max;
-        }
-      }
-
-      chargeTime = use.time;
-      // Consume the charge
-      charges -= 1;
-
-      if (use.time === time) {
-        currentCharges = charges;
-      }
-
-      if (charges < 0) return -1;
-    }
-
-    return currentCharges;
-  }
-
   getTime(event) {
     const clientY = event.nativeEvent.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
@@ -95,7 +51,6 @@ class Timeline extends React.Component {
     const activeIds = {}; // Holds the time of active cooldowns
     const activeTimes = {};
     const width = this.pixToTime(this.myRef.current.clientWidth);
-    console.log(width);
     // List cooldowns that are active at the clicked time
     const active = this.represents.filter(cdName => {
       const cd = this.props.cooldowns.find(
@@ -165,7 +120,7 @@ class Timeline extends React.Component {
             Math.abs(time - cd.time) < cooldowns[cdName].recast
         ) ||
         (cooldowns[cdName].resource &&
-          this.getResource(time, cooldowns[cdName].resource) < 0)
+          getResource(time, cooldowns[cdName].resource, this.props.raw) < 0)
     );
 
     const { active, activeIds } = this.getActive(time);
@@ -203,11 +158,19 @@ class Timeline extends React.Component {
             <span>{cooldown}</span>
             {cooldowns[cooldown].resource ? (
               <span className="resource-info">
-                <span className="symbol">
+                <span
+                  className="symbol"
+                  role="img"
+                  aria-label={cooldowns[cooldown].resource}
+                >
                   {resources[cooldowns[cooldown].resource].symbol}:{' '}
                 </span>
                 {Math.floor(
-                  this.getResource(time, cooldowns[cooldown].resource) + 1
+                  getResource(
+                    time,
+                    cooldowns[cooldown].resource,
+                    this.props.raw
+                  ) + 1
                 )}
               </span>
             ) : null}

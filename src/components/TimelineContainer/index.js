@@ -24,6 +24,7 @@ class TimelineContainer extends React.Component {
                   name={timeline.name}
                   who={timeline.who}
                   cooldowns={timeline.cooldowns}
+                  raw={timeline.raw}
                   encounterDuration={this.props.encounterDuration}
                   showUnavailable={this.props.showUnavailable}
                   shared={timeline.shared}

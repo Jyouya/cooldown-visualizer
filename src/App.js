@@ -8,6 +8,8 @@ import jobs from './data/jobs';
 import cooldowns from './data/cooldowns';
 
 import sortedInsert from './utils/sortedInsert';
+import getResource from './utils/getResource';
+import closestResource from './utils/closestResource';
 import './App.css';
 
 class App extends React.Component {
@@ -47,7 +49,6 @@ class App extends React.Component {
     ],
     encounterDuration: 60000,
     zoom: 12000,
-    raidMitigationOnly: true,
     snap: true,
     snapTo: 25,
     // globalFilters: {
@@ -147,20 +148,22 @@ class App extends React.Component {
         shared:
           filter(this.optimizedCooldowns[cooldown].sharesWith) &&
           this.optimizedCooldowns[cooldown].sharesWith,
-        who: partyMember
+        who: partyMember,
+        raw: party[partyMember].cooldowns
       }))
       .filter(filter);
   };
 
   buildJobTimelines = () => {
-    const { party, raidMitigationOnly } = this.state;
+    const { party } = this.state;
     const filter = this.filterCooldowns(this.state.partyViewFilters);
     return party
       .map((member, i) => ({
         name: member.job,
         cooldowns: member.cooldowns.filter(filter),
         shared: jobs[member.job].cooldowns.filter(filter),
-        who: i
+        who: i,
+        raw: member.cooldowns
       }))
       .filter((_, i) => party[i].enabled);
   };
@@ -193,6 +196,8 @@ class App extends React.Component {
     // ! when adding times before 0, this will need to be changed to the start of the timeline
     const startOfTime = 0;
     if (time < startOfTime) time = startOfTime;
+    if (time > this.state.encounterDuration - 100)
+      time = this.state.encounterDuration - 100;
     time = this.snap(time);
 
     const party = [...this.state.party];
@@ -214,17 +219,32 @@ class App extends React.Component {
 
     // ! Does not check if the new time it moves to is available
     if (unavailable) {
-      if (time > unavailable.time || unavailable.time - recast < startOfTime)
+      if (
+        (time > unavailable.time &&
+          time + recast < this.state.encounterDuration) ||
+        unavailable.time - recast < startOfTime
+      )
         time = unavailable.time + recast;
       else time = unavailable.time - recast;
     }
 
-    // Determine if the timeline needs to be resorted
+    if (
+      cooldowns[target.name].resource &&
+      getResource(time, cooldowns[target.name].resource, timeline) < 0
+    ) {
+      time = closestResource(
+        time,
+        cooldowns[target.name].resource,
+        timeline,
+        target.time
+      );
+    }
     if (
       (targetIndex && timeline[targetIndex - 1].time > time) ||
       (targetIndex < timeline.length - 1 &&
         timeline[targetIndex + 1].time < time)
     ) {
+      // Determine if the timeline needs to be resorted
       // Resort timeline
       // Remove targetIndex
       timeline.splice(targetIndex, 1);

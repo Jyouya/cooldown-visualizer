@@ -5,6 +5,7 @@
   background: linear-gradient(90.1deg, rgb(161, 87, 181), rgb(189, 115, 209));
   box-sizing: border-box;
   border-right: 1px solid purple;
+  overflow: hidden;
 
   grid-row: 1;
 }
