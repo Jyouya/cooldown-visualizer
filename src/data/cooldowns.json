@@ -191,7 +191,40 @@
     "recast": 200,
     "raid": true,
     "heal": true,
+    "gcd": true,
     "resource": "lily"
+  },
+  "Afflatus Rapture": {
+    "img": "./icons/afflatus_rapture.png",
+    "duration": 0,
+    "recast": 200,
+    "raid": true,
+    "heal": true,
+    "gcd": true,
+    "resource": "lily"
+  },
+  "Medica": {
+    "img": "./icons/medica.png",
+    "duration": 0,
+    "recast": 200,
+    "raid": true,
+    "heal": true,
+    "gcd": true
+  },
+  "Medica II": {
+    "img": "./icons/medica_ii.png",
+    "duration": 1500,
+    "recast": 200,
+    "raid": true,
+    "heal": true,
+    "gcd": true
+  },
+  "Regen": {
+    "img": "./icons/regen.png",
+    "duration": 1800,
+    "recast": 200,
+    "raid": true,
+    "heal": true,
+    "gcd": true
   }
-
 }

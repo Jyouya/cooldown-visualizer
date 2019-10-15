@@ -30,27 +30,34 @@ class Timeline extends React.Component {
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
   }
 
+  pixToTime(px) {
+    const height = this.myRef.current.clientHeight;
+    const duration = this.props.encounterDuration;
+    const time = (px / height) * duration;
+
+    return Math.floor(time);
+  }
+
   getTime(event) {
     const clientY = event.nativeEvent.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
-    const height = this.myRef.current.clientHeight;
-    const duration = this.props.encounterDuration;
-    const time = (timelineY / height) * duration;
-
-    return Math.floor(time);
+    return this.pixToTime(timelineY);
   }
 
   // TODO: account for instant skills (e.g. assize)
   getActive(time) {
     const activeIds = {}; // Holds the time of active cooldowns
     const activeTimes = {};
+    const width = this.pixToTime(this.myRef.current.clientWidth);
+    console.log(width);
     // List cooldowns that are active at the clicked time
     const active = this.represents.filter(cdName => {
       const cd = this.props.cooldowns.find(
         cd =>
-          cd.name === cdName &&
-          time > cd.time &&
-          time - cd.time < cooldowns[cdName].duration
+          (cd.name === cdName &&
+            time > cd.time &&
+            time - cd.time < cooldowns[cdName].duration) ||
+          (cd.name === cdName && time >= cd.time && time < cd.time + width)
       );
       if (cd) {
         activeIds[cd.name] = cd.id;
@@ -179,7 +186,6 @@ class Timeline extends React.Component {
    * cooldowns
    */
   render() {
-
     return (
       <div
         className="timeline"

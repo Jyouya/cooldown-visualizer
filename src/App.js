@@ -36,6 +36,11 @@ class App extends React.Component {
         enabled: true,
         job: 'PLD',
         cooldowns: []
+      },
+      {
+        enabled: true,
+        job: 'WHM',
+        cooldowns: []
       }
     ],
     encounterDuration: 60000,
@@ -60,32 +65,40 @@ class App extends React.Component {
     // },
     partyViewFilters: {
       raid: {
-        enabled: true
+        include: true
       },
       heal: {
-        enabled: false
+        include: false
       },
       shield: {
-        enabled: false
+        include: false
+      },
+      gcd: {
+        include: false,
+        exclude: false
       },
       img: {
         alisas: 'all',
-        enabled: false
+        include: false
       }
     },
     playerViewFilters: {
       img: {
         alisas: 'all',
-        enabled: true
+        include: true
       },
       raid: {
-        enabled: false
+        include: false
       },
       heal: {
-        enabled: false
+        include: false
       },
       shield: {
-        enabled: false
+        include: false
+      },
+      gcd: {
+        include: false,
+        exclude: false
       }
     }
   };
@@ -106,11 +119,15 @@ class App extends React.Component {
   loadFile = () => {};
 
   filterCooldowns(rules) {
-    const rulesArray = Object.entries(rules).filter(([_, v]) => v.enabled);
+    const includeRules = Object.entries(rules).filter(([, v]) => v.include);
+    const excludeRules = Object.entries(rules).filter(([, v]) => v.exclude);
     return cooldown => {
       if (!cooldown) return;
       const name = typeof cooldown === 'string' ? cooldown : cooldown.name;
-      return rulesArray.find(([rule]) => cooldowns[name][rule]);
+      return (
+        includeRules.find(([rule]) => cooldowns[name][rule]) &&
+        !excludeRules.find(([rule]) => cooldowns[name][rule])
+      );
     };
   }
 
@@ -227,8 +244,8 @@ class App extends React.Component {
   getTimestamp = json => {
     if (!json) return;
     const cd = JSON.parse(json);
-    const time = this.state.party[cd.who].cooldowns.find(x => x.id === cd.id)
-      .time;
+    const which = this.state.party[cd.who].cooldowns.find(x => x.id === cd.id);
+    const time = which && which.time;
     return (
       Math.floor(time / 6000)
         .toString()

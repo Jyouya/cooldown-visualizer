@@ -68,7 +68,17 @@
     "img": "./icons/WHM.png",
     "role": "healer",
     "cooldowns": [
-
+      "Temperance",
+      "Asylum",
+      "Assize",
+      "Divine Benison",
+      "Tetragrammaton",
+      "Afflatus Solace",
+      "Afflatus Rapture",
+      "Presence of Mind",
+      "Medica",
+      "Medica II",
+      "Regen"
     ],
     "resources": {
       "lily": {

@@ -38,9 +38,12 @@ class Cooldown extends React.Component {
               (data.duration / Math.max(data.duration, data.recast)) * 50 + '%',
             backgroundColor: data.color || 'green'
           }}
-        >
-          <img className="icon" src={data.img} alt={this.props.name} />
-        </div>
+        ></div>
+        <img
+          className="icon"
+          src={data.img}
+          alt={this.props.name}
+        />
       </div>
     );
   }

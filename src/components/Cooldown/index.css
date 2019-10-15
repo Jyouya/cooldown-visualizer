@@ -8,7 +8,6 @@
 
 .cooldown-active {
   top: 50%;
-  overflow: hidden;
   z-index: 2;
 }
 
@@ -22,7 +21,8 @@
 .icon {
   left: -1px;
   right: 0;
-  top: 0;
+  top: 50%;
+  z-index: 2;
   position: absolute;
   width: calc(100% + 2px);
   user-select: none;
@@ -32,5 +32,5 @@
 .cooldown {
   position: absolute;
   width: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
