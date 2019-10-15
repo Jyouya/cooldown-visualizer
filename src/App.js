@@ -42,7 +42,52 @@ class App extends React.Component {
     zoom: 12000,
     raidMitigationOnly: true,
     snap: true,
-    snapTo: 25
+    snapTo: 25,
+    // globalFilters: {
+    //   raid: {
+    //     enabled: false
+    //   },
+    //   heal: {
+    //     enabled: false
+    //   },
+    //   shield: {
+    //     enabled: false
+    //   },
+    //   img: {
+    //     alisas: 'all',
+    //     enabled: false
+    //   }
+    // },
+    partyViewFilters: {
+      raid: {
+        enabled: true
+      },
+      heal: {
+        enabled: false
+      },
+      shield: {
+        enabled: false
+      },
+      img: {
+        alisas: 'all',
+        enabled: false
+      }
+    },
+    playerViewFilters: {
+      img: {
+        alisas: 'all',
+        enabled: true
+      },
+      raid: {
+        enabled: false
+      },
+      heal: {
+        enabled: false
+      },
+      shield: {
+        enabled: false
+      }
+    }
   };
 
   componentDidMount() {
@@ -60,8 +105,19 @@ class App extends React.Component {
 
   loadFile = () => {};
 
+  filterCooldowns(rules) {
+    const rulesArray = Object.entries(rules).filter(([_, v]) => v.enabled);
+    return cooldown => {
+      if (!cooldown) return;
+      const name = typeof cooldown === 'string' ? cooldown : cooldown.name;
+      return rulesArray.find(([rule]) => cooldowns[name][rule]);
+    };
+  }
+
   buildAbilityTimelines = partyMember => {
     const { party } = this.state;
+    const filter = this.filterCooldowns(this.state.playerViewFilters);
+
     return jobs[party[partyMember].job].cooldowns
       .filter(cooldown => !cooldowns[cooldown].shared)
       .map(cooldown => ({
@@ -69,22 +125,22 @@ class App extends React.Component {
         cooldowns: party[partyMember].cooldowns.filter(
           ({ name }) => name === cooldown || cooldowns[name].shared === cooldown
         ),
-        shared: this.optimizedCooldowns[cooldown].sharesWith,
+        shared:
+          filter(this.optimizedCooldowns[cooldown].sharesWith) &&
+          this.optimizedCooldowns[cooldown].sharesWith,
         who: partyMember
-      }));
+      }))
+      .filter(filter);
   };
 
   buildJobTimelines = () => {
     const { party, raidMitigationOnly } = this.state;
+    const filter = this.filterCooldowns(this.state.partyViewFilters);
     return party
       .map((member, i) => ({
         name: member.job,
-        cooldowns: member.cooldowns.filter(
-          cooldown => !raidMitigationOnly || cooldowns[cooldown.name].raid
-        ),
-        shared: jobs[member.job].cooldowns.filter(
-          cooldown => !raidMitigationOnly || cooldowns[cooldown].raid
-        ),
+        cooldowns: member.cooldowns.filter(filter),
+        shared: jobs[member.job].cooldowns.filter(filter),
         who: i
       }))
       .filter((_, i) => party[i].enabled);
@@ -115,7 +171,11 @@ class App extends React.Component {
   };
 
   moveCooldown = (member, id, time, after) => {
+    // ! when adding times before 0, this will need to be changed to the start of the timeline
+    const startOfTime = 0;
+    if (time < startOfTime) time = startOfTime;
     time = this.snap(time);
+
     const party = [...this.state.party];
     let timeline = party[member].cooldowns;
     const targetIndex = timeline.findIndex(cd => cd.id === id);
@@ -133,9 +193,7 @@ class App extends React.Component {
 
     const recast = cooldowns[target.name].recast;
 
-    // ! when adding times before 0, this will need to be changed to the start of the timeline
-    const startOfTime = 0;
-
+    // ! Does not check if the new time it moves to is available
     if (unavailable) {
       if (time > unavailable.time || unavailable.time - recast < startOfTime)
         time = unavailable.time + recast;
