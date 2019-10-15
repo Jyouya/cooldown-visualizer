@@ -30,42 +30,12 @@ class App extends React.Component {
       {
         enabled: true,
         job: 'GNB',
-        cooldowns: [
-          {
-            name: 'Rampart',
-            time: 9000
-          },
-          {
-            name: 'Aurora',
-            time: 10000
-          },
-          {
-            name: 'Heart of Light',
-            time: 13000
-          },
-          {
-            name: 'Rampart',
-            time: 19000
-          }
-        ]
+        cooldowns: []
       },
       {
         enabled: true,
         job: 'PLD',
-        cooldowns: [
-          {
-            name: 'Passage of Arms',
-            time: 4000
-          },
-          {
-            name: 'Sheltron',
-            time: 5000
-          },
-          {
-            name: 'Intervention',
-            time: 6000
-          }
-        ]
+        cooldowns: []
       }
     ],
     encounterDuration: 60000,
@@ -175,7 +145,7 @@ class App extends React.Component {
     // Determine if the timeline needs to be resorted
     if (
       (targetIndex && timeline[targetIndex - 1].time > time) ||
-      (targetIndex < timeline.length - 2 &&
+      (targetIndex < timeline.length - 1 &&
         timeline[targetIndex + 1].time < time)
     ) {
       // Resort timeline

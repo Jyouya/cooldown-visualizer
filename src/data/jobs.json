@@ -2,6 +2,7 @@
   "GNB": {
     "name": "Gunbreaker",
     "img": "./icons/GNB.png",
+    "role": "tank",
     "cooldowns": [
       "Rampart",
       "Reprisal",
@@ -17,6 +18,7 @@
   "WAR": {
     "name": "Warrior",
     "img": "./icons/WAR.png",
+    "role": "tank",
     "cooldowns": [
       "Rampart",
       "Reprisal",
@@ -32,6 +34,7 @@
   "DRK": {
     "name": "Dark Knight",
     "img": "./icons/DRK.png",
+    "role": "tank",
     "cooldowns": [
       "Rampart",
       "Reprisal",
@@ -46,6 +49,7 @@
   "PLD": {
     "name": "Paladin",
     "img": "./icons/PLD.png",
+    "role": "tank",
     "cooldowns": [
       "Rampart",
       "Reprisal",
@@ -58,5 +62,20 @@
       "Hallowed Ground",
       "Arm's Length"
     ]
+  },
+  "WHM": {
+    "name": "White Mage",
+    "img": "./icons/WHM.png",
+    "role": "healer",
+    "cooldowns": [
+
+    ],
+    "resources": {
+      "lily": {
+        "max": 3,
+        "recharge": 30,
+        "initial": 0
+      }
+    }
   }
 }

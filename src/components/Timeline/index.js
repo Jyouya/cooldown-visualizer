@@ -173,22 +173,18 @@ class Timeline extends React.Component {
     );
   };
 
-  // TODO: make unavailable cooldowns inactive in the context menu
-
   /*
    * * Props:
    * length
    * cooldowns
    */
   render() {
-    // TODO: mouseover tooltips
 
     return (
       <div
         className="timeline"
         ref={this.myRef}
         onContextMenu={this.handleContextMenu}
-        // TODO: mouseDown mouseUp mouseMove
         onMouseDown={this.handleMouseDown}
         onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}

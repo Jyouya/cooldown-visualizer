@@ -33,7 +33,8 @@
   "Aurora": {
     "img": "./icons/aurora.png",
     "duration": 1800,
-    "recast": 6000
+    "recast": 6000,
+    "heal": true
   },
   "Sentinel": {
     "img": "./icons/sentinel.png",
@@ -70,12 +71,14 @@
     "img": "./icons/divine_veil.png",
     "duration": 3000,
     "recast": 9000,
-    "raid": true
+    "raid": true,
+    "shield": true
   },
   "The Blackest Night": {
     "img": "./icons/the_blackest_night.png",
     "duration": 700,
-    "recast": 1500
+    "recast": 1500,
+    "shield": true
   },
   "Dark Mind": {
     "img": "./icons/dark_mind.png",
@@ -128,7 +131,8 @@
     "img": "./icons/shake_it_off.png",
     "duration": 1500,
     "recast": 9000,
-    "raid": true
+    "raid": true,
+    "shield": true
   },
   "Reprisal": {
     "img": "./icons/reprisal.png",
@@ -140,5 +144,54 @@
     "img": "./icons/arm's_length.png",
     "duration": 600,
     "recast": 12000
+  },
+
+  "Presence of Mind": {
+    "img": "./icons/presence_of_mind.png",
+    "duration": 1500,
+    "recast": 15000
+  },
+  "Asylum": {
+    "img": "./icons/asylum.png",
+    "duration": 2400,
+    "recast": 9000,
+    "raid": true,
+    "heal": true
+  },
+  "Assize": {
+    "img": "./icons/assize.png",
+    "duration": 0,
+    "recast": 4500,
+    "raid": true,
+    "heal": true
+  },
+  "Temperance": {
+    "img": "./icons/temperance.png",
+    "duration": 2000,
+    "recast": 12000,
+    "raid": true
+  },
+  "Divine Benison": {
+    "img": "./icons/divine_benison.png",
+    "duration": 1500,
+    "recast": 3000,
+    "raid": true,
+    "shield": true
+  },
+  "Tetragrammaton": {
+    "img": "./icons/tetragrammaton.png",
+    "duration": 0,
+    "recast": 6000,
+    "raid": true,
+    "heal": true
+  },
+  "Afflatus Solace": {
+    "img": "./icons/afflatus_solace.png",
+    "duration": 0,
+    "recast": 200,
+    "raid": true,
+    "heal": true,
+    "resource": "lily"
   }
+
 }
