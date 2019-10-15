@@ -42,6 +42,16 @@
       left: 42px;
     }
 
+    .resource-info {
+      position: relative;
+      right: -42px;
+      font-size: 20px;
+
+      .symbol {
+        font-size: 22px;
+      }
+    }
+
     :nth-child(2) {
       flex-grow: 1;
     }

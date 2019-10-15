@@ -31,8 +31,6 @@ class Cooldown extends React.Component {
             who: this.props.who,
             id: this.props.id
           })}
-          // data-event="mouseDown"
-          // data-event-off="mouseUp"
           style={{
             height:
               (data.duration / Math.max(data.duration, data.recast)) * 50 + '%',
@@ -40,6 +38,11 @@ class Cooldown extends React.Component {
           }}
         ></div>
         <img
+          data-for="cooldown"
+          data-tip={JSON.stringify({
+            who: this.props.who,
+            id: this.props.id
+          })}
           className="icon"
           src={data.img}
           alt={this.props.name}

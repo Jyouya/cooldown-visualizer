@@ -6,6 +6,9 @@ import { Link } from 'react-router-dom';
 
 import cooldowns from '../../data/cooldowns';
 import jobs from '../../data/jobs';
+import resources from '../../data/resources';
+
+import sortedInsert from '../../utils/sortedInsert';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -38,13 +41,56 @@ class Timeline extends React.Component {
     return Math.floor(time);
   }
 
+  getResource(time, resourceName) {
+    const resource = resources[resourceName];
+    const uses = this.props.cooldowns.filter(
+      ({ name }) => (cooldowns[name].resource = resourceName)
+    );
+    let charges = resource.initial;
+    let chargeTime = 0;
+    let currentCharges;
+
+    // * do the sorted insert
+    // * test if the new timeline is valid
+    // * get the charges at the new cooldown
+
+    const test = sortedInsert(uses, { time }, (a, b) =>
+      a.time > b.time ? 1 : -1
+    );
+
+    for (const use of test) {
+      charges = charges + (use.time - chargeTime) / resource.recharge;
+      // Deal with overcapping on charges
+      if (charges > resource.max) {
+        if (resource.allowOvercharge) {
+          charges -=
+            Math.floor(charges % resource.max) +
+            resource.max * Math.floor((charges - resource.max) / resource.max);
+        } else {
+          charges = resource.max;
+        }
+      }
+
+      chargeTime = use.time;
+      // Consume the charge
+      charges -= 1;
+
+      if (use.time === time) {
+        currentCharges = charges;
+      }
+
+      if (charges < 0) return -1;
+    }
+
+    return currentCharges;
+  }
+
   getTime(event) {
     const clientY = event.nativeEvent.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
     return this.pixToTime(timelineY);
   }
 
-  // TODO: account for instant skills (e.g. assize)
   getActive(time) {
     const activeIds = {}; // Holds the time of active cooldowns
     const activeTimes = {};
@@ -111,12 +157,15 @@ class Timeline extends React.Component {
     // TODO: consider charges for availability (e.g. lilies)
 
     // List cooldowns which are unavailable
-    const unavailable = this.represents.filter(cdName =>
-      this.props.cooldowns.find(
-        cd =>
-          cd.name === cdName &&
-          Math.abs(time - cd.time) < cooldowns[cdName].recast
-      )
+    const unavailable = this.represents.filter(
+      cdName =>
+        this.props.cooldowns.find(
+          cd =>
+            cd.name === cdName &&
+            Math.abs(time - cd.time) < cooldowns[cdName].recast
+        ) ||
+        (cooldowns[cdName].resource &&
+          this.getResource(time, cooldowns[cdName].resource) < 0)
     );
 
     const { active, activeIds } = this.getActive(time);
@@ -152,6 +201,16 @@ class Timeline extends React.Component {
           >
             <img src={cooldowns[cooldown].img} alt="" />
             <span>{cooldown}</span>
+            {cooldowns[cooldown].resource ? (
+              <span className="resource-info">
+                <span className="symbol">
+                  {resources[cooldowns[cooldown].resource].symbol}:{' '}
+                </span>
+                {Math.floor(
+                  this.getResource(time, cooldowns[cooldown].resource) + 1
+                )}
+              </span>
+            ) : null}
           </Option>
         ))}
         {active.length && available.length ? <Separator /> : null}

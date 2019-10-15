@@ -79,13 +79,6 @@
       "Medica",
       "Medica II",
       "Regen"
-    ],
-    "resources": {
-      "lily": {
-        "max": 3,
-        "recharge": 30,
-        "initial": 0
-      }
-    }
+    ]
   }
 }

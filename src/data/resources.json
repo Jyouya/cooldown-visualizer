@@ -1,0 +1,9 @@
+{
+  "lily": {
+    "max": 3,
+    "recharge": 3000,
+    "initial": 0,
+    "allowOvercharge": true,
+    "symbol": "🌺"
+  }
+}
