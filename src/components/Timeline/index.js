@@ -1,7 +1,7 @@
 import React from 'react';
 import Cooldown from '../Cooldown';
 import { Option, Separator, Label } from '../ContextMenu';
-import './index.css';
+import './index.scss';
 import { Link } from 'react-router-dom';
 
 import cooldowns from '../../data/cooldowns';
@@ -25,12 +25,16 @@ class Timeline extends React.Component {
     // Determine what cds go on this timeline
     if (Array.isArray(this.props.shared)) this.represents = this.props.shared;
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
+
+    document.addEventListener('mouseup', this.handleMouseUp);
   }
 
   componentDidUpdate() {
     // Determine what cds go on this timeline
     if (Array.isArray(this.props.shared)) this.represents = this.props.shared;
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
+
+    document.removeEventListener('mouseup', this.hanldeMouseUp);
   }
 
   pixToTime = px => {
@@ -217,7 +221,7 @@ class Timeline extends React.Component {
         ref={this.myRef}
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
-        onMouseUp={this.handleMouseUp}
+        // onMouseUp={this.handleMouseUp}
         onMouseMove={this.handleMouseMove}
       >
         <Link to={`/${this.props.who}`}>
@@ -227,17 +231,19 @@ class Timeline extends React.Component {
             alt={this.props.name}
           />
         </Link>
-        {this.props.cooldowns.map((cooldown, i) => (
-          <Cooldown
-            key={i}
-            cooldown={cooldown}
-            who={this.props.who}
-            functions={{ ...this.props.functions, getTime: this.getTime }}
-            encounterDuration={this.props.encounterDuration}
-            showUnavailable={this.props.showUnavailable}
-            grabbing={this.state.dragId === cooldown.id}
-          />
-        ))}
+        <div className="timeline-wrapper">
+          {this.props.cooldowns.map((cooldown, i) => (
+            <Cooldown
+              key={i}
+              cooldown={cooldown}
+              who={this.props.who}
+              functions={{ ...this.props.functions, getTime: this.getTime }}
+              encounterDuration={this.props.encounterDuration}
+              showUnavailable={this.props.showUnavailable}
+              grabbing={this.state.dragId === cooldown.id}
+            />
+          ))}
+        </div>
       </div>
     );
   }
