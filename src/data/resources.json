@@ -3,7 +3,16 @@
     "max": 3,
     "recharge": 3000,
     "initial": 0,
-    "allowOvercharge": true,
     "symbol": "🌺"
+  },
+  "aetherflow": {
+    "max": 3,
+    "initial": 0,
+    "symbol": "📚"
+  },
+  "fairy": {
+    "max": 100,
+    "initial": 0,
+    "symbol": "🧚"
   }
 }

@@ -1,0 +1,72 @@
+.cooldown-active,
+.cooldown-unavailable {
+  top: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  border-radius: 0.375rem;
+}
+
+.cooldown-active {
+  top: 50%;
+  z-index: 2;
+  cursor: grab;
+
+  &.grabbing {
+    cursor: grabbing;
+  }
+
+  .resize-handle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 0.75rem;
+    width: 100%;
+    border-radius: 0.375rem;
+    border-bottom: solid goldenrod 1px;
+    cursor: row-resize;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -0.25rem;
+      left: calc(50% - 0.25rem);
+      transform: rotate(45deg);
+      width: 0.5rem;
+      height: 0.5rem;
+      background: linear-gradient(to right, goldenrod, #f1dead);
+      z-index: 3;
+    }
+  }
+}
+
+.cooldown-unavailable {
+  height: 100%;
+  background-color: darkslategrey;
+  opacity: 0.25;
+  z-index: 1;
+}
+
+.icon {
+  left: -1px;
+  top: 0;
+  width: calc(100% + 2px);
+  position: relative;
+  user-select: none;
+  pointer-events: none;
+}
+
+.icon-wrapper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  z-index: 2;
+  cursor: grab;
+}
+
+.cooldown {
+  position: absolute;
+  width: 100%;
+  /* overflow: hidden; */
+}

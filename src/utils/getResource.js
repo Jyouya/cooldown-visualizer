@@ -21,8 +21,8 @@ export default function getResource(time, resourceName, timeline) {
   );
 
   for (const use of test) {
-    charges += (use.time - chargeTime) / resource.recharge;
-    overcharges += (use.time - chargeTime) / resource.recharge;
+    charges += (use.time - chargeTime + .0001) / resource.recharge;
+    overcharges += (use.time - chargeTime + .0001) / resource.recharge;
     // Deal with overcapping on charges
     if (charges > resource.max) {
       charges = resource.max + (charges % 1);

@@ -79,7 +79,13 @@
     font-size: 14px;
 
     display: flex;
-    justify-content: space-between;
+    // justify-content: space-between;
     align-items: center;
+
+    .symbol {
+      font-size: 22px;
+      min-width: 30px;
+      text-align: center;
+    }
   }
 }

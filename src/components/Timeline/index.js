@@ -33,19 +33,19 @@ class Timeline extends React.Component {
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
   }
 
-  pixToTime(px) {
+  pixToTime = px => {
     const height = this.myRef.current.clientHeight;
     const duration = this.props.encounterDuration;
     const time = (px / height) * duration;
 
     return Math.floor(time);
-  }
+  };
 
-  getTime(event) {
+  getTime = event => {
     const clientY = event.nativeEvent.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
     return this.pixToTime(timelineY);
-  }
+  };
 
   getActive(time) {
     const activeIds = {}; // Holds the time of active cooldowns
@@ -134,6 +134,9 @@ class Timeline extends React.Component {
       event,
       <>
         <Label>
+          <span className="symbol" role="img" aria-label="Time">
+            ⏱️{' '}
+          </span>
           {Math.floor(time / 6000)
             .toString()
             .padStart(2, '0') +
@@ -227,20 +230,14 @@ class Timeline extends React.Component {
         {this.props.cooldowns.map((cooldown, i) => (
           <Cooldown
             key={i}
-            name={cooldown.name}
-            time={cooldown.time}
-            id={cooldown.id}
+            cooldown={cooldown}
             who={this.props.who}
+            functions={{ ...this.props.functions, getTime: this.getTime }}
             encounterDuration={this.props.encounterDuration}
             showUnavailable={this.props.showUnavailable}
+            grabbing={this.state.dragId === cooldown.id}
           />
         ))}
-        {/* {represents.map((cooldown, i) => (
-          <Option key={i}>
-          <img src={cooldowns[cooldown].img} />
-          {cooldown}
-          </Option>
-        ))} */}
       </div>
     );
   }

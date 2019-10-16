@@ -1,52 +1,71 @@
 import React from 'react';
-import cooldownData from '../../data/cooldowns.json';
-import './index.css';
+import cooldownData from '../../data/cooldowns';
+import Resize from './Resize';
+import './index.scss';
 
 class Cooldown extends React.Component {
+  constructor(props) {
+    super(props);
+    this.activeRef = React.createRef();
+  }
   render() {
-    const data = cooldownData[this.props.name];
+    const { name, time, id, duration } = this.props.cooldown;
+    const data = cooldownData[name];
     // const start = (this.props.time / this.props.encounterDuration) * 100 + '%';
     return (
       <div
         className="cooldown"
         style={{
           top:
-            ((this.props.time - data.recast) / this.props.encounterDuration) *
+            ((time - Math.max(data.recast, duration)) /
+              this.props.encounterDuration) *
               100 +
             '%',
           height:
-            Math.max(
-              data.recast / this.props.encounterDuration,
-              data.duration / this.props.encounterDuration
-            ) *
-              200 +
+            (Math.max(data.recast, duration) * 200) /
+              this.props.encounterDuration +
             '%'
         }}
       >
-        {this.props.showUnavailable && <div className="cooldown-unavailable" />}
+        {this.props.showUnavailable && (
+          <div
+            className="cooldown-unavailable"
+            {...(duration > data.recast
+              ? {
+                  style: {
+                    height: (data.recast / duration) * 100 + '%',
+                    top: 50 - (data.recast / duration) * 50 + '%'
+                  }
+                }
+              : {})}
+          />
+        )}
         <div
-          className="cooldown-active"
+          className={`cooldown-active${this.props.grabbing ? ' grabbing' : ''}`}
+          ref={this.activeRef}
           data-for="cooldown"
           data-tip={JSON.stringify({
             who: this.props.who,
-            id: this.props.id
+            id: id
           })}
           style={{
-            height:
-              (data.duration / Math.max(data.duration, data.recast)) * 50 + '%',
+            height: (duration / Math.max(duration, data.recast)) * 50 + '%',
             backgroundColor: data.color || 'green'
           }}
-        ></div>
-        <img
+        >
+          {data.variable ? <Resize {...this.props} /> : null}
+        </div>
+
+        <div
           data-for="cooldown"
           data-tip={JSON.stringify({
             who: this.props.who,
-            id: this.props.id
+            id: id
           })}
-          className="icon"
-          src={data.img}
-          alt={this.props.name}
-        />
+          className="icon-wrapper"
+        >
+          <img className="icon" src={data.img} alt={name} />
+        </div>
       </div>
     );
   }

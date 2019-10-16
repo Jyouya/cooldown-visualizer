@@ -169,12 +169,15 @@ class App extends React.Component {
   };
 
   addCooldown = (member, name, time, after) => {
-    console.log(member, name, time);
     const party = [...this.state.party];
+    const cd = cooldowns[name];
+    const timeline = party[member].cooldowns;
+
+    const duration = cd.variable ? cd.minMax(timeline)[1] : cd.duration;
 
     party[member].cooldowns = sortedInsert(
-      party[member].cooldowns,
-      { name, time, id: ++this.cooldownId },
+      timeline,
+      { name, time, id: ++this.cooldownId, duration },
       (a, b) => (a.time > b.time ? 1 : -1)
     );
 
@@ -263,6 +266,18 @@ class App extends React.Component {
     after && after();
   };
 
+  resizeCooldown = (member, id, duration, after) => {
+    const party = [...this.state.party];
+    const timeline = party[member].cooldowns;
+    const cooldown = timeline.find(cd => cd.id === id);
+    const [min, max] = cooldowns[cooldown.name].minMax(timeline);
+
+    cooldown.duration = Math.min(Math.max(min, duration), max);
+    this.setState({ party });
+
+    after && after();
+  };
+
   getTimestamp = json => {
     if (!json) return;
     const cd = JSON.parse(json);
@@ -292,7 +307,8 @@ class App extends React.Component {
     const functions = {
       addCooldown: this.addCooldown,
       removeCooldown: this.removeCooldown,
-      moveCooldown: this.moveCooldown
+      moveCooldown: this.moveCooldown,
+      resizeCooldown: this.resizeCooldown
     };
     return (
       <BrowserRouter>
