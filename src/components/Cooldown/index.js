@@ -62,7 +62,7 @@ class Cooldown extends React.Component {
             who: this.props.who,
             id: id
           })}
-          className="icon-wrapper"
+          className={`icon-wrapper${this.props.grabbing ? ' grabbing' : ''}`}
         >
           <img className="icon" src={data.img} alt={name} />
         </div>

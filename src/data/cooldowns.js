@@ -49,17 +49,20 @@ export default {
   Sheltron: {
     img: './icons/sheltron.png',
     duration: 600,
-    recast: 500
+    recast: 500,
+    resource: { cost: { resource: 'oath', fn: instance => 50 } }
   },
   Cover: {
     img: './icons/cover.png',
     duration: 1200,
-    recast: 12000
+    recast: 12000,
+    resource: { cost: { resource: 'oath', fn: instance => 50 } }
   },
   Intervention: {
     img: './icons/intervention.png',
     duration: 600,
-    recast: 1000
+    recast: 1000,
+    resource: { cost: { resource: 'oath', fn: instance => 50 } }
   },
   'Passage of Arms': {
     img: './icons/passage_of_arms.png',
@@ -194,7 +197,7 @@ export default {
     raid: true,
     heal: true,
     gcd: true,
-    resource: 'lily'
+    resource: { cost: { resource: 'lily', fn: instance => 1 } }
   },
   'Afflatus Rapture': {
     img: './icons/afflatus_rapture.png',
@@ -203,7 +206,7 @@ export default {
     raid: true,
     heal: true,
     gcd: true,
-    resource: 'lily'
+    resource: { cost: { resource: 'lily', fn: instance => 1 } }
   },
   Medica: {
     img: './icons/medica.png',

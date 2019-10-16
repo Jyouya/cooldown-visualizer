@@ -10,6 +10,7 @@ import cooldowns from './data/cooldowns';
 import sortedInsert from './utils/sortedInsert';
 import getResource from './utils/getResource';
 import closestResource from './utils/closestResource';
+import dummyCooldown from './utils/dummyCooldown';
 import './App.css';
 
 class App extends React.Component {
@@ -48,6 +49,7 @@ class App extends React.Component {
       }
     ],
     encounterDuration: 60000,
+    startOfTime: 0,
     zoom: 12000,
     snap: true,
     snapTo: 25,
@@ -154,6 +156,25 @@ class App extends React.Component {
       .filter(filter);
   };
 
+  checkRecastCollision(timeline, target, time) {
+    return timeline.find(
+      cd =>
+        cd.name === target.name &&
+        Math.abs(time - cd.time) < cooldowns[target.name].recast
+    );
+  }
+
+  checkResourceAvailability(timeline, target, time) {
+    return (
+      cooldowns[target.name].resource &&
+      getResource(
+        { ...target, time },
+        cooldowns[target.name].resource.cost.resource,
+        timeline
+      ) < cooldowns[target.name].resource.cost.fn({ ...target, time })
+    );
+  }
+
   buildJobTimelines = () => {
     const { party } = this.state;
     const filter = this.filterCooldowns(this.state.partyViewFilters);
@@ -197,8 +218,7 @@ class App extends React.Component {
 
   moveCooldown = (member, id, time, after) => {
     // ! when adding times before 0, this will need to be changed to the start of the timeline
-    const startOfTime = 0;
-    if (time < startOfTime) time = startOfTime;
+    if (time < this.state.startOfTime) time = this.state.startOfTime;
     if (time > this.state.encounterDuration - 100)
       time = this.state.encounterDuration - 100;
     time = this.snap(time);
@@ -208,15 +228,13 @@ class App extends React.Component {
     const targetIndex = timeline.findIndex(cd => cd.id === id);
     const target = timeline[targetIndex];
 
+    const timeStack = [target.time];
+
     // Remove target from the party, so we're not comparing it to itself
     timeline[targetIndex] = {};
 
     // Determine if the cooldown is available
-    const unavailable = timeline.find(
-      cd =>
-        cd.name === target.name &&
-        Math.abs(time - cd.time) < cooldowns[target.name].recast
-    );
+    const unavailable = this.checkRecastCollision(timeline, target, time);
 
     const recast = cooldowns[target.name].recast;
 
@@ -225,23 +243,36 @@ class App extends React.Component {
       if (
         (time > unavailable.time &&
           time + recast < this.state.encounterDuration) ||
-        unavailable.time - recast < startOfTime
+        unavailable.time - recast < this.state.startOfTime
       )
         time = unavailable.time + recast;
       else time = unavailable.time - recast;
+      timeStack.push(time);
     }
 
-    if (
-      cooldowns[target.name].resource &&
-      getResource(time, cooldowns[target.name].resource, timeline) < 0
-    ) {
+    if (this.checkResourceAvailability(timeline, target, time)) {
       time = closestResource(
-        time,
-        cooldowns[target.name].resource,
+        target,
+        cooldowns[target.name].resource.cost.resource,
         timeline,
         target.time
       );
+      timeStack.push(time);
     }
+
+    timeStack.pop();
+    while (timeStack.length > 0) {
+      if (
+        !(
+          this.checkRecastCollision(timeline, target, time) ||
+          this.checkResourceAvailability(timeline, target, time)
+        )
+      ) {
+        break;
+      }
+      time = timeStack.pop();
+    }
+
     if (
       (targetIndex && timeline[targetIndex - 1].time > time) ||
       (targetIndex < timeline.length - 1 &&

@@ -9,6 +9,7 @@ import jobs from '../../data/jobs';
 import resources from '../../data/resources';
 
 import getResource from '../../utils/getResource';
+import dummyCooldown from '../../utils/dummyCooldown';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -124,7 +125,14 @@ class Timeline extends React.Component {
             Math.abs(time - cd.time) < cooldowns[cdName].recast
         ) ||
         (cooldowns[cdName].resource &&
-          getResource(time, cooldowns[cdName].resource, this.props.raw) < 0)
+          getResource(
+            dummyCooldown(this.props.raw, cdName, time),
+            cooldowns[cdName].resource.cost.resource,
+            this.props.raw
+          ) <
+            cooldowns[cdName].resource.cost.fn(
+              dummyCooldown(this.props.raw, cdName, time)
+            ))
     );
 
     const { active, activeIds } = this.getActive(time);
@@ -168,16 +176,17 @@ class Timeline extends React.Component {
                 <span
                   className="symbol"
                   role="img"
-                  aria-label={cooldowns[cooldown].resource}
+                  aria-label={cooldowns[cooldown].resource.cost.resource}
                 >
-                  {resources[cooldowns[cooldown].resource].symbol}:{' '}
+                  {resources[cooldowns[cooldown].resource.cost.resource].symbol}
+                  :{' '}
                 </span>
                 {Math.floor(
                   getResource(
-                    time,
-                    cooldowns[cooldown].resource,
+                    dummyCooldown(this.props.raw, cooldown, time),
+                    cooldowns[cooldown].resource.cost.resource,
                     this.props.raw
-                  ) + 1
+                  )
                 )}
               </span>
             ) : null}

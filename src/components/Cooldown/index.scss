@@ -12,10 +12,6 @@
   z-index: 2;
   cursor: grab;
 
-  &.grabbing {
-    cursor: grabbing;
-  }
-
   .resize-handle {
     position: absolute;
     bottom: 0;
@@ -68,5 +64,9 @@
 .cooldown {
   position: absolute;
   width: 100%;
+
+  .grabbing {
+    cursor: grabbing;
+  }
   /* overflow: hidden; */
 }
