@@ -1,26 +1,73 @@
 // import sortedInsert from '../utils/sortedInsert';
-import cooldowns from '../data/cooldowns';
-import resources from '../data/resources';
-import getResource from './getResource';
+// import cooldowns from '../data/cooldowns';
+// import resources from '../data/resources';
+// import getResource from './getResource';
 
-// ! Assumes that there is a valid time between the nodes to the left and right of guess
+import costGraph from './costGraph';
+import resourceGraph from './resourceGraph';
+import graphIntersections from './graphIntersections';
+
 export default function closestResource(
   cooldown,
   resourceName,
   timeline,
   guess
 ) {
-  const resource = resources[resourceName];
-  const uses = timeline.filter(
-    ({ name }) =>
-      name &&
-      cooldowns[name].resource &&
-      cooldowns[name].resource.cost.resource === resourceName
+  const points = graphIntersections(
+    costGraph(cooldown, timeline, resourceName),
+    resourceGraph(timeline, resourceName)
   );
 
-  const cost = cooldowns[cooldown.name].resource.cost.fn(cooldown);
+  // binary search for the index before cooldown.time
+  let low = 0,
+    high = points.length;
 
-  if (!uses.length) return (cost / resource.rechargeAmount) * resource.recharge;
+  if (high === 1) return points[0];
+  
+  while (low < high) {
+    const mid = (low + high) >>> 1;
+    if (points[mid] < cooldown.time) low = mid + 1;
+    else high = mid;
+  }
+
+  const left = points[low - 1],
+    right = points[low];
+  console.log('points: ', points);
+
+  console.log('left: ', left, 'right: ', right);
+
+  if (Math.abs(left - cooldown.time) < Math.abs(right - cooldown.time))
+    return left;
+  else return right;
+}
+
+// ! Assumes that there is a valid time between the nodes to the left and right of guess
+/*export default function closestResource(
+  cooldown,
+  resourceName,
+  timeline,
+  guess
+) {
+  const resource = resources[resourceName];
+
+  const uses = timeline.filter(({ name }) => {
+    const resource = name && cooldowns[name].resource;
+    return (
+      resource &&
+      ((resource.cost && resource.cost.name === resourceName) ||
+        (resource.gives && resource.gives.name === resourceName))
+    );
+  });
+
+  const cost = cooldowns[cooldown.name].resource.cost.amount(
+    cooldown,
+    timeline
+  );
+
+  const recharge = cost ? resource.rechargeAmount : 1;
+
+  console.log('debug');
+  if (!uses.length) return (cost / recharge) * resource.recharge;
 
   const rightIndex = uses.findIndex((_, i) => uses[i] && uses[i].time > guess);
 
@@ -35,7 +82,7 @@ export default function closestResource(
 
   const leftGuess =
     left.time +
-    ((cost - leftResource) / resource.rechargeAmount) * resource.recharge -
+    ((cost - leftResource) / recharge) * resource.recharge -
     (left.time % resource.recharge);
   console.log(getResource(left, resourceName, timeline));
   console.log(guess);
@@ -45,10 +92,8 @@ export default function closestResource(
 
   const rightGuess = right
     ? right.time -
-      ((cost - rightResource) / resource.rechargeAmount - 1) *
-        resource.recharge -
-      ((((cost - rightResource) / resource.rechargeAmount) * right.time) %
-        resource.recharge) -
+      ((cost - rightResource) / recharge - 1) * resource.recharge -
+      ((((cost - rightResource) / recharge) * right.time) % resource.recharge) -
       100
     : Infinity;
   console.log('right guess', rightGuess);
@@ -56,6 +101,6 @@ export default function closestResource(
   if (
     Math.abs(leftGuess - cooldown.time) < Math.abs(rightGuess - cooldown.time)
   )
-    return leftGuess;
+    return Math.max(leftGuess, -50);
   else return rightGuess;
-}
+}*/

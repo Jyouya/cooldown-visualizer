@@ -80,5 +80,22 @@
       "Medica II",
       "Regen"
     ]
+  },
+  "SCH": {
+    "name": "Scholar",
+    "img": "./icons/SCH.png",
+    "role": "healer",
+    "cooldowns": [
+      "Aetherflow",
+      "Lustrate",
+      "Excogitation",
+      "Indomitability",
+      "Sacred Soil",
+      "Energy Drain",
+      "Deployment Tactics",
+      "Emergency Tactics",
+      "Recitation",
+      "Dissipation"
+    ]
   }
 }

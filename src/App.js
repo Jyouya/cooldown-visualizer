@@ -46,6 +46,11 @@ class App extends React.Component {
         enabled: true,
         job: 'WHM',
         cooldowns: []
+      },
+      {
+        enabled: true,
+        job: 'SCH',
+        cooldowns: []
       }
     ],
     encounterDuration: 60000,
@@ -165,13 +170,12 @@ class App extends React.Component {
   }
 
   checkResourceAvailability(timeline, target, time) {
+    const resource = cooldowns[target.name].resource;
     return (
-      cooldowns[target.name].resource &&
-      getResource(
-        { ...target, time },
-        cooldowns[target.name].resource.cost.resource,
-        timeline
-      ) < cooldowns[target.name].resource.cost.fn({ ...target, time })
+      resource &&
+      resource.cost &&
+      getResource({ ...target, time }, resource.cost.name, timeline) <
+        resource.cost.amount({ ...target, time }, timeline)
     );
   }
 
@@ -206,6 +210,7 @@ class App extends React.Component {
     after && after();
   };
 
+  // TODO: cds that are depended on by others (e.g. Aetherflow) need to cascade their deletion
   removeCooldown = (member, id, after) => {
     const party = [...this.state.party];
 
@@ -216,8 +221,10 @@ class App extends React.Component {
     after && after();
   };
 
+  // TODO: When moving aetherflow, dependant abilities may need to be removed
+  // ** Rather than removing, consider giving them a red border to show that they're
+  // ** unavailable
   moveCooldown = (member, id, time, after) => {
-    // ! when adding times before 0, this will need to be changed to the start of the timeline
     if (time < this.state.startOfTime) time = this.state.startOfTime;
     if (time > this.state.encounterDuration - 100)
       time = this.state.encounterDuration - 100;
@@ -238,7 +245,7 @@ class App extends React.Component {
 
     const recast = cooldowns[target.name].recast;
 
-    // ! Does not check if the new time it moves to is available
+    // // ! Does not check if the new time it moves to is available
     if (unavailable) {
       if (
         (time > unavailable.time &&
@@ -253,13 +260,14 @@ class App extends React.Component {
     if (this.checkResourceAvailability(timeline, target, time)) {
       time = closestResource(
         target,
-        cooldowns[target.name].resource.cost.resource,
+        cooldowns[target.name].resource.cost.name,
         timeline,
         target.time
       );
       timeStack.push(time);
     }
 
+    // Validate the new position, if not, find one that is valid
     timeStack.pop();
     while (timeStack.length > 0) {
       if (

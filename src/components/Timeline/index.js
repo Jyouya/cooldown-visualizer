@@ -112,28 +112,30 @@ class Timeline extends React.Component {
     // Determine the 'time' of the click
     let time = this.getTime(event);
 
-    console.log(time);
-
-    // TODO: consider charges for availability (e.g. lilies)
+    // TODO: consider charges for availability (e.g. consolation)
 
     // List cooldowns which are unavailable
-    const unavailable = this.represents.filter(
-      cdName =>
+    const unavailable = this.represents.filter(cdName => {
+      const resource = cooldowns[cdName].resource;
+      return (
         this.props.cooldowns.find(
           cd =>
             cd.name === cdName &&
             Math.abs(time - cd.time) < cooldowns[cdName].recast
         ) ||
-        (cooldowns[cdName].resource &&
+        (resource &&
+          resource.cost &&
           getResource(
             dummyCooldown(this.props.raw, cdName, time),
-            cooldowns[cdName].resource.cost.resource,
+            resource.cost.name,
             this.props.raw
           ) <
-            cooldowns[cdName].resource.cost.fn(
-              dummyCooldown(this.props.raw, cdName, time)
+            resource.cost.amount(
+              dummyCooldown(this.props.raw, cdName, time),
+              this.props.raw
             ))
-    );
+      );
+    });
 
     const { active, activeIds } = this.getActive(time);
 
@@ -171,20 +173,20 @@ class Timeline extends React.Component {
           >
             <img src={cooldowns[cooldown].img} alt="" />
             <span>{cooldown}</span>
-            {cooldowns[cooldown].resource ? (
+            {cooldowns[cooldown].resource &&
+            cooldowns[cooldown].resource.cost ? (
               <span className="resource-info">
                 <span
                   className="symbol"
                   role="img"
-                  aria-label={cooldowns[cooldown].resource.cost.resource}
+                  aria-label={cooldowns[cooldown].resource.cost.name}
                 >
-                  {resources[cooldowns[cooldown].resource.cost.resource].symbol}
-                  :{' '}
+                  {resources[cooldowns[cooldown].resource.cost.name].symbol}:{' '}
                 </span>
                 {Math.floor(
                   getResource(
                     dummyCooldown(this.props.raw, cooldown, time),
-                    cooldowns[cooldown].resource.cost.resource,
+                    cooldowns[cooldown].resource.cost.name,
                     this.props.raw
                   )
                 )}

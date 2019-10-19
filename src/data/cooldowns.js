@@ -1,3 +1,5 @@
+import * as functions from './costFunctions';
+
 export default {
   Camouflage: {
     img: './icons/camouflage.png',
@@ -50,19 +52,19 @@ export default {
     img: './icons/sheltron.png',
     duration: 600,
     recast: 500,
-    resource: { cost: { resource: 'oath', fn: instance => 50 } }
+    resource: { cost: { name: 'oath', amount: instance => 50 } }
   },
   Cover: {
     img: './icons/cover.png',
     duration: 1200,
     recast: 12000,
-    resource: { cost: { resource: 'oath', fn: instance => 50 } }
+    resource: { cost: { name: 'oath', amount: instance => 50 } }
   },
   Intervention: {
     img: './icons/intervention.png',
     duration: 600,
     recast: 1000,
-    resource: { cost: { resource: 'oath', fn: instance => 50 } }
+    resource: { cost: { name: 'oath', amount: instance => 50 } }
   },
   'Passage of Arms': {
     img: './icons/passage_of_arms.png',
@@ -197,7 +199,7 @@ export default {
     raid: true,
     heal: true,
     gcd: true,
-    resource: { cost: { resource: 'lily', fn: instance => 1 } }
+    resource: { cost: { name: 'lily', amount: instance => 1 } }
   },
   'Afflatus Rapture': {
     img: './icons/afflatus_rapture.png',
@@ -206,7 +208,7 @@ export default {
     raid: true,
     heal: true,
     gcd: true,
-    resource: { cost: { resource: 'lily', fn: instance => 1 } }
+    resource: { cost: { name: 'lily', amount: instance => 1 } }
   },
   Medica: {
     img: './icons/medica.png',
@@ -231,5 +233,92 @@ export default {
     raid: true,
     heal: true,
     gcd: true
+  },
+  Aetherflow: {
+    img: './icons/aetherflow.png',
+    duration: 0,
+    recast: 6000,
+    raid: true, // flagged as true, since editing schs raid cds would be tedious without it
+    resource: { gives: { name: 'aetherflow', amount: 3 } }
+  },
+  Lustrate: {
+    img: './icons/lustrate.png',
+    duration: 0,
+    recast: 100,
+    raid: true,
+    heal: true,
+    resource: {
+      cost: { name: 'aetherflow', amount: instance => 1 },
+      gives: { name: 'fairy', amount: 10 }
+    }
+  },
+  Excogitation: {
+    img: './icons/excogitation.png',
+    duration: 4500,
+    recast: 4500,
+    raid: true,
+    heal: true,
+    // TODO: have cost.amount check if it's in recitation
+    resource: {
+      cost: { name: 'aetherflow', amount: functions.aetherflowCost },
+      gives: { name: 'fairy', amount: 10 }
+    }
+  },
+  Indomitability: {
+    img: './icons/indomitability.png',
+    duration: 0,
+    recast: 3000,
+    raid: true,
+    heal: true,
+    resource: {
+      cost: { name: 'aetherflow', amount: functions.aetherflowCost },
+      gives: { name: 'fairy', amount: 10 }
+    }
+  },
+  'Sacred Soil': {
+    img: './icons/sacred_soil.png',
+    duration: 1500,
+    recast: 3000,
+    raid: true,
+    heal: true,
+    resource: {
+      cost: { name: 'aetherflow', amount: instance => 1 },
+      gives: { name: 'fairy', amount: 10 }
+    }
+  },
+  'Energy Drain': {
+    img: './icons/energy_drain.png',
+    duration: 0,
+    recast: 300,
+    resource: {
+      cost: { name: 'aetherflow', amount: instance => 1 },
+      gives: { name: 'fairy', amount: 10 }
+    }
+  },
+  'Deployment Tactics': {
+    img: './icons/deployment_tactics.png',
+    duration: 0,
+    recast: 12000,
+    raid: true
+  },
+  'Emergency Tactics': {
+    img: './icons/emergency_tactics.png',
+    duration: 1500,
+    recast: 1500,
+    raid: true
+  },
+  Recitation: {
+    img: './icons/recitation.png',
+    duration: 1500,
+    recast: 9000,
+    raid: true,
+    modifiesCostOf: { abilities: ['Excogitation', 'Indomitability'] }
+  },
+  Dissipation: {
+    img: './icons/dissipation.png',
+    duration: 3000,
+    recast: 18000,
+    raid: true,
+    resource: { gives: { name: 'aetherflow', amount: 3 } }
   }
 };
