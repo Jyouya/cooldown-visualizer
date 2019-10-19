@@ -1,4 +1,5 @@
 import * as functions from './costFunctions';
+import getResource from '../utils/getResource';
 
 export default {
   Camouflage: {
@@ -319,6 +320,45 @@ export default {
     duration: 3000,
     recast: 18000,
     raid: true,
-    resource: { gives: { name: 'aetherflow', amount: 3 } }
+    pet: true,
+    resource: { gives: { name: 'aetherflow', amount: 3 } },
+    channel: 'pet'
+  },
+  'Whispering Dawn': {
+    img: './icons/whispering_dawn.png',
+    duration: 2100,
+    recast: 6000,
+    heal: true,
+    raid: true,
+    pet: true
+  },
+  'Fey Illumination': {
+    img: './icons/fey_illumination.png',
+    duration: 2000,
+    recast: 12000,
+    raid: true,
+    pet: true
+  },
+  Aetherpact: {
+    img: './icons/aetherpact.png',
+    duration: 300,
+    recast: 300,
+    resource: {
+      cost: {
+        name: 'fairy',
+        amount: instance => Math.floor((instance.duration || 300) / 300) * 10
+      }
+    },
+    channel: 'pet',
+    variable: true,
+    raid: true,
+    heal: true,
+    pet: true,
+    minMax: (time, timeline) => [
+      300,
+      Math.floor(
+        getResource({ name: 'Aetherpact', time }, 'fairy', timeline) / 10
+      ) * 300
+    ]
   }
 };

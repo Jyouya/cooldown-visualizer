@@ -16,7 +16,7 @@ export default {
   fairy: {
     max: 100,
     rechargeAmount: 0,
-    recharge: 30000,
+    recharge: Infinity,
     initial: 0,
     symbol: '🧚'
   },

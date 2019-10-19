@@ -38,7 +38,7 @@ function intersects(a, b, c, d, p, q, r, s) {
   } else {
     lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
     gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
-    if (0 < lambda && lambda < 1 && (0 < gamma && gamma < 1)) {
+    if (0 <= lambda && lambda <= 1 && (0 <= gamma && gamma <= 1)) {
       return [a + lambda * (c - a)];
     } else {
       return [];

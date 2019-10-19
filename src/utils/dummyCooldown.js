@@ -3,7 +3,7 @@ import cooldowns from '../data/cooldowns';
 function dummyCooldown(timeline, name, time) {
   const cd = cooldowns[name];
 
-  const duration = cd.variable ? cd.minMax(timeline)[1] : cd.duration;
+  const duration = cd.variable ? cd.minMax(time, timeline)[0] : cd.duration;
 
   return { name, time, duration };
 }

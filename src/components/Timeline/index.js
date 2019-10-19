@@ -133,7 +133,14 @@ class Timeline extends React.Component {
             resource.cost.amount(
               dummyCooldown(this.props.raw, cdName, time),
               this.props.raw
-            ))
+            )) ||
+        this.props.raw.find(
+          cd =>
+            cd.name &&
+            (cooldowns[cdName][cooldowns[cd.name].channel] &&
+              time > cd.time &&
+              time < cd.time + cd.duration)
+        )
       );
     });
 

@@ -1,5 +1,4 @@
 import cooldowns from '../data/cooldowns';
-import resources from '../data/resources';
 
 /**
  * A Cooldown

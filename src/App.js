@@ -162,10 +162,10 @@ class App extends React.Component {
   };
 
   checkRecastCollision(timeline, target, time) {
+    const cooldown = cooldowns[target.name];
     return timeline.find(
       cd =>
-        cd.name === target.name &&
-        Math.abs(time - cd.time) < cooldowns[target.name].recast
+        cd.name === target.name && Math.abs(time - cd.time) < cooldown.recast
     );
   }
 
@@ -176,6 +176,17 @@ class App extends React.Component {
       resource.cost &&
       getResource({ ...target, time }, resource.cost.name, timeline) <
         resource.cost.amount({ ...target, time }, timeline)
+    );
+  }
+
+  checkBusy(timeline, target, time) {
+    const cooldown = cooldowns[target.name];
+    return timeline.find(
+      cd =>
+        cd.name &&
+        (cooldown[cooldowns[cd.name].channel] &&
+          time > cd.time &&
+          time < cd.time + cd.duration)
     );
   }
 
@@ -198,7 +209,7 @@ class App extends React.Component {
     const cd = cooldowns[name];
     const timeline = party[member].cooldowns;
 
-    const duration = cd.variable ? cd.minMax(timeline)[1] : cd.duration;
+    const duration = cd.variable ? cd.minMax(time, timeline)[0] : cd.duration;
 
     party[member].cooldowns = sortedInsert(
       timeline,
@@ -249,11 +260,24 @@ class App extends React.Component {
     if (unavailable) {
       if (
         (time > unavailable.time &&
-          time + recast < this.state.encounterDuration) ||
+          unavailable.time + recast < this.state.encounterDuration) ||
         unavailable.time - recast < this.state.startOfTime
       )
         time = unavailable.time + recast;
       else time = unavailable.time - recast;
+      timeStack.push(time);
+    }
+
+    // check if we (or the pet) is channeling a skill
+    const busy = this.checkBusy(timeline, target, time);
+
+    if (busy) {
+      if (
+        time > busy.time + busy.duration / 2 &&
+        busy.time + busy.duration < this.state.encounterDuration
+      )
+        time = busy.time + busy.duration;
+      else time = busy.time - 1;
       timeStack.push(time);
     }
 
@@ -273,7 +297,8 @@ class App extends React.Component {
       if (
         !(
           this.checkRecastCollision(timeline, target, time) ||
-          this.checkResourceAvailability(timeline, target, time)
+          this.checkResourceAvailability(timeline, target, time) ||
+          this.checkBusy(timeline, target, time)
         )
       ) {
         break;
@@ -308,10 +333,13 @@ class App extends React.Component {
   resizeCooldown = (member, id, duration, after) => {
     const party = [...this.state.party];
     const timeline = party[member].cooldowns;
-    const cooldown = timeline.find(cd => cd.id === id);
-    const [min, max] = cooldowns[cooldown.name].minMax(timeline);
+    const targetIndex = timeline.findIndex(cd => cd.id === id);
+    const cooldown = timeline[targetIndex];
+    timeline[targetIndex] = {};
+    const [min, max] = cooldowns[cooldown.name].minMax(cooldown.time, timeline);
 
     cooldown.duration = Math.min(Math.max(min, duration), max);
+    timeline[targetIndex] = cooldown;
     this.setState({ party });
 
     after && after();
