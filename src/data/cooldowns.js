@@ -404,5 +404,108 @@ export default {
     heal: true,
     gcd: true,
     shield: true
+  },
+  Lightspeed: {
+    img: './icons/lightspeed.png',
+    duration: 1500,
+    recast: 9000,
+    raid: true
+  },
+  'Essential Dignity': {
+    img: './icons/essential_dignity.png',
+    duration: 0,
+    recast: 100,
+    charges: { max: 2, time: 4000 },
+    heal: true,
+    raid: true
+  },
+  'Collective Unconscious': {
+    img: './icons/collective_unconscious.png',
+    duration: 500,
+    recast: 9000,
+    variable: true,
+    raid: true,
+    heal: true,
+    minMax: () => [500, 1800]
+  },
+  'Celestial Opposition': {
+    img: './icons/celestial_opposition.png',
+    duration: 1500,
+    recast: 6000,
+    heal: true,
+    raid: true
+  },
+  'Earthly Star': {
+    img: './icons/earthly_star.png',
+    duration: 1000,
+    recast: 6000,
+    heal: true,
+    raid: true,
+    variable: true,
+    minMax: () => [100, 2000]
+  },
+  Synastry: {
+    img: './icons/synastry.png',
+    duration: 2000,
+    recast: 12000,
+    raid: true
+  },
+  'Celestial Intersection': {
+    img: './icons/celestial_intersection.png',
+    duration: 3000,
+    recast: 3000,
+    heal: true,
+    raid: true,
+    shield: true
+  },
+  Horoscope: {
+    img: './icons/horoscope.png',
+    duration: 1000,
+    recast: 6000,
+    raid: true,
+    heal: true,
+    variable: true,
+    //TODO: Max should be determined by looking for helios in the 10s window
+    minMax: () => [500, 4000]
+  },
+  'Neutral Sect': {
+    img: './icons/neutral_sect.png',
+    duration: 2000,
+    recast: 12000,
+    raid: true
+  },
+  Helios: {
+    img: './icons/helios.png',
+    duration: 0,
+    recast: 200,
+    raid: true,
+    heal: true,
+    gcd: true
+  },
+  'Aspected Helios': {
+    img: './icons/aspected_helios.png',
+    duration: 1500,
+    recast: 200,
+    raid: true,
+    heal: true,
+    gcd: true
+  },
+  'Aspected Benefic': {
+    img: './icons/aspected_benefic.png',
+    duration: 1500,
+    recast: 200,
+    raid: true,
+    heal: true,
+    gcd: true
+  },
+  Swiftcast: {
+    img: './icons/swiftcast.png',
+    duration: 1000,
+    recast: 6000
+  },
+  Surecast: {
+    img: './icons/surecast.png',
+    duration: 600,
+    recast: 12000
   }
 };

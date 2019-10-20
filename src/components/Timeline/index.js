@@ -63,7 +63,7 @@ class Timeline extends React.Component {
         cd =>
           (cd.name === cdName &&
             time > cd.time &&
-            time - cd.time < cooldowns[cdName].duration) ||
+            time - cd.time < cd.duration) ||
           (cd.name === cdName && time >= cd.time && time < cd.time + width)
       );
       if (cd) {

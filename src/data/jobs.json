@@ -78,7 +78,9 @@
       "Presence of Mind",
       "Medica",
       "Medica II",
-      "Regen"
+      "Regen",
+      "Swiftcast",
+      "Surecast"
     ]
   },
   "SCH": {
@@ -103,7 +105,30 @@
       "Summon Seraph",
       "Consolation",
       "Succor",
-      "Adloquium"
+      "Adloquium",
+      "Swiftcast",
+      "Surecast"
+    ]
+  },
+  "AST": {
+    "name": "Astrologian",
+    "img": "./icons/AST.png",
+    "role": "healer",
+    "cooldowns": [
+      "Lightspeed",
+      "Essential Dignity",
+      "Collective Unconscious",
+      "Celestial Opposition",
+      "Earthly Star",
+      "Synastry",
+      "Celestial Intersection",
+      "Horoscope",
+      "Neutral Sect",
+      "Helios",
+      "Aspected Helios",
+      "Aspected Benefic",
+      "Swiftcast",
+      "Surecast"
     ]
   }
 }

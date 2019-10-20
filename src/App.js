@@ -52,6 +52,11 @@ class App extends React.Component {
         enabled: true,
         job: 'SCH',
         cooldowns: []
+      },
+      {
+        enabled: true,
+        job: 'AST',
+        cooldowns: []
       }
     ],
     encounterDuration: 60000,
