@@ -47,7 +47,7 @@ class Menu extends React.Component {
       }
 
       if (bottom) {
-        this.root.style.top = `${clickY - rootH - 5}px`;
+        this.root.style.top = `${Math.max(5, clickY - rootH - 5)}px`;
       }
     });
   };
