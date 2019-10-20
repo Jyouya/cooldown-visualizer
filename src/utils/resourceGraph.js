@@ -1,12 +1,5 @@
 import cooldowns from '../data/cooldowns';
 import resources from '../data/resources';
-// import { glMatrix, mat2, vec2 } from 'gl-matrix';
-
-// glMatrix.setMatrixArrayType(Array);
-
-// export default function(cooldown, resourceName, timeline, guess) {
-//   // createNodes
-// }
 
 /**
  * A Cooldown
@@ -119,18 +112,3 @@ export default function resourceGraph(timeline, resourceName) {
 
   return graph;
 }
-
-// Do they intersect?
-
-// function intersection(x11, y11, x12, y12, x21, y21, x22, y22) {
-//   // TODO: first, test if they intersect
-
-//   const m1 = (y2 - y1) / (x2 - x1);
-//   const m2 = (y4 - y3) / (x4 - x3);
-//   const A = mat2.fromValues(-m1, -m2, 1, 1);
-//   const inverse = mat2.create();
-//   A.invert(inverse);
-//   v = vec2.fromValues(-mx1 + y1, -mx3 + y3);
-//   result = vec2.create();
-//   v.transformMat2(result, v, A);
-// }

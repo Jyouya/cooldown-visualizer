@@ -10,6 +10,7 @@ import resources from '../../data/resources';
 
 import getResource from '../../utils/getResource';
 import dummyCooldown from '../../utils/dummyCooldown';
+import getCharges from '../../utils/getCharges';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -75,6 +76,54 @@ class Timeline extends React.Component {
     return { active, activeIds, activeTimes };
   }
 
+  getUnavailable(name, time) {
+    const resource = cooldowns[name].resource;
+    const requires = cooldowns[name].requires;
+    const charges = cooldowns[name].charges;
+    return (
+      this.props.raw.find(
+        cd =>
+          // Test if it's on cooldown
+          (cd.name === name &&
+            Math.abs(time - cd.time) < cooldowns[name].recast) ||
+          // Test if we (or the pet) are busy
+          (cooldowns[name][cooldowns[cd.name].channel] &&
+            time > cd.time &&
+            time < cd.time + cd.duration)
+      ) ||
+      // Test if we have the resources to use it
+      (resource &&
+        resource.cost &&
+        getResource(
+          dummyCooldown(this.props.raw, name, time),
+          resource.cost.name,
+          this.props.raw
+        ) <
+          resource.cost.amount(
+            dummyCooldown(this.props.raw, name, time),
+            this.props.raw
+          )) ||
+      (requires &&
+        !this.props.raw.find(
+          cd =>
+            cd.name === requires &&
+            cd.time < time &&
+            time < cd.time + cd.duration
+        )) ||
+      (charges &&
+        Array.from(Array(charges.max))
+          .map((_, i) =>
+            this.props.cooldowns.filter(
+              cd =>
+                cd.name === name &&
+                cd.time < time + (charges.max - i) * charges.time &&
+                cd.time > time - i * charges.time
+            )
+          )
+          .find(arr => arr.length === charges.max))
+    );
+  }
+
   handleMouseDown = event => {
     if (this.state.dragId) return; // Already dragging something
     const time = this.getTime(event);
@@ -112,39 +161,12 @@ class Timeline extends React.Component {
     // Determine the 'time' of the click
     let time = this.getTime(event);
 
-    // TODO: consider charges for availability (e.g. consolation)
+    const { active, activeIds } = this.getActive(time);
 
     // List cooldowns which are unavailable
-    const unavailable = this.represents.filter(cdName => {
-      const resource = cooldowns[cdName].resource;
-      return (
-        this.props.cooldowns.find(
-          cd =>
-            cd.name === cdName &&
-            Math.abs(time - cd.time) < cooldowns[cdName].recast
-        ) ||
-        (resource &&
-          resource.cost &&
-          getResource(
-            dummyCooldown(this.props.raw, cdName, time),
-            resource.cost.name,
-            this.props.raw
-          ) <
-            resource.cost.amount(
-              dummyCooldown(this.props.raw, cdName, time),
-              this.props.raw
-            )) ||
-        this.props.raw.find(
-          cd =>
-            cd.name &&
-            (cooldowns[cdName][cooldowns[cd.name].channel] &&
-              time > cd.time &&
-              time < cd.time + cd.duration)
-        )
-      );
-    });
-
-    const { active, activeIds } = this.getActive(time);
+    const unavailable = this.represents.filter(name =>
+      this.getUnavailable(name, time)
+    );
 
     // List cooldowns available for use
     const available = this.represents.filter(
@@ -180,25 +202,33 @@ class Timeline extends React.Component {
           >
             <img src={cooldowns[cooldown].img} alt="" />
             <span>{cooldown}</span>
-            {cooldowns[cooldown].resource &&
-            cooldowns[cooldown].resource.cost ? (
-              <span className="resource-info">
-                <span
-                  className="symbol"
-                  role="img"
-                  aria-label={cooldowns[cooldown].resource.cost.name}
-                >
-                  {resources[cooldowns[cooldown].resource.cost.name].symbol}:{' '}
+            {(cooldowns[cooldown].resource &&
+              (cooldowns[cooldown].resource.cost ? (
+                <span className="resource-info">
+                  <span
+                    className="symbol"
+                    role="img"
+                    aria-label={cooldowns[cooldown].resource.cost.name}
+                  >
+                    {resources[cooldowns[cooldown].resource.cost.name].symbol}:{' '}
+                  </span>
+                  {Math.floor(
+                    getResource(
+                      dummyCooldown(this.props.raw, cooldown, time),
+                      cooldowns[cooldown].resource.cost.name,
+                      this.props.raw
+                    )
+                  )}
                 </span>
-                {Math.floor(
-                  getResource(
-                    dummyCooldown(this.props.raw, cooldown, time),
-                    cooldowns[cooldown].resource.cost.name,
-                    this.props.raw
-                  )
-                )}
-              </span>
-            ) : null}
+              ) : null)) ||
+              (cooldowns[cooldown].charges ? (
+                <span className="resource-info">
+                  <span className="symbol" role="img" aria-label="charges">
+                    ⚡:{' '}
+                  </span>
+                  {getCharges(this.props.cooldowns, cooldown, time)}
+                </span>
+              ) : null)}
           </Option>
         ))}
         {active.length && available.length ? <Separator /> : null}

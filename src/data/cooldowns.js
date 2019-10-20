@@ -360,5 +360,49 @@ export default {
         getResource({ name: 'Aetherpact', time }, 'fairy', timeline) / 10
       ) * 300
     ]
+  },
+  'Fey Blessing': {
+    img: './icons/fey_blessing.png',
+    duration: 0,
+    recast: 6000,
+    resource: { cost: { name: 'fairy', amount: instance => 10 } },
+    raid: true,
+    heal: true,
+    pet: true
+  },
+  'Summon Seraph': {
+    img: './icons/summon_seraph.png',
+    duration: 2000,
+    recast: 12000,
+    raid: true,
+    pet: true
+  },
+  Consolation: {
+    img: './icons/consolation.png',
+    duration: 0,
+    recast: 100,
+    charges: { max: 2, time: 2000 },
+    requires: 'Summon Seraph',
+    raid: true,
+    pet: true,
+    heal: true
+  },
+  Succor: {
+    img: './icons/succor.png',
+    duration: 3000,
+    recast: 200,
+    raid: true,
+    heal: true,
+    gcd: true,
+    shield: true
+  },
+  Adloquium: {
+    img: './icons/adloquium.png',
+    duration: 3000,
+    recast: 200,
+    raid: true,
+    heal: true,
+    gcd: true,
+    shield: true
   }
 };

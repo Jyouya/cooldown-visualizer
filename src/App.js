@@ -10,6 +10,7 @@ import cooldowns from './data/cooldowns';
 import sortedInsert from './utils/sortedInsert';
 import getResource from './utils/getResource';
 import closestResource from './utils/closestResource';
+import closestCharge from './utils/closestCharge';
 import dummyCooldown from './utils/dummyCooldown';
 import './App.css';
 
@@ -190,6 +191,43 @@ class App extends React.Component {
     );
   }
 
+  checkRequirements(timeline, target, time) {
+    const cooldown = cooldowns[target.name];
+    const requires = cooldown.requires;
+    return (
+      !requires ||
+      timeline.find(
+        cd =>
+          cd.name === requires && cd.time < time && time < cd.time + cd.duration
+      )
+    );
+  }
+
+  checkCharges(timeline, target, time) {
+    const cdInfo = cooldowns[target.name];
+    if (!cdInfo.charges) return true;
+    const { max, time: recharge } = cdInfo.charges;
+    return !Array.from(Array(max))
+      .map((_, i) =>
+        timeline.filter(
+          cd =>
+            cd.name === target.name &&
+            cd.time < time + (max - i) * recharge &&
+            cd.time > time - i * recharge
+        )
+      )
+      .find(arr => arr.length === max);
+
+    // return (
+    //   timeline.filter(
+    //     cd =>
+    //       cd.name === target.name &&
+    //       cd.time < time &&
+    //       cd.time > time - cdInfo.charges.time * cdInfo.charges.max
+    //   ).length < cdInfo.charges.max ||
+    // );
+  }
+
   buildJobTimelines = () => {
     const { party } = this.state;
     const filter = this.filterCooldowns(this.state.partyViewFilters);
@@ -251,6 +289,29 @@ class App extends React.Component {
     // Remove target from the party, so we're not comparing it to itself
     timeline[targetIndex] = {};
 
+    const requires = this.checkRequirements(timeline, target, time);
+
+    if (!requires) {
+      // find nearest time when the required skill is active
+      const requirement = cooldowns[target.name].requires;
+      const windows = timeline.filter(({ name }) => name === requirement);
+
+      const windowIndex = windows
+        .map(({ time, duration }, i) =>
+          Math.abs(target.time - time - duration / 2)
+        )
+        .reduce((iMin, x, i, arr) => (x < arr[iMin] ? i : iMin), 0);
+
+      const window = windows[windowIndex];
+      const left = window.time;
+      const right = window.time + window.duration;
+
+      if (Math.abs(left - time) > Math.abs(right - time)) time = right;
+      else time = left;
+
+      timeStack.push(time);
+    }
+
     // Determine if the cooldown is available
     const unavailable = this.checkRecastCollision(timeline, target, time);
 
@@ -265,6 +326,12 @@ class App extends React.Component {
       )
         time = unavailable.time + recast;
       else time = unavailable.time - recast;
+      timeStack.push(time);
+    }
+
+    console.log(this.checkCharges(timeline, target, time))
+    if (!this.checkCharges(timeline, target, time)) {
+      time = closestCharge(target, timeline);
       timeStack.push(time);
     }
 
@@ -298,7 +365,9 @@ class App extends React.Component {
         !(
           this.checkRecastCollision(timeline, target, time) ||
           this.checkResourceAvailability(timeline, target, time) ||
-          this.checkBusy(timeline, target, time)
+          this.checkBusy(timeline, target, time) ||
+          this.checkRequirements(timeline, target, time) ||
+          this.checkCharges(timeline, target, time)
         )
       ) {
         break;
