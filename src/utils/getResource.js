@@ -15,7 +15,6 @@ export default function getResource(cooldown, resourceName, timeline) {
     );
   });
 
-  // console.log('uses: ', uses);
   let charges = resource.initial;
   let chargeTime = 0;
   let currentCharges = charges;
@@ -24,8 +23,6 @@ export default function getResource(cooldown, resourceName, timeline) {
   // * do the sorted insert
   // * test if the new timeline is valid
   // * get the charges at the new cooldown
-
-  // console.log(cooldown);
 
   const test = sortedInsert(uses, cooldown, (a, b) =>
     a.time > b.time ? 1 : -1
@@ -79,12 +76,6 @@ export default function getResource(cooldown, resourceName, timeline) {
   }
 
   const unrounded = Math.min(overcharges, resource.max, currentCharges);
-
-  console.log(
-    resourceName + ': ' + (Math.floor(unrounded / round) * round + finalCost)
-  );
-
-  console.log(overcharges, resource.max, currentCharges);
 
   return Math.floor(unrounded / round) * round + finalCost;
 }

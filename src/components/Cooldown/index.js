@@ -41,7 +41,9 @@ class Cooldown extends React.Component {
           />
         )}
         <div
-          className={`cooldown-active${this.props.grabbing ? ' grabbing' : ''}`}
+          className={
+            'cooldown-active ' + (this.props.grabbing ? ' grabbing ' : '')
+          }
           ref={this.activeRef}
           data-for="cooldown"
           data-tip={JSON.stringify({
@@ -53,19 +55,41 @@ class Cooldown extends React.Component {
             backgroundColor: data.color || 'green'
           }}
         >
+          <div className={'contents'}>
+            {duration ? (
+              <div
+                className={
+                  'icon-wrapper ' +
+                  (this.props.grabbing ? ' grabbing ' : '') +
+                  (data.variable ? 'variable-duration' : '')
+                }
+                data-for="cooldown"
+                data-tip={JSON.stringify({
+                  who: this.props.who,
+                  id: id
+                })}
+              >
+                <img className="icon" src={data.img} alt={name} />
+              </div>
+            ) : null}
+          </div>
           {data.variable ? <Resize {...this.props} /> : null}
         </div>
-
-        <div
-          data-for="cooldown"
-          data-tip={JSON.stringify({
-            who: this.props.who,
-            id: id
-          })}
-          className={`icon-wrapper${this.props.grabbing ? ' grabbing' : ''}`}
-        >
-          <img className="icon" src={data.img} alt={name} />
-        </div>
+        {!duration ? (
+          <div
+            className={
+              'icon-wrapper no-duration ' +
+              (this.props.grabbing ? ' grabbing' : '')
+            }
+            data-for="cooldown"
+            data-tip={JSON.stringify({
+              who: this.props.who,
+              id: id
+            })}
+          >
+            <img className="icon" src={data.img} alt={name} />
+          </div>
+        ) : null}
       </div>
     );
   }

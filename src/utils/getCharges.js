@@ -1,7 +1,6 @@
 import cooldowns from '../data/cooldowns';
 
 export default function getCharges(timeline, abilityName, time) {
-  console.log(...arguments)
   const { max, time: recharge } = cooldowns[abilityName].charges;
   return max - Math.max(
     ...Array.from(Array(max)).map(

@@ -329,7 +329,6 @@ class App extends React.Component {
       timeStack.push(time);
     }
 
-    console.log(this.checkCharges(timeline, target, time))
     if (!this.checkCharges(timeline, target, time)) {
       time = closestCharge(target, timeline);
       timeStack.push(time);

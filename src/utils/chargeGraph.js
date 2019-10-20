@@ -1,5 +1,4 @@
 import cooldowns from '../data/cooldowns';
-import resources from '../data/resources';
 
 /**
  * A Cooldown
@@ -19,7 +18,7 @@ import resources from '../data/resources';
 /**
  * Generates a graph of charge availability over time
  * @param {Cooldown[]} timeline - The raw timeline of all cooldowns from one player
- * @param {string} resourceName - The name of the resource for which to graph the availability
+ * @param {string} cooldownName - The name of the cooldown for which to graph the availability
  * @returns {Point[]} An array of points, with x being the time, and y the amount of resource available
  */
 
@@ -40,13 +39,10 @@ export default function chargeGraph(timeline, cooldownName) {
     charges += (use.time - lastUse + 0.00001) / recharge;
 
     if (charges > max) {
-      // Determine when max charges were hit
-      // (current.charge - prev.charge) / (current.time - prev.time) * (when - current.time) = resource.max - current.charge
-      // when - current.time = (resource.max - current.charge) * (current.time - prev.time) / (current.charge - prev.charge)
       const when =
         ((max - charges) * (use.time - lastUse)) / (charges - prev) + use.time;
 
-      // Add the point where resource caps to our graph
+      // Add the point where charges cap to our graph
       graph.push([when, max]);
 
       charges = max;
@@ -59,7 +55,6 @@ export default function chargeGraph(timeline, cooldownName) {
 
     charges -= 1;
 
-    // const before = [graph];
     const after = [use.time, charges];
 
     // Add amount of charges we have after skill usage only if it has changed
@@ -69,11 +64,8 @@ export default function chargeGraph(timeline, cooldownName) {
   const [prevTime, prevCharge] = graph[graph.length - 1];
   if (prevCharge < max) {
     // Determine when max charges were hit
-    // resource.max - prevCharge = (resource.rechargeAmount / resource.recharge) * (when - prevTime)
-    // when - prevTime = (resource.max - prevCharge) * (resource.recharge / resource.rechargeAmount)
     const when = (max - prevCharge) * recharge + prevTime;
 
-    // Add the point where resource caps to our graph
     graph.push([when, max]);
   } else {
     // If we're already maxed, charges are unchanging, forever

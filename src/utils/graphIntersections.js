@@ -1,5 +1,5 @@
 export default function graphIntersecitons(graph1, graph2) {
-  console.log('graph1: ', graph1, 'graph2: ', graph2);
+  // console.log('graph1: ', graph1, 'graph2: ', graph2);
   const segments1 = getSegments(graph1);
   const segments2 = getSegments(graph2);
   return segments1.flatMap(s1 =>

@@ -35,10 +35,9 @@ export default function closestResource(
   const left = points[low - 1],
     right = points[low];
 
-  // if (low === points.length - 1) return points[points.length - 1];
-  console.log('points: ', points);
+  // console.log('points: ', points);
 
-  console.log('left: ', left, 'right: ', right);
+  // console.log('left: ', left, 'right: ', right);
   if (!left) {
     return right;
   } else if (!right) {
