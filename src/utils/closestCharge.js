@@ -3,7 +3,7 @@ import graphIntersections from './graphIntersections';
 
 export default function closestCharge(cooldown, timeline) {
   const points = graphIntersections(
-    [[0, 1], [360000, 1]],
+    [[-360000, 1], [360000, 1]],
     chargeGraph(timeline, cooldown.name).map(([x, y]) => [Math.round(x), y])
   ).map(x => Math.round(x));
 

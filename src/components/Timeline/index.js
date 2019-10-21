@@ -41,7 +41,7 @@ class Timeline extends React.Component {
 
   pixToTime = px => {
     const height = this.myRef.current.clientHeight;
-    const duration = this.props.encounterDuration;
+    const duration = this.props.encounterDuration - this.props.startOfTime;
     const time = (px / height) * duration;
 
     return Math.floor(time);
@@ -50,7 +50,7 @@ class Timeline extends React.Component {
   getTime = event => {
     const clientY = event.nativeEvent.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
-    return this.pixToTime(timelineY);
+    return this.pixToTime(timelineY) + this.props.startOfTime;
   };
 
   getActive(time) {
@@ -180,11 +180,12 @@ class Timeline extends React.Component {
           <span className="symbol" role="img" aria-label="Time">
             ⏱️{' '}
           </span>
-          {Math.floor(time / 6000)
+          {Math.sign(time) < 0 ? '-' : ''}
+          {Math.floor(Math.abs(time) / 6000)
             .toString()
             .padStart(2, '0') +
             ':' +
-            ((time % 6000) / 100).toFixed(2).padStart(5, '0')}
+            ((Math.abs(time) % 6000) / 100).toFixed(2).padStart(5, '0')}
         </Label>
         <Separator />
         {available.map((cooldown, i) => (
@@ -212,12 +213,15 @@ class Timeline extends React.Component {
                   >
                     {resources[cooldowns[cooldown].resource.cost.name].symbol}:{' '}
                   </span>
-                  {Math.floor(
-                    getResource(
-                      dummyCooldown(this.props.raw, cooldown, time),
-                      cooldowns[cooldown].resource.cost.name,
-                      this.props.raw
-                    )
+                  {Math.max(
+                    Math.floor(
+                      getResource(
+                        dummyCooldown(this.props.raw, cooldown, time),
+                        cooldowns[cooldown].resource.cost.name,
+                        this.props.raw
+                      )
+                    ),
+                    0
                   )}
                 </span>
               ) : null)) ||
@@ -287,6 +291,7 @@ class Timeline extends React.Component {
               who={this.props.who}
               functions={{ ...this.props.functions, getTime: this.getTime }}
               encounterDuration={this.props.encounterDuration}
+              startOfTime={this.props.startOfTime}
               showUnavailable={this.props.showUnavailable}
               grabbing={this.state.dragId === cooldown.id}
             />

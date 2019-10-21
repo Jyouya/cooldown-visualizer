@@ -60,7 +60,7 @@ class App extends React.Component {
       }
     ],
     encounterDuration: 60000,
-    startOfTime: 0,
+    startOfTime: -2500,
     zoom: 12000,
     snap: true,
     snapTo: 25,
@@ -424,11 +424,12 @@ class App extends React.Component {
     const which = this.state.party[cd.who].cooldowns.find(x => x.id === cd.id);
     const time = which && which.time;
     return (
-      Math.floor(time / 6000)
+      (Math.sign(time) < 0 ? '-' : '') +
+      Math.floor(Math.abs(time) / 6000)
         .toString()
         .padStart(2, '0') +
       ':' +
-      ((time % 6000) / 100).toFixed(2).padStart(5, '0')
+      ((Math.abs(time) % 6000) / 100).toFixed(2).padStart(5, '0')
     );
   };
 
@@ -443,7 +444,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { zoom, encounterDuration } = this.state;
+    const { zoom, encounterDuration, startOfTime } = this.state;
     const functions = {
       addCooldown: this.addCooldown,
       removeCooldown: this.removeCooldown,
@@ -467,6 +468,7 @@ class App extends React.Component {
                         timelines={this.buildAbilityTimelines(partyMember)}
                         showUnavailable
                         encounterDuration={encounterDuration}
+                        startOfTime={startOfTime}
                         zoom={zoom}
                         functions={functions}
                       />
@@ -479,6 +481,7 @@ class App extends React.Component {
                     <TimelineContainer
                       timelines={this.buildJobTimelines()}
                       encounterDuration={encounterDuration}
+                      startOfTime={startOfTime}
                       zoom={zoom}
                       functions={functions}
                     />

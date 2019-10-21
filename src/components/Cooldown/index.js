@@ -11,19 +11,18 @@ class Cooldown extends React.Component {
   render() {
     const { name, time, id, duration } = this.props.cooldown;
     const data = cooldownData[name];
-    // const start = (this.props.time / this.props.encounterDuration) * 100 + '%';
     return (
       <div
         className="cooldown"
         style={{
           top:
-            ((time - Math.max(data.recast, duration)) /
-              this.props.encounterDuration) *
+            ((time - this.props.startOfTime - Math.max(data.recast, duration)) /
+              (this.props.encounterDuration - this.props.startOfTime)) *
               100 +
             '%',
           height:
             (Math.max(data.recast, duration) * 200) /
-              this.props.encounterDuration +
+              (this.props.encounterDuration - this.props.startOfTime) +
             '%'
         }}
       >

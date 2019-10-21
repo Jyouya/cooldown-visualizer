@@ -15,7 +15,10 @@ class TimelineContainer extends React.Component {
               className="timeline-container"
               style={{
                 height:
-                  (this.props.encounterDuration / this.props.zoom) * 100 + '%'
+                  ((this.props.encounterDuration - this.props.startOfTime) /
+                    this.props.zoom) *
+                    100 +
+                  '%'
               }}
             >
               {this.props.timelines.map((timeline, i) => (
@@ -26,6 +29,7 @@ class TimelineContainer extends React.Component {
                   cooldowns={timeline.cooldowns}
                   raw={timeline.raw}
                   encounterDuration={this.props.encounterDuration}
+                  startOfTime={this.props.startOfTime}
                   showUnavailable={this.props.showUnavailable}
                   shared={timeline.shared}
                   contextMenuRef={value}
