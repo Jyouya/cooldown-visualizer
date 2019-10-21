@@ -41,7 +41,6 @@ class Resize extends React.Component {
       functions,
       cooldown: { time, id }
     } = this.props;
-    console.log(event);
     const duration =
       functions.getTime({ nativeEvent: event }) - time - this.state.dragOffset;
     functions.resizeCooldown(who, id, duration);

@@ -28,7 +28,8 @@ class Timeline extends React.Component {
     if (Array.isArray(this.props.shared)) this.represents = this.props.shared;
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
 
-    document.addEventListener('mouseup', this.handleMouseUp);
+    document.addEventListener('mouseup', this.handleMouseUp, true);
+    document.addEventListener('mousemove', this.handleMouseMove, true);
   }
 
   componentDidUpdate() {
@@ -37,6 +38,7 @@ class Timeline extends React.Component {
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
 
     document.removeEventListener('mouseup', this.hanldeMouseUp);
+    document.removeEventListener('mousemove', this.handleMouseMove);
   }
 
   pixToTime = px => {
@@ -48,7 +50,9 @@ class Timeline extends React.Component {
   };
 
   getTime = event => {
-    const clientY = event.nativeEvent.clientY;
+    const clientY = event.nativeEvent
+      ? event.nativeEvent.clientY
+      : event.clientY;
     const timelineY = clientY - this.myRef.current.getClientRects()[0].top;
     return this.pixToTime(timelineY) + this.props.startOfTime;
   };
@@ -126,6 +130,7 @@ class Timeline extends React.Component {
 
   handleMouseDown = event => {
     if (this.state.dragId) return; // Already dragging something
+
     const time = this.getTime(event);
     const { active, activeIds, activeTimes } = this.getActive(time);
 
@@ -274,7 +279,7 @@ class Timeline extends React.Component {
         onContextMenu={this.handleContextMenu}
         onMouseDown={this.handleMouseDown}
         // onMouseUp={this.handleMouseUp}
-        onMouseMove={this.handleMouseMove}
+        // onMouseMove={this.handleMouseMove}
       >
         <Link to={`/${this.props.who}`}>
           <img
