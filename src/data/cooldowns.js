@@ -359,7 +359,8 @@ export default {
       Math.floor(
         getResource({ name: 'Aetherpact', time }, 'fairy', timeline) / 10
       ) * 300
-    ]
+    ],
+    detonate: './icons/dissolve_union.png'
   },
   'Fey Blessing': {
     img: './icons/fey_blessing.png',
@@ -442,7 +443,8 @@ export default {
     heal: true,
     raid: true,
     variable: true,
-    minMax: () => [100, 2000]
+    minMax: () => [100, 2000],
+    detonate: './icons/stellar_detonation.png'
   },
   Synastry: {
     img: './icons/synastry.png',
@@ -465,8 +467,16 @@ export default {
     raid: true,
     heal: true,
     variable: true,
-    //TODO: Max should be determined by looking for helios in the 10s window
-    minMax: () => [500, 4000]
+    minMax: (time, timeline) => {
+      const helios = timeline.find(
+        cd =>
+          (cd.name === 'Helios' || cd.name === 'Aspected Helios') &&
+          cd.time > time &&
+          cd.time < time + 1000
+      );
+      return [500, (helios ? helios.time - time : -2000) + 3000];
+    },
+    detonate: './icons/horoscope2.png'
   },
   'Neutral Sect': {
     img: './icons/neutral_sect.png',

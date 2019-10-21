@@ -115,20 +115,20 @@
     "img": "./icons/AST.png",
     "role": "healer",
     "cooldowns": [
-      "Lightspeed",
-      "Essential Dignity",
-      "Collective Unconscious",
-      "Celestial Opposition",
-      "Earthly Star",
-      "Synastry",
-      "Celestial Intersection",
-      "Horoscope",
-      "Neutral Sect",
-      "Helios",
-      "Aspected Helios",
       "Aspected Benefic",
+      "Celestial Intersection",
+      "Neutral Sect",
       "Swiftcast",
-      "Surecast"
+      "Essential Dignity",
+      "Lightspeed",
+      "Earthly Star",
+      "Celestial Opposition",
+      "Collective Unconscious",
+      "Horoscope",
+      "Aspected Helios",
+      "Helios",
+      "Surecast",
+      "Synastry"
     ]
   }
 }

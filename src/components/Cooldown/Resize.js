@@ -1,4 +1,5 @@
 import React from 'react';
+import cooldowns from '../../data/cooldowns';
 import './index.scss';
 
 class Resize extends React.Component {
@@ -19,7 +20,13 @@ class Resize extends React.Component {
 
   handleMouseDown = event => {
     event.stopPropagation();
-    this.setState({ drag: true });
+    const {
+      functions,
+      cooldown: { time, duration }
+    } = this.props;
+    const dragOffset =
+      functions.getTime({ nativeEvent: event }) - (time + duration);
+    this.setState({ drag: true, dragOffset });
   };
 
   handleMouseUp = event => {
@@ -34,12 +41,20 @@ class Resize extends React.Component {
       functions,
       cooldown: { time, id }
     } = this.props;
-    const duration = functions.getTime({ nativeEvent: event }) - time;
+    console.log(event);
+    const duration =
+      functions.getTime({ nativeEvent: event }) - time - this.state.dragOffset;
     functions.resizeCooldown(who, id, duration);
   };
 
   render() {
-    return <div className="resize-handle" onMouseDown={this.handleMouseDown} />;
+    const detonate = cooldowns[this.props.cooldown.name].detonate;
+    return (
+      <div onMouseDown={this.handleMouseDown}>
+        <div className={'resize-handle'} />
+        {detonate ? <img className="icon" src={detonate} alt="" /> : null}
+      </div>
+    );
   }
 }
 
