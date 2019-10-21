@@ -10,7 +10,13 @@ class Cooldown extends React.Component {
   }
   render() {
     const { name, time, id, duration } = this.props.cooldown;
-    const data = cooldownData[name];
+    const baseData = cooldownData[name];
+    const data =
+      (baseData.upgrade && {
+        ...baseData,
+        ...baseData.upgrade(this.props.cooldown, this.props.raw)
+      }) ||
+      baseData;
     return (
       <div
         className="cooldown"

@@ -250,7 +250,7 @@ export default {
     heal: true,
     resource: {
       cost: { name: 'aetherflow', amount: instance => 1 },
-      gives: { name: 'fairy', amount: 10 }
+      gives: { name: 'fairy', amount: functions.fairyGain }
     }
   },
   Excogitation: {
@@ -259,10 +259,9 @@ export default {
     recast: 4500,
     raid: true,
     heal: true,
-    // TODO: have cost.amount check if it's in recitation
     resource: {
       cost: { name: 'aetherflow', amount: functions.aetherflowCost },
-      gives: { name: 'fairy', amount: 10 }
+      gives: { name: 'fairy', amount: functions.fairyGain }
     }
   },
   Indomitability: {
@@ -273,7 +272,7 @@ export default {
     heal: true,
     resource: {
       cost: { name: 'aetherflow', amount: functions.aetherflowCost },
-      gives: { name: 'fairy', amount: 10 }
+      gives: { name: 'fairy', amount: functions.fairyGain }
     }
   },
   'Sacred Soil': {
@@ -284,7 +283,7 @@ export default {
     heal: true,
     resource: {
       cost: { name: 'aetherflow', amount: instance => 1 },
-      gives: { name: 'fairy', amount: 10 }
+      gives: { name: 'fairy', amount: functions.fairyGain }
     }
   },
   'Energy Drain': {
@@ -293,7 +292,7 @@ export default {
     recast: 300,
     resource: {
       cost: { name: 'aetherflow', amount: instance => 1 },
-      gives: { name: 'fairy', amount: 10 }
+      gives: { name: 'fairy', amount: functions.fairyGain }
     }
   },
   'Deployment Tactics': {
@@ -330,14 +329,31 @@ export default {
     recast: 6000,
     heal: true,
     raid: true,
-    pet: true
+    pet: true,
+    upgrade: (instance, timeline) =>
+      timeline.find(
+        cd =>
+          cd.name === 'Summon Seraph' &&
+          cd.time < instance.time &&
+          instance.time < cd.time + 2000
+      ) && { name: "Angel's Whisper", img: "./icons/angel's_whisper.png" }
   },
   'Fey Illumination': {
     img: './icons/fey_illumination.png',
     duration: 2000,
     recast: 12000,
     raid: true,
-    pet: true
+    pet: true,
+    upgrade: (instance, timeline) =>
+      timeline.find(
+        cd =>
+          cd.name === 'Summon Seraph' &&
+          cd.time < instance.time &&
+          instance.time < cd.time + 2000
+      ) && {
+        name: 'Seraphic Illumination',
+        img: './icons/seraphic_illumination.png'
+      }
   },
   Aetherpact: {
     img: './icons/aetherpact.png',

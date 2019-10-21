@@ -37,7 +37,8 @@ export default function getResource(cooldown, resourceName, timeline) {
     if (resourceDetails.cost && resourceDetails.cost.name === resourceName) {
       cost = resourceDetails.cost.amount(use, timeline);
     } else {
-      cost = -resourceDetails.gives.amount;
+      const amount = resourceDetails.gives.amount;
+      cost = -(typeof amount === 'function' ? amount(use, timeline) : amount);
     }
 
     const prevCharges = charges;

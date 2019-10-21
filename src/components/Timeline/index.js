@@ -193,53 +193,66 @@ class Timeline extends React.Component {
             ((Math.abs(time) % 6000) / 100).toFixed(2).padStart(5, '0')}
         </Label>
         <Separator />
-        {available.map((cooldown, i) => (
-          <Option
-            key={i}
-            disabled={unavailable.includes(cooldown)}
-            onClick={() => {
-              this.props.functions.addCooldown(
-                this.props.who,
-                cooldown,
-                time,
-                this.props.contextMenuRef.current.hide
-              );
-            }}
-          >
-            <img src={cooldowns[cooldown].img} alt="" />
-            <span>{cooldown}</span>
-            {(cooldowns[cooldown].resource &&
-              (cooldowns[cooldown].resource.cost ? (
-                <span className="resource-info">
-                  <span
-                    className="symbol"
-                    role="img"
-                    aria-label={cooldowns[cooldown].resource.cost.name}
-                  >
-                    {resources[cooldowns[cooldown].resource.cost.name].symbol}:{' '}
+        {available.map((cooldown, i) => {
+          const baseData = cooldowns[cooldown];
+          const data =
+            (baseData.upgrade && {
+              ...baseData,
+              ...baseData.upgrade(
+                dummyCooldown(this.props.cooldowns, cooldown, time),
+                this.props.raw
+              )
+            }) ||
+            baseData;
+          return (
+            <Option
+              key={i}
+              disabled={unavailable.includes(cooldown)}
+              onClick={() => {
+                this.props.functions.addCooldown(
+                  this.props.who,
+                  cooldown,
+                  time,
+                  this.props.contextMenuRef.current.hide
+                );
+              }}
+            >
+              <img src={data.img} alt="" />
+              <span>{data.name || cooldown}</span>
+              {(cooldowns[cooldown].resource &&
+                (cooldowns[cooldown].resource.cost ? (
+                  <span className="resource-info">
+                    <span
+                      className="symbol"
+                      role="img"
+                      aria-label={cooldowns[cooldown].resource.cost.name}
+                    >
+                      {resources[cooldowns[cooldown].resource.cost.name].symbol}
+                      :{' '}
+                    </span>
+                    {Math.max(
+                      Math.floor(
+                        getResource(
+                          dummyCooldown(this.props.raw, cooldown, time),
+                          cooldowns[cooldown].resource.cost.name,
+                          this.props.raw
+                        )
+                      ),
+                      0
+                    )}
                   </span>
-                  {Math.max(
-                    Math.floor(
-                      getResource(
-                        dummyCooldown(this.props.raw, cooldown, time),
-                        cooldowns[cooldown].resource.cost.name,
-                        this.props.raw
-                      )
-                    ),
-                    0
-                  )}
-                </span>
-              ) : null)) ||
-              (cooldowns[cooldown].charges ? (
-                <span className="resource-info">
-                  <span className="symbol" role="img" aria-label="charges">
-                    ⚡:{' '}
+                ) : null)) ||
+                (cooldowns[cooldown].charges ? (
+                  <span className="resource-info">
+                    <span className="symbol" role="img" aria-label="charges">
+                      ⚡:{' '}
+                    </span>
+                    {getCharges(this.props.cooldowns, cooldown, time)}
                   </span>
-                  {getCharges(this.props.cooldowns, cooldown, time)}
-                </span>
-              ) : null)}
-          </Option>
-        ))}
+                ) : null)}
+            </Option>
+          );
+        })}
         {active.length && available.length ? <Separator /> : null}
         {!active.length
           ? null
@@ -299,6 +312,7 @@ class Timeline extends React.Component {
               startOfTime={this.props.startOfTime}
               showUnavailable={this.props.showUnavailable}
               grabbing={this.state.dragId === cooldown.id}
+              raw={this.props.raw}
             />
           ))}
         </div>

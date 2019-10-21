@@ -48,7 +48,8 @@ export default function resourceGraph(timeline, resourceName) {
     if (details.cost && details.cost.name === resourceName) {
       cost = details.cost.amount(event, timeline);
     } else {
-      cost = -details.gives.amount;
+      const amount = details.gives.amount;
+      cost = -(typeof amount === 'function' ? amount(event, timeline) : amount);
     }
 
     charges +=
