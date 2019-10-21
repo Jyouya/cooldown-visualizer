@@ -43,11 +43,11 @@ class App extends React.Component {
         job: 'PLD',
         cooldowns: []
       },
-      {
-        enabled: true,
-        job: 'WHM',
-        cooldowns: []
-      },
+      // {
+      //   enabled: true,
+      //   job: 'WHM',
+      //   cooldowns: []
+      // },
       {
         enabled: true,
         job: 'SCH',
@@ -57,6 +57,26 @@ class App extends React.Component {
         enabled: true,
         job: 'AST',
         cooldowns: []
+      },
+      {
+        enabled: true,
+        job: 'MNK',
+        cooldowns: []
+      },
+      {
+        enabled: true,
+        job: 'DRG',
+        cooldowns: []
+      },
+      {
+        enabled: true,
+        job: 'BRD',
+        cooldowns: []
+      },
+      {
+        enabled: true,
+        job: 'SMN',
+        cooldowns: []
       }
     ],
     encounterDuration: 60000,
@@ -64,21 +84,6 @@ class App extends React.Component {
     zoom: 12000,
     snap: true,
     snapTo: 25,
-    // globalFilters: {
-    //   raid: {
-    //     enabled: false
-    //   },
-    //   heal: {
-    //     enabled: false
-    //   },
-    //   shield: {
-    //     enabled: false
-    //   },
-    //   img: {
-    //     alisas: 'all',
-    //     enabled: false
-    //   }
-    // },
     partyViewFilters: {
       raid: {
         include: true

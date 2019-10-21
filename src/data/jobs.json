@@ -63,6 +63,7 @@
       "Arm's Length"
     ]
   },
+
   "WHM": {
     "name": "White Mage",
     "img": "./icons/WHM.png",
@@ -130,5 +131,80 @@
       "Surecast",
       "Synastry"
     ]
+  },
+
+  "MNK": {
+    "name": "Monk",
+    "img": "./icons/MNK.png",
+    "role": "melee",
+    "cooldowns": ["Mantra", "Feint", "Arm's Length", "Second Wind", "Bloodbath"]
+  },
+  "DRG": {
+    "name": "Dragoon",
+    "img": "./icons/DRG.png",
+    "role": "melee",
+    "cooldowns": ["Feint", "Arm's Length", "Second Wind", "Bloodbath"]
+  },
+  "NIN": {
+    "name": "Ninja",
+    "img": "./icons/NIN.png",
+    "role": "melee",
+    "cooldowns": [
+      "Shade Shift",
+      "Feint",
+      "Arm's Length",
+      "Second Wind",
+      "Bloodbath"
+    ]
+  },
+  "SAM": {
+    "name": "Samurai",
+    "img": "./icons/SAM.png",
+    "role": "melee",
+    "cooldowns": [
+      "Third Eye",
+      "Feint",
+      "Arm's Length",
+      "Second Wind",
+      "Bloodbath"
+    ]
+  },
+
+  "BRD": {
+    "name": "Bard",
+    "img": "./icons/BRD.png",
+    "role": "ranged",
+    "cooldowns": ["Troubadour", "Nature's Minne", "Arm's Length", "Second Wind"]
+  },
+  "MCH": {
+    "name": "Machinist",
+    "img": "./icons/MCH.png",
+    "role": "ranged",
+    "cooldowns": ["Tactician", "Arm's Length", "Second Wind"]
+  },
+  "DNC": {
+    "name": "Dancer",
+    "img": "./icons/DNC.png",
+    "role": "ranged",
+    "cooldowns": ["Shield Samba", "Curing Waltz", "Arm's Length", "Second Wind"]
+  },
+
+  "BLM": {
+    "name": "Black Mage",
+    "img": "./icons/BLM.png",
+    "role": "caster",
+    "cooldowns": ["Manaward", "Addle", "Swiftcast", "Surecast"]
+  },
+  "SMN": {
+    "name": "Summoner",
+    "img": "./icons/SMN.png",
+    "role": "caster",
+    "cooldowns": ["Everlasting Flight", "Addle", "Swiftcast", "Surecast"]
+  },
+  "RDM": {
+    "name": "Red Mage",
+    "img": "./icons/RDM.png",
+    "role": "caster",
+    "cooldowns": ["Addle", "Swiftcast", "Surecast"]
   }
 }

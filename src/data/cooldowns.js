@@ -517,5 +517,88 @@ export default {
     img: './icons/surecast.png',
     duration: 600,
     recast: 12000
+  },
+
+  Feint: {
+    img: './icons/feint.png',
+    duration: 1000,
+    recast: 9000,
+    raid: true
+  },
+  'Second Wind': {
+    img: './icons/second_wind.png',
+    duration: 0,
+    recast: 12000
+  },
+  Bloodbath: {
+    img: './icons/bloodbath.png',
+    duration: 2000,
+    recast: 9000
+  },
+  Mantra: {
+    img: './icons/mantra.png',
+    duration: 1500,
+    recast: 9000,
+    raid: true
+  },
+  'Shade Shift': {
+    img: './icons/shade_shift.png',
+    duration: 2000,
+    recast: 12000,
+    shield: true
+  },
+  'Third Eye': {
+    img: './icons/third_eye.png',
+    duration: 300,
+    recast: 1500
+  },
+  Troubadour: {
+    img: './icons/troubadour.png',
+    duration: 1500,
+    recast: 18000,
+    raid: true
+  },
+  "Nature's Minne": {
+    img: "./icons/nature's_minne.png",
+    duration: 1500,
+    recast: 9000,
+    raid: true
+  },
+  Tactician: {
+    img: './icons/tactician.png',
+    duration: 1500,
+    recast: 18000,
+    raid: true
+  },
+  'Curing Waltz': {
+    img: './icons/curing_waltz.png',
+    duration: 0,
+    recast: 6000,
+    raid: true,
+    heal: true
+  },
+  'Shield Samba': {
+    img: './icons/shield_samba.png',
+    duration: 1500,
+    recast: 18000,
+    raid: true
+  },
+  Addle: {
+    img: './icons/addle.png',
+    duration: 1000,
+    recast: 9000,
+    raid: true
+  },
+  Manaward: {
+    img: './icons/manaward.png',
+    duration: 2000,
+    recast: 12000,
+    shield: true
+  },
+  'Everlasting Flight': {
+    img: './icons/everlasting_flight.png',
+    duration: 2000,
+    recast: 12000,
+    raid: true
   }
 };
