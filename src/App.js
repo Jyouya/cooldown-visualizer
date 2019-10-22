@@ -1,8 +1,13 @@
 import React from 'react';
-import TimelineContainer from './components/TimelineContainer';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import ReactToolTip from 'react-tooltip';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync';
 import { Menu as ContextMenu, Context } from './components/ContextMenu';
+
+import TimelineContainer from './components/TimelineContainer';
+import EncounterTimeline from './components/EncounterTimeline';
+import Mechanic from './components/Mechanic';
+import EncounterOverlay from './components/EncounterOverlay';
 
 import jobs from './data/jobs';
 import cooldowns from './data/cooldowns';
@@ -11,8 +16,9 @@ import sortedInsert from './utils/sortedInsert';
 import getResource from './utils/getResource';
 import closestResource from './utils/closestResource';
 import closestCharge from './utils/closestCharge';
-import dummyCooldown from './utils/dummyCooldown';
-import './App.css';
+import timestamp from './utils/timestamp';
+// import dummyCooldown from './utils/dummyCooldown';
+import './App.scss';
 
 class App extends React.Component {
   constructor(props) {
@@ -79,7 +85,269 @@ class App extends React.Component {
         cooldowns: []
       }
     ],
-    encounterDuration: 60000,
+    encounter: {
+      duration: 63500,
+      startOfTime: -2500,
+      mechanics: {
+        'Doomvoid Cleaver': {
+          style: { color: 'yellow' },
+          description:
+            "Narrow Cone AoE's to all players; must avoid clipping; spawns 8 Nyxes@Nyx after damage"
+        },
+        'Doomvoid Slicer': {
+          style: { color: 'green' },
+          description:
+            'Donut shaped AoE with safe area under the boss; spawns 8 Nyxes@Nyx after AoE'
+        },
+        'Doomvoid Guillotine': {
+          style: { color: 'green' },
+          description:
+            "Big Line AoE through the boss's front and back; spawns 8 Nyxes@Nyx after AoE"
+        },
+        Nyx: {
+          style: { color: 'purple' },
+          description:
+            'Spawnd by Doomvoid spells; cannot be targetted; touching inflicts Diabolic Curse and Damage Down debuffs'
+        },
+        'Dark Fire III': {
+          style: { color: 'cadetblue' },
+          description: 'Circle AoE on random players'
+        },
+        'Spell-in-Waiting': {
+          style: { color: '#1A5276' },
+          description: 'Delays next spell cast'
+        },
+        'Unholy Darkness': {
+          style: { color: 'cadetblue' },
+          description: 'Stacking AoE on a random player'
+        },
+        'Punishing Ray': {
+          style: { color: 'yellow' },
+          description:
+            '8 dark meteor circles spawn; requires all players inside every circle'
+        },
+        Shadowflame: {
+          style: { color: 'orange' },
+          description: 'Tankbuster hits both tanks'
+        },
+        'Hell Wind': {
+          style: { color: 'cadetblue' },
+          description: 'Brings target player to 1 HP'
+        },
+        Entropy: {
+          style: { color: 'red' },
+          description: 'High raid damage'
+        },
+        Shadoweye: {
+          style: { color: '#1A5276' },
+          description: 'Petrifies any player looking toward the target'
+        },
+        'Hand of Erebos': {
+          style: { color: '#1A5276' },
+          description:
+            'Boss tethers to The Hand of Erebos and readies either @Empty_Rage or @Empty_Hate'
+        },
+        'Empty Rage': {
+          style: { color: 'green' },
+          description:
+            'Huge AoE around Hand of Erebos; indicated by Orange Tether'
+        },
+        'Empty Hate': {
+          style: { color: 'red' },
+          description:
+            'Knockback with mid raid damage; indicated by Black Tether'
+        },
+        Equillibrium: {
+          style: { color: '#1A5276' },
+          description:
+            '4 players marked with Darkness, 4 marked with light; make pairs of light and darkness'
+        },
+        Flare: {
+          style: { color: 'cadetblue' },
+          description: 'Proximity-based damage from target'
+        },
+        Quietus: {
+          style: { color: 'red' },
+          description: 'High raid damage'
+        },
+        'Cycle of Retribution': {
+          style: { color: '#1A5276' },
+          description:
+            'A combination of Doomvoid Slicer@Doomvoid_Slicer > Cleaver@Doomvoid_Cleaver > Guillotine@Doomvoid_Guillotine'
+        },
+        'Cycle of Chaos': {
+          style: { color: '#1A5276' },
+          description:
+            'A combination of Doomvoid Guillotine@Doomvoid_Guillotine > Slicer@Doomvoid_Slicer > Cleaver@Doomvoid_Cleaver'
+        }
+      },
+      timeline: [
+        // { time: 0, phase: 1, text: ''},
+        { time: 0, text: ['Pull'] },
+        { time: 900, text: ['Doomvoid Cleaver'] },
+        { time: 2400, text: ['Unholy Darkness'] },
+        { time: 3000, text: ['Doomvoid Slicer', 'or', 'Doomvoid Guillotine'] },
+        { time: 4200, text: ['Dark Fire III', 'x4'] },
+        [
+          { time: 5800, text: ['Spell-in-Waiting'] },
+          { time: 5800, text: ['Punishing Ray', 'appears'] }
+        ],
+        { time: 6100, text: ['Unholy Darkness', '(delayed)'] },
+        { time: 6800, text: ['Punishing Ray', 'resolves'] },
+        { time: 7100, text: ['Spell-in-Waiting'] },
+        { time: 7400, text: ['Dark Fire III', 'x4 (delayed)'] },
+        { time: 8400, text: ['Spell-in-Waiting'] },
+        { time: 8800, text: ['Shadoweye', '(delayed)'] },
+        { time: 9400, text: ['Dark Fire III', 'x4 resolves'] },
+        { time: 10400, text: ['Hell Wind', 'x2'] },
+        { time: 10500, text: ['Unholy Darkness', '+', 'Shadoweye', 'resolve'] },
+        { time: 11900, text: ['Shadowflame'] },
+        { time: 13100, text: ['Entropy'] },
+
+        [
+          { time: 14100, text: ['Hand of Erebos'] },
+          { time: 14100, text: ['Empty Rage'] }
+        ],
+        { time: 14600, text: ['Doomvoid Guillotine'] },
+        { time: 15400, text: ['Doomvoid Slicer'] },
+        [
+          { time: 16200, text: ['Hand of Erebos'] },
+          { time: 16200, text: ['Empty Hate'] }
+        ],
+        { time: 17300, text: ['Doomvoid Cleaver'] },
+        { time: 18800, text: ['Shadowflame'] },
+        { time: 20000, text: ['Entropy'] },
+
+        { time: 20600, text: ['Spell-in-Waiting'] },
+        { time: 20900, text: ['Hell Wind', 'x2 (delayed)'] },
+        { time: 22300, text: ['Flare', 'x3'] },
+        { time: 22700, text: ['Spell-in-Waiting'] },
+        { time: 23100, text: ['Shadoweye', '(delayed)'] },
+        { time: 23500, text: ['Punishing Ray', 'appears'] },
+        { time: 24100, text: ['Hell Wind', 'x2 resolves'] },
+        { time: 24700, text: ['Punishing Ray', '+', 'Shadoweye', 'resolve'] },
+        { time: 25900, text: ['Shadowflame'] },
+        { time: 27000, text: ['Entropy'] },
+
+        { time: 28100, text: ['Equillibrium'] },
+        { time: 28300, text: ['Doomvoid Cleaver'] },
+        { time: 29300, text: ['Unholy Darkness'] },
+        { time: 30100, text: ['Doomvoid Slicer', 'or', 'Doomvoid Guillotine'] },
+        { time: 32800, text: ['Shadowflame'] },
+        { time: 33900, text: ['Entropy'] },
+
+        { time: 34600, text: ['Spell-in-Waiting'] },
+        { time: 34900, text: ['Flare', 'x3 (delayed)'] },
+        [
+          { time: 35600, text: ['Hand of Erebos'] },
+          { time: 35600, text: ['Empty Rage', 'or', 'Empty Hate'] }
+        ],
+        { time: 36000, text: ['Spell-in-Waiting'] },
+        { time: 36300, text: ['Unholy Darkness', '(delayed)'] },
+        { time: 37300, text: ['Spell-in-Waiting'] },
+        { time: 37600, text: ['Flare', 'x3 (delayed)'] },
+        { time: 37900, text: ['1st', 'Flare', 'x3 resolves'] },
+        { time: 38500, text: ['Unholy Darkness', 'resolves'] },
+        { time: 39800, text: ['Shadowflame'] },
+        { time: 40700, text: ['Spell-in-Waiting'] },
+        { time: 41000, text: ['Shadoweye', 'x2 (delayed)'] },
+        { time: 42000, text: ['Spell-in-Waiting'] },
+        { time: 42300, text: ['Dark Fire III', 'x4 (delayed)'] },
+        { time: 42400, text: ['Flare', 'x3', '+', 'Shadoweye', 'x2 resolve'] },
+        { time: 43600, text: ['Dark Fire III', 'x4 resolves'] },
+        { time: 43800, text: ['Punishing Ray', 'appears'] },
+        { time: 44300, text: ['Equillibrium'] },
+        { time: 44900, text: ['Punishing Ray', 'resolves'] },
+        { time: 45300, text: ['Doomvoid Cleaver'] },
+        { time: 46800, text: ['Shadowflame'] },
+
+        { time: 49800, text: ['Quietus'] },
+        [
+          {
+            time: 50600,
+            text: ['Cycle of Retribution', 'or', 'Chaos@Cycle_of_Chaos']
+          },
+          {
+            time: 50600,
+            text: [
+              'Slicer@Doomvoid_Slicer',
+              '|',
+              'Guillotine@Doomvoid_Guillotine'
+            ]
+          }
+        ],
+        {
+          time: 50900,
+          text: ['Cleaver@Doomvoid_Cleaver', '|', 'Slicer@Doomvoid_Slicer']
+        },
+        {
+          time: 51200,
+          text: [
+            'Guillotine@Doomvoid_Guillotine',
+            '|',
+            'Cleaver@Doomvoid_Cleaver'
+          ]
+        },
+        [
+          {
+            time: 53000,
+            text: ['Cycle of Retribution', 'or', 'Chaos@Cycle_of_Chaos']
+          },
+          {
+            time: 53000,
+            text: [
+              'Slicer@Doomvoid_Slicer',
+              '|',
+              'Guillotine@Doomvoid_Guillotine'
+            ]
+          }
+        ],
+        {
+          time: 53300,
+          text: ['Cleaver@Doomvoid_Cleaver', '|', 'Slicer@Doomvoid_Slicer']
+        },
+        {
+          time: 53600,
+          text: [
+            'Guillotine@Doomvoid_Guillotine',
+            '|',
+            'Cleaver@Doomvoid_Cleaver'
+          ]
+        },
+        { time: 55700, text: ['Quietus'] },
+        [
+          {
+            time: 56700,
+            text: ['Cycle of Retribution', 'or', 'Chaos@Cycle_of_Chaos']
+          },
+          {
+            time: 56700,
+            text: [
+              'Slicer@Doomvoid_Slicer',
+              '|',
+              'Guillotine@Doomvoid_Guillotine'
+            ]
+          }
+        ],
+        {
+          time: 57000,
+          text: ['Cleaver@Doomvoid_Cleaver', '|', 'Slicer@Doomvoid_Slicer']
+        },
+        {
+          time: 57300,
+          text: [
+            'Guillotine@Doomvoid_Guillotine',
+            '|',
+            'Cleaver@Doomvoid_Cleaver'
+          ]
+        },
+        { time: 59200, text: ['Quietus'] },
+        { time: 60100, text: ['Quietus'] },
+        { time: 61000, text: ['Quietus'] },
+        { time: 63000, text: ['Quietus', '(Enrage)'] }
+      ]
+    },
+    encounterDuration: 63500,
     startOfTime: -2500,
     zoom: 12000,
     snap: true,
@@ -428,14 +696,7 @@ class App extends React.Component {
     const cd = JSON.parse(json);
     const which = this.state.party[cd.who].cooldowns.find(x => x.id === cd.id);
     const time = which && which.time;
-    return (
-      (Math.sign(time) < 0 ? '-' : '') +
-      Math.floor(Math.abs(time) / 6000)
-        .toString()
-        .padStart(2, '0') +
-      ':' +
-      ((Math.abs(time) % 6000) / 100).toFixed(2).padStart(5, '0')
-    );
+    return timestamp(time);
   };
 
   snap(time) {
@@ -459,51 +720,99 @@ class App extends React.Component {
     return (
       <BrowserRouter>
         <Context.Provider value={this.contextRef}>
-          <div className="App">
-            <ContextMenu ref={this.contextRef} />
-            {/* ! Give timeline-area a decorative child to do the blur effect */}
-            <div className="timeline-area">
-              <Switch>
-                <Route
-                  path="/:partyMember"
-                  render={({ match }) => {
-                    const { partyMember } = match.params;
-                    return (
-                      <TimelineContainer
-                        timelines={this.buildAbilityTimelines(partyMember)}
-                        showUnavailable
-                        encounterDuration={encounterDuration}
-                        startOfTime={startOfTime}
-                        zoom={zoom}
-                        functions={functions}
-                      />
-                    );
-                  }}
-                />
-                <Route
-                  path="/"
-                  render={() => (
-                    <TimelineContainer
-                      timelines={this.buildJobTimelines()}
-                      encounterDuration={encounterDuration}
-                      startOfTime={startOfTime}
-                      zoom={zoom}
-                      functions={functions}
+          <ScrollSync>
+            <div className="App">
+              <ContextMenu ref={this.contextRef} />
+              <ScrollSyncPane>
+                <div className="timeline-area">
+                  <Switch>
+                    <Route
+                      path="/:partyMember"
+                      render={({ match }) => {
+                        const { partyMember } = match.params;
+                        return (
+                          <TimelineContainer
+                            timelines={this.buildAbilityTimelines(partyMember)}
+                            showUnavailable
+                            encounterDuration={encounterDuration}
+                            startOfTime={startOfTime}
+                            zoom={zoom}
+                            functions={functions}
+                          />
+                        );
+                      }}
                     />
+                    <Route
+                      path="/"
+                      render={() => (
+                        <TimelineContainer
+                          timelines={this.buildJobTimelines()}
+                          encounterDuration={encounterDuration}
+                          startOfTime={startOfTime}
+                          zoom={zoom}
+                          functions={functions}
+                        />
+                      )}
+                    />
+                  </Switch>
+                  <ReactToolTip
+                    id="cooldown"
+                    place="right"
+                    getContent={this.getTimestamp}
+                    overridePosition={(_, __, currentTarget, node) => {
+                      const { right, top } = currentTarget.getClientRects()[0];
+                      return {
+                        top: top - node.clientHeight / 2,
+                        left: right
+                      };
+                    }}
+                  />
+                </div>
+              </ScrollSyncPane>
+              <ScrollSyncPane>
+                <EncounterTimeline
+                  encounter={this.state.encounter}
+                  {...{ zoom, encounterDuration, startOfTime }}
+                />
+                <ReactToolTip
+                  id="mechanic"
+                  place="right"
+                  effect="solid"
+                  type="info"
+                  delayHide={300}
+                  delayShow={300}
+                  delayUpdate={300}
+                  getContent={mechanic => (
+                    <div>
+                      {mechanic &&
+                        this.state.encounter.mechanics[mechanic].description
+                          .split(/\s(?=\w*@)|(?<=@\w+)\s/)
+                          .map((str, i) => {
+                            const match = str.match(/(\w*)@(\w+)/);
+                            return match ? (
+                              <Mechanic
+                                encounter={this.state.encounter}
+                                name={match[2]}
+                                alt={match[1] || null}
+                                key={i}
+                              />
+                            ) : (
+                              (i > 0 ? ' ' : '') +
+                                str +
+                                (i <
+                                this.state.encounter.mechanics[mechanic]
+                                  .description.length -
+                                  1
+                                  ? ' '
+                                  : '')
+                            );
+                          })}
+                    </div>
                   )}
                 />
-              </Switch>
-              <ReactToolTip
-                id="cooldown"
-                place="right"
-                getContent={this.getTimestamp}
-                overridePosition={(_, __, currentTarget, node) => {
-                  const { right, top } = currentTarget.getClientRects()[0];
-                  return { top: top - node.clientHeight / 2, left: right };
-                }}
-              />
+              </ScrollSyncPane>
             </div>
-          </div>
+          </ScrollSync>
         </Context.Provider>
       </BrowserRouter>
     );

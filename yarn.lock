@@ -8486,6 +8486,11 @@ react-scripts@3.2.0:
   optionalDependencies:
     fsevents "2.0.7"
 
+react-scroll-sync@^0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/react-scroll-sync/-/react-scroll-sync-0.7.0.tgz#935387b2b877dcc7032ad9410155b0b7d7951048"
+  integrity sha512-PL4MWceh596EA+z5zLPYYB7HfctjShh+XTOZ5FgZnxwA66g1Fnx0kK0DMjma23cqlhXBvYLA7Fnp67afzBwdHA==
+
 react-tooltip@^3.11.1:
   version "3.11.1"
   resolved "https://registry.yarnpkg.com/react-tooltip/-/react-tooltip-3.11.1.tgz#7b4ce48ed26a46e996662b19a2afebbfd483513b"

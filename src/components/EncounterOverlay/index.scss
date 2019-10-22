@@ -1,0 +1,36 @@
+.event-marker {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  color: #ddddddaa;
+  -webkit-text-stroke: 1px #999999aa;
+  font-size: 10px;
+  letter-spacing: 1px;
+  box-sizing: border-box;
+  height: 1px;
+  background: #ddddddaa;
+  border-bottom: 1px solid #999999aa;
+  border-top: 1px solid #999999aa;
+
+  .hover-box {
+    position: relative;
+    top: -5px;
+    height: 11px;
+    width: 100%;
+  }
+
+  .right {
+    text-align: right;
+    right: 0;
+  }
+
+  .left {
+    text-align: left;
+    left: 0;
+  }
+
+  .mechanic-name,
+  .timestamp {
+    top: 3px;
+  }
+}

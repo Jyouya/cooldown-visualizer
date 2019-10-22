@@ -1,0 +1,39 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #09d3ac;
+}
+
+
+.timeline-area {
+  grid-row-start: 2;
+  grid-row-end: span 2;
+  grid-column-start: 2;
+  grid-column-end: span 1;
+  position: relative;
+  overflow-y: scroll;
+
+  // TODO: Get a nice looking, thin scrollbar
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

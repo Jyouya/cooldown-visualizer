@@ -11,6 +11,7 @@ import resources from '../../data/resources';
 import getResource from '../../utils/getResource';
 import dummyCooldown from '../../utils/dummyCooldown';
 import getCharges from '../../utils/getCharges';
+import timestamp from '../../utils/timestamp';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -185,12 +186,7 @@ class Timeline extends React.Component {
           <span className="symbol" role="img" aria-label="Time">
             ⏱️{' '}
           </span>
-          {Math.sign(time) < 0 ? '-' : ''}
-          {Math.floor(Math.abs(time) / 6000)
-            .toString()
-            .padStart(2, '0') +
-            ':' +
-            ((Math.abs(time) % 6000) / 100).toFixed(2).padStart(5, '0')}
+          {timestamp(time)}
         </Label>
         <Separator />
         {available.map((cooldown, i) => {
