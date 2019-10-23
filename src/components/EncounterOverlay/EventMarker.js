@@ -13,24 +13,29 @@ class EventMarker extends React.Component {
         className={'event-marker' + (details ? ' active' : '')}
         style={{ top }}
       >
-        <div className={'mechanic-name' + (mirror ? ' right' : ' left')}>
-          {details
-            ? event.map((event, i) => (
-                <div key={i}>
-                  {event.text
-                    .map((str, i) => {
-                      const match = str.match(/(\w*)@(\w+)/);
-                      return match
-                        ? match[1] || match[2].replace(/_/g, ' ')
-                        : str;
-                    })
-                    .join(' ')}
-                </div>
-              ))
-            : null}
+        <div className="line" />
+        <div className={'mechanic-container' + (mirror ? ' right' : ' left')}>
+          <div className="mechanic-name">
+            {details
+              ? event.map((event, i) => (
+                  <div key={i}>
+                    {event.text
+                      .map((str, i) => {
+                        const match = str.match(/(\w*)@(\w+)/);
+                        return match
+                          ? match[1] || match[2].replace(/_/g, ' ')
+                          : str;
+                      })
+                      .join(' ')}
+                  </div>
+                ))
+              : null}
+          </div>
         </div>
-        <div className={'timestamp' + (mirror ? ' left' : ' right')}>
-          {details ? timestamp(event[0].time, true) : null}
+        <div className={'timestamp-container' + (mirror ? ' left' : ' right')}>
+          <div className="timestamp">
+            {details ? timestamp(event[0].time, true) : null}
+          </div>
         </div>
       </div>
     );
