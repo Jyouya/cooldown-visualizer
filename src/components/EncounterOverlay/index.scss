@@ -2,35 +2,53 @@
   position: absolute;
   width: 100%;
   left: 0;
-  color: #ddddddaa;
-  -webkit-text-stroke: 1px #999999aa;
-  font-size: 10px;
+  color: #ffffffaa;
+  font-size: 11px;
   letter-spacing: 1px;
   box-sizing: border-box;
   height: 1px;
   background: #ddddddaa;
-  border-bottom: 1px solid #999999aa;
-  border-top: 1px solid #999999aa;
+  transition: opacity 0.4s, box-shadow 0.4s, text-shadow 0.4s;
+  opacity: 0.2;
+  // border-bottom: 1px solid #99999944;
+  // border-top: 1px solid #99999944;
 
-  .hover-box {
-    position: relative;
-    top: -5px;
-    height: 11px;
-    width: 100%;
+  &.active {
+    opacity: 0.9;
+    box-shadow: 0 1px 5px 2px #4442;
+    text-shadow: 0 1px 5px #4442;
+    // transition: opacity .5s;
   }
 
   .right {
     text-align: right;
     right: 0;
+    margin-right: 0.5rem;
   }
 
   .left {
     text-align: left;
     left: 0;
+    margin-left: 0.5rem;
   }
 
-  .mechanic-name,
   .timestamp {
-    top: 3px;
+    position: absolute;
+    top: 2px;
+  }
+
+  .mechanic-name {
+    position: absolute;
+    bottom: 2px;
+  }
+}
+
+.encounter-overlay-container {
+  pointer-events: none;
+  grid-row: 2 / span 2;
+  grid-column: 2;
+  overflow: hidden;
+  .encounter-overlay {
+    position: relative;
   }
 }

@@ -2,20 +2,19 @@ import React from 'react';
 import timestamp from '../../utils/timestamp';
 
 class EventMarker extends React.Component {
-  state = { hover: false, mirror: false };
-
   render() {
-    const { mirror, hover } = this.state;
-    const top = this.props.top;
+    const { mirror, details, top } = this.props;
     const event = Array.isArray(this.props.event)
       ? this.props.event
       : [this.props.event];
 
     return (
-      <div className="event-marker" style={{ top }}>
-        <div className="hover-box"></div>
-        <div className={'mechanic-name' + mirror ? ' right' : ' left'}>
-          {hover
+      <div
+        className={'event-marker' + (details ? ' active' : '')}
+        style={{ top }}
+      >
+        <div className={'mechanic-name' + (mirror ? ' right' : ' left')}>
+          {details
             ? event.map((event, i) => (
                 <div key={i}>
                   {event.text
@@ -30,8 +29,8 @@ class EventMarker extends React.Component {
               ))
             : null}
         </div>
-        <div className={'timestamp' + mirror ? ' left' : ' right'}>
-          {hover ? timestamp(event[0].time, true) : null}
+        <div className={'timestamp' + (mirror ? ' left' : ' right')}>
+          {details ? timestamp(event[0].time, true) : null}
         </div>
       </div>
     );

@@ -770,6 +770,12 @@ class App extends React.Component {
                 </div>
               </ScrollSyncPane>
               <ScrollSyncPane>
+                <EncounterOverlay
+                  encounter={this.state.encounter}
+                  {...{ zoom, encounterDuration, startOfTime }}
+                />
+              </ScrollSyncPane>
+              <ScrollSyncPane>
                 <EncounterTimeline
                   encounter={this.state.encounter}
                   {...{ zoom, encounterDuration, startOfTime }}
