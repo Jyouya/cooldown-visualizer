@@ -43,7 +43,6 @@ class EncounterOverlay extends React.Component {
       // Binary search timeline
       const time = this.getTime(event);
 
-      // ! detects element after time instead of closest
       const index = closestIndex(
         timeline,
         { time },
@@ -52,7 +51,7 @@ class EncounterOverlay extends React.Component {
           (Array.isArray(b) ? b[0].time : b.time)
       );
       const e = timeline[index];
-      console.log(Math.abs(time - (Array.isArray(e) ? e[0].time : e.time)));
+      // console.log(Math.abs(time - (Array.isArray(e) ? e[0].time : e.time)));
       if (Math.abs(time - (Array.isArray(e) ? e[0].time : e.time)) < 300)
         shown = index;
       else shown = null;

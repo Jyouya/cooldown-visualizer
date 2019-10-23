@@ -20,7 +20,7 @@ code {
   width: 1366px;
   height: 100vh;
   grid-template-rows: 3rem calc(50% - 3rem) calc(50% - 3rem);
-  grid-template-columns: calc(25% - 2rem) 41rem 25%;
+  grid-template-columns: calc(25% - 2rem) auto 1fr;
   grid-row-gap: 1rem;
   grid-column-gap: 1rem;
   margin: 0 auto;
