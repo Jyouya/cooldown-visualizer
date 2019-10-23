@@ -41,7 +41,7 @@
     .mechanic-container {
       backdrop-filter: blur(5px);
     }
-    
+
     box-shadow: 0 1px 5px 2px #4442;
     text-shadow: 0 1px 5px #444f;
   }
@@ -49,13 +49,19 @@
   .right {
     text-align: right;
     right: 0;
-    margin-right: 0.5rem;
+    .timestamp,
+    .mechanic-name {
+      margin-right: 0.5rem;
+    }
   }
 
   .left {
     text-align: left;
     left: 0;
-    margin-left: 0.5rem;
+    .timestamp,
+    .mechanic-name {
+      margin-left: 0.5rem;
+    }
   }
 
   .timestamp {

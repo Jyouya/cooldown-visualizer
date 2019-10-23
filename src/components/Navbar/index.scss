@@ -1,0 +1,14 @@
+.navbar {
+  grid-row: 1;
+  grid-column: 1 / -1;
+  height: 100%;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+  }
+}

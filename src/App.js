@@ -9,6 +9,8 @@ import EncounterTimeline from './components/EncounterTimeline';
 import Mechanic from './components/Mechanic';
 import EncounterOverlay from './components/EncounterOverlay';
 
+import Navbar from './components/Navbar';
+
 import jobs from './data/jobs';
 import cooldowns from './data/cooldowns';
 
@@ -722,6 +724,7 @@ class App extends React.Component {
         <Context.Provider value={this.contextRef}>
           <ScrollSync>
             <div className="App">
+              <Navbar />
               <ContextMenu ref={this.contextRef} />
               <ScrollSyncPane>
                 <div className="timeline-area">
@@ -759,8 +762,15 @@ class App extends React.Component {
                     id="cooldown"
                     place="right"
                     getContent={this.getTimestamp}
-                    overridePosition={(_, __, currentTarget, node) => {
-                      const { right, top } = currentTarget.getClientRects()[0];
+                    overridePosition={(
+                      { left: l, top: t },
+                      event,
+                      currentTarget,
+                      node
+                    ) => {
+                      const rects = currentTarget.getClientRects();
+                      if (!rects[0]) return { left: l, top: t };
+                      const { right, top } = rects[0];
                       return {
                         top: top - node.clientHeight / 2,
                         left: right
