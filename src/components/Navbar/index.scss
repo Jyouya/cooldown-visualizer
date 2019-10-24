@@ -2,13 +2,31 @@
   grid-row: 1;
   grid-column: 1 / -1;
   height: 100%;
+  position: relative;
+  width: 100%;
+  color: #ddd;
+  display: flex;
+  justify-content: space-between;
+
+  &,
+  &::before {
+    background: linear-gradient(to bottom, #252525, #191919);
+  }
 
   &::before {
-    content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+    content: '';
     height: 100%;
+    left: calc(50% - 50vw);
+    width: 100vw;
+    z-index: -1;
+  }
+
+  .nav {
+    &-center {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
   }
 }

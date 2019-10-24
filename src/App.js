@@ -10,6 +10,7 @@ import Mechanic from './components/Mechanic';
 import EncounterOverlay from './components/EncounterOverlay';
 
 import Navbar from './components/Navbar';
+import Zoom from './components/Zoom';
 
 import jobs from './data/jobs';
 import cooldowns from './data/cooldowns';
@@ -719,12 +720,19 @@ class App extends React.Component {
       moveCooldown: this.moveCooldown,
       resizeCooldown: this.resizeCooldown
     };
+    // TODO: Try to maintain scroll while zooming 
     return (
       <BrowserRouter>
         <Context.Provider value={this.contextRef}>
           <ScrollSync>
             <div className="App">
-              <Navbar />
+              <Navbar>
+                <div className="nav-left"></div>
+                <div className="nav-center">
+                  <Zoom setZoom={value => this.setState({ zoom: value })} />
+                </div>
+                <div className="nav-right"></div>
+              </Navbar>
               <ContextMenu ref={this.contextRef} />
               <ScrollSyncPane>
                 <div className="timeline-area">
