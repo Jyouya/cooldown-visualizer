@@ -1,0 +1,29 @@
+.dropdown-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0 1rem;
+
+  &:hover {
+    background: #fff2;
+  }
+
+  &--label {
+  }
+
+  .menu {
+    background: #191919;
+    position: absolute;
+    top: 100%;
+    left: 0;
+
+    &--option {
+      color: inherit;
+      &__disabled {
+        color: #777;
+      }
+    }
+  }
+}

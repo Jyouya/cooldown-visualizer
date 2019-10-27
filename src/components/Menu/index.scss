@@ -1,0 +1,86 @@
+.menu {
+  position: absolute;
+  display: grid;
+  box-sizing: border-box;
+
+  &.bottom {
+    top: 100%;
+    &.left {
+      right: 0;
+    }
+    &.right {
+      left: 0;
+    }
+  }
+
+  &.side {
+    top: 0;
+    &.left {
+      right: 100%;
+    }
+    &.right {
+      left: 100%;
+    }
+  }
+
+  &--button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 100%;
+    // box-sizing: border-box;
+    padding: 0 1rem;
+    cursor: default;
+
+    &:hover {
+      background: #fff2;
+    }
+  }
+
+  &--item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default;
+    position: relative;
+
+    &:hover {
+      // background: #393939;
+      background: #fff2;
+    }
+
+    padding: 2px 2rem 1px 1.5rem;
+
+    width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+
+    &__disabled {
+      color: #999999;
+      pointer-events: none;
+    }
+
+    &:last-child {
+      padding-bottom: 5px;
+    }
+
+    &:first-child {
+      padding-top: 6px;
+    }
+  }
+
+  &--toggle {
+    &__on {
+      &::before {
+        position: absolute;
+        left: 0.35rem;
+        content: '✔';
+      }
+    }
+  }
+
+  &--arrow {
+    position: absolute;
+    right: 0.5rem;
+  }
+}

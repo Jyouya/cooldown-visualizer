@@ -11,6 +11,8 @@ import EncounterOverlay from './components/EncounterOverlay';
 
 import Navbar from './components/Navbar';
 import Zoom from './components/Zoom';
+import { Radio } from './components/Menu';
+import Settings from './components/Settings';
 
 import jobs from './data/jobs';
 import cooldowns from './data/cooldowns';
@@ -36,6 +38,7 @@ class App extends React.Component {
     }
 
     this.contextRef = React.createRef();
+    this.radio = new Radio();
   }
 
   cooldownId = 0;
@@ -370,13 +373,13 @@ class App extends React.Component {
         exclude: false
       },
       img: {
-        alisas: 'all',
+        alias: 'all',
         include: false
       }
     },
     playerViewFilters: {
       img: {
-        alisas: 'all',
+        alias: 'all',
         include: true
       },
       raid: {
@@ -720,7 +723,7 @@ class App extends React.Component {
       moveCooldown: this.moveCooldown,
       resizeCooldown: this.resizeCooldown
     };
-    // TODO: Try to maintain scroll while zooming 
+    // TODO: Try to maintain scroll while zooming
     return (
       <BrowserRouter>
         <Context.Provider value={this.contextRef}>
@@ -731,7 +734,13 @@ class App extends React.Component {
                 <div className="nav-center">
                   <Zoom setZoom={value => this.setState({ zoom: value })} />
                 </div>
-                <div className="nav-right"></div>
+                <div className="nav-right">
+                  <Settings
+                    radio={this.radio}
+                    settings={this.state}
+                    updateSettings={settings => this.setState(settings)}
+                  />
+                </div>
               </Navbar>
               <ContextMenu ref={this.contextRef} />
               <ScrollSyncPane>

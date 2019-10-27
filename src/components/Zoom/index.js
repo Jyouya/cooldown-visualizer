@@ -12,7 +12,7 @@ class Zoom extends React.Component {
   render() {
     return (
       <>
-        <label>Zoom</label>
+        <label className="zoom-label">Zoom</label>
         <input
           className="horizontal-slider zoom-slider"
           type="range"
@@ -21,7 +21,7 @@ class Zoom extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
         />
-        <label>{this.state.value / 100}s</label>
+        <label className="zoom-readout">{this.state.value / 100}s</label>
       </>
     );
   }

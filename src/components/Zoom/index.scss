@@ -9,7 +9,7 @@
   }
 
   &:hover {
-      background: #888
+    background: #888;
   }
   &::-webkit-slider-thumb {
     appearance: none;
@@ -18,5 +18,15 @@
     border-radius: 3px;
     background: #252525;
     cursor: pointer;
+  }
+}
+
+.zoom {
+  &-label {
+    padding: 0 .5rem;
+  }
+  &-readout {
+    padding: 0 .5rem;
+    width: 4em;
   }
 }
