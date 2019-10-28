@@ -74,7 +74,12 @@ class Cooldown extends React.Component {
                   id: id
                 })}
               >
-                <img className="icon" src={data.img} alt={name} />
+                <img
+                  className="icon"
+                  src={data.img}
+                  alt={name}
+                  draggable="false"
+                />
               </div>
             ) : null}
           </div>
@@ -92,7 +97,7 @@ class Cooldown extends React.Component {
               id: id
             })}
           >
-            <img className="icon" src={data.img} alt={name} />
+            <img className="icon" src={data.img} alt={name} draggable="false" />
           </div>
         ) : null}
       </div>

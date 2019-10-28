@@ -48,12 +48,14 @@ class App extends React.Component {
       {
         enabled: true,
         job: 'GNB',
-        cooldowns: []
+        cooldowns: [],
+        id: 1
       },
       {
         enabled: true,
         job: 'PLD',
-        cooldowns: []
+        cooldowns: [],
+        id: 2
       },
       // {
       //   enabled: true,
@@ -63,32 +65,38 @@ class App extends React.Component {
       {
         enabled: true,
         job: 'SCH',
-        cooldowns: []
+        cooldowns: [],
+        id: 3
       },
       {
         enabled: true,
         job: 'AST',
-        cooldowns: []
+        cooldowns: [],
+        id: 4
       },
       {
         enabled: true,
         job: 'MNK',
-        cooldowns: []
+        cooldowns: [],
+        id: 5
       },
       {
         enabled: true,
         job: 'DRG',
-        cooldowns: []
+        cooldowns: [],
+        id: 6
       },
       {
         enabled: true,
         job: 'BRD',
-        cooldowns: []
+        cooldowns: [],
+        id: 7
       },
       {
         enabled: true,
         job: 'SMN',
-        cooldowns: []
+        cooldowns: [],
+        id: 8
       }
     ],
     encounter: {

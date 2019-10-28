@@ -51,7 +51,9 @@ class Resize extends React.Component {
     return (
       <div onMouseDown={this.handleMouseDown}>
         <div className={'resize-handle'} />
-        {detonate ? <img className="icon" src={detonate} alt="" /> : null}
+        {detonate ? (
+          <img className="icon" src={detonate} alt="" draggable="false" />
+        ) : null}
       </div>
     );
   }

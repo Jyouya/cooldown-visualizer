@@ -41,7 +41,8 @@ class Menu extends React.Component {
         ? React.cloneElement(child, {
             radio: this.radio,
             radioDelay: this.props.radioDelay,
-            menuClass: this.props.menuClass
+            menuClass: this.props.menuClass,
+            close: this.props.close
           })
         : child
     );

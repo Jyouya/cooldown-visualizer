@@ -1,4 +1,6 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 class MenuHover extends React.Component {
   state = { active: false, mouseInside: false };
@@ -21,19 +23,6 @@ class MenuHover extends React.Component {
     this.setState({ active: false });
   };
 
-  // handleMouseEnter = event => {
-  //   this.setState({ mouseInside: true });
-  //   if (!this.state.active) {
-  //     setTimeout(() => {
-  //       if (this.state.mouseInside) this.open();
-  //     }, this.props.showDelay || 0);
-  //   }
-  // };
-
-  // handleMouseOut = event => {
-  //   this.setState({ mouseInside: false });
-  // };
-
   render() {
     const childrenWithProps = React.Children.map(this.props.children, child =>
       React.isValidElement(child)
@@ -44,7 +33,6 @@ class MenuHover extends React.Component {
         : child
     );
 
-    console.log(this.props.hover);
     return (
       <div
         className="menu--hover"
@@ -52,7 +40,11 @@ class MenuHover extends React.Component {
         // onMouseOut={this.handleMouseOut}
       >
         {this.props.label}
-        {this.props.arrow ? <span className="menu--arrow">{'\u203A'}</span> : null}
+        {this.props.arrow ? (
+          <span className="menu--arrow">
+            <FontAwesomeIcon icon={faChevronRight} />
+          </span>
+        ) : null}
         {this.props.hover ? childrenWithProps : null}
       </div>
     );

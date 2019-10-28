@@ -290,11 +290,12 @@ class Timeline extends React.Component {
         // onMouseUp={this.handleMouseUp}
         // onMouseMove={this.handleMouseMove}
       >
-        <Link to={`/${this.props.who}`}>
+        <Link to={`/${this.props.who}`} draggable="false">
           <img
             className="label-icon"
             src={(cooldowns[this.props.name] || jobs[this.props.name]).img}
             alt={this.props.name}
+            draggable="false"
           />
         </Link>
         <div className="timeline-wrapper">

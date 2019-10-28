@@ -37,6 +37,13 @@
     }
   }
 
+  &--separator {
+    width: calc(100% - 1rem);
+    height: 1px;
+    background: #fff2;
+    margin: 3px 0.5rem 2px 0.5rem;
+  }
+
   &--item {
     display: flex;
     justify-content: space-between;

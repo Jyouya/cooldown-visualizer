@@ -5,7 +5,7 @@ class MenuItem extends React.Component {
     super(props);
     this.myRef = React.createRef();
   }
-  state = { mouseInside: false, active: false };
+  state = { active: false };
 
   deactivate = () => {
     this.setState({ active: false });
@@ -16,9 +16,6 @@ class MenuItem extends React.Component {
   }
 
   handleMouseEnter = event => {
-    console.log('mouseenter');
-    // this.setState({ mouseInside: true });
-    this.mouseInside = true;
     setTimeout(() => {
       const element = this.myRef.current;
       if (!this.state.active && element && element.matches(':hover')) {
@@ -27,12 +24,6 @@ class MenuItem extends React.Component {
         this.setState({ active: true });
       }
     }, this.props.radioDelay || 0);
-  };
-
-  handleMouseOut = event => {
-    // this.setState({ mouseInside: false });
-    console.log('mouseout');
-    this.mouseInside = false;
   };
 
   render() {
@@ -50,9 +41,17 @@ class MenuItem extends React.Component {
         className={`menu--item${
           this.props.disabled ? ' menu--item__disabled' : ''
         }`}
-        onClick={!this.props.disabled ? this.props.onClick : null}
+        onClick={
+          !this.props.disabled
+            ? this.props.closeOnClick
+              ? () => {
+                  this.props.onClick();
+                  this.props.close && this.props.close();
+                }
+              : this.props.onClick
+            : null
+        }
         onMouseEnter={this.handleMouseEnter}
-        onMouseOut={this.handleMouseOut}
         ref={this.myRef}
       >
         {childrenWithProps || null}

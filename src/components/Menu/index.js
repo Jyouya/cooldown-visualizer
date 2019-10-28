@@ -5,3 +5,4 @@ export * from './Radio';
 export * from './MenuItem';
 export * from './MenuHover';
 export * from './MenuToggle';
+export * from './MenuSeparator';
