@@ -22,7 +22,8 @@ class MenuButton extends React.Component {
   };
 
   handleHover = event => {
-    if (!this.state.active && this.radio && this.radio.active) {
+    console.log(this.state.active, this.radio);
+    if (!this.state.active && this.props.radio && this.props.radio.active) {
       this.open();
     }
   };

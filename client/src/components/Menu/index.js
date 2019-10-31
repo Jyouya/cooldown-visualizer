@@ -6,3 +6,4 @@ export * from './MenuItem';
 export * from './MenuHover';
 export * from './MenuToggle';
 export * from './MenuSeparator';
+export * from './MenuLabel';

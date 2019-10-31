@@ -19,7 +19,7 @@ class Settings extends React.Component {
     const { updateSettings: set, settings } = this.props;
     return (
       <>
-        <MenuButton label="Settings">
+        <MenuButton label="Settings" radio={this.props.radio}>
           <Menu menuClass="dark" bottom radioDelay={300}>
             <MenuToggle set={s => set({ snap: s })} on={settings.snap}>
               Snap

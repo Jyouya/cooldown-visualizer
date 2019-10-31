@@ -2,6 +2,7 @@ import React from 'react';
 import './index.scss';
 import PartyView from './PartyView';
 import JobPalette from './JobPalette';
+import Modal from '../Modal';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -26,9 +27,9 @@ class PartySetup extends React.Component {
   }
 
   render() {
-    return this.props.isShown ? (
-      <div className="modal" onClick={this.props.close}>
-        <div className="content" onClick={e => e.stopPropagation()}>
+    return (
+      <Modal close={this.props.close} isShown={this.props.isShown}>
+        <div className="party-setup">
           <div className="party-view-wrapper">
             {this.state.views.map((view, i, views) => (
               <PartyView
@@ -68,8 +69,8 @@ class PartySetup extends React.Component {
             </div>
           </div>
         </div>
-      </div>
-    ) : null;
+      </Modal>
+    );
   }
 }
 

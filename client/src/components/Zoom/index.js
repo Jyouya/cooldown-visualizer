@@ -5,7 +5,7 @@ class Zoom extends React.Component {
   state = { value: 12000 };
 
   handleChange = event => {
-    this.setState({ value: event.target.value });
+    this.setState({ value: Math.floor(event.target.value / 100) * 100 });
     this.props.setZoom(this.state.value);
   };
 
@@ -21,7 +21,9 @@ class Zoom extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
         />
-        <label className="zoom-readout">{this.state.value / 100}s</label>
+        <label className="zoom-readout">
+          {this.state.value / 100}s
+        </label>
       </>
     );
   }

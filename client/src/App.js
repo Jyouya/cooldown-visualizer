@@ -13,6 +13,8 @@ import Navbar from './components/Navbar';
 import Zoom from './components/Zoom';
 import { Radio } from './components/Menu';
 import Settings from './components/Settings';
+import EncounterMenu from './components/EncounterMenu';
+import AccountMenu from './components/AccountMenu';
 
 import jobs from './data/jobs';
 import cooldowns from './data/cooldowns';
@@ -22,6 +24,7 @@ import getResource from './utils/getResource';
 import closestResource from './utils/closestResource';
 import closestCharge from './utils/closestCharge';
 import timestamp from './utils/timestamp';
+import API from './utils/API';
 // import dummyCooldown from './utils/dummyCooldown';
 import './App.scss';
 
@@ -738,16 +741,19 @@ class App extends React.Component {
           <ScrollSync>
             <div className="App">
               <Navbar>
-                <div className="nav-left"></div>
-                <div className="nav-center">
-                  <Zoom setZoom={value => this.setState({ zoom: value })} />
-                </div>
-                <div className="nav-right">
+                <div className="nav-left">
+                  <EncounterMenu radio={this.radio} />
                   <Settings
                     radio={this.radio}
                     settings={this.state}
                     updateSettings={settings => this.setState(settings)}
                   />
+                </div>
+                <div className="nav-center">
+                  <Zoom setZoom={value => this.setState({ zoom: value })} />
+                </div>
+                <div className="nav-right">
+                  <AccountMenu />
                 </div>
               </Navbar>
               <ContextMenu ref={this.contextRef} />

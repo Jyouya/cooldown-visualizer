@@ -1,54 +1,34 @@
-.modal {
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  backdrop-filter: blur(10px);
-  z-index: 1000;
+.party-setup {
+  min-width: 40%;
+  min-height: 25.375rem;
 
   display: flex;
-  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
 
-  .content {
-    margin: 0 auto;
-    min-width: 40%;
-    min-height: 29.375rem;
-    background: linear-gradient(to bottom, #252525, #191919);
-    box-sizing: border-box;
-    padding: 2rem;
+  .buttons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
 
-    // & > * {
-    //   grid-row: 1;
-    // }
+    button {
+      background: inherit;
+      color: inherit;
+      border: solid #fff2 1px;
+      border-radius: 15px;
+      padding: 10px;
+      user-select: none;
 
-    .buttons {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-evenly;
+      &:hover {
+        background: #fff2;
+      }
 
-      button {
-        background: inherit;
-        color: inherit;
-        border: solid #fff2 1px;
-        border-radius: 15px;
-        padding: 10px;
-        user-select: none;
+      &:focus {
+        outline: none;
+      }
 
-        &:hover {
-          background: #fff2;
-        }
-
-        &:focus {
-          outline: none;
-        }
-
-        &:active {
-          box-shadow: 0 0 10px #fff9;
-        }
+      &:active {
+        box-shadow: 0 0 10px #fff9;
       }
     }
   }

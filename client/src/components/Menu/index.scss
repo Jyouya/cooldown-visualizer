@@ -2,9 +2,11 @@
   position: absolute;
   display: grid;
   box-sizing: border-box;
+  z-index: 1500;
 
   &.bottom {
     top: 100%;
+    min-width: 100%;
     &.left {
       right: 0;
     }
@@ -42,6 +44,15 @@
     height: 1px;
     background: #fff2;
     margin: 3px 0.5rem 2px 0.5rem;
+  }
+
+  &--label {
+    padding: 2px 2rem 1px 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: default;
+    position: relative;
   }
 
   &--item {

@@ -31,6 +31,23 @@
       height: 100%;
     }
   }
+
+  button {
+    background: inherit;
+    border: none;
+    color: inherit;
+    height: 100%;
+    padding: 0 1rem;
+    font-size: inherit;
+    font: inherit;
+
+    &:focus {
+      outline: none;
+    }
+    &:hover {
+      background: #fff2;
+    }
+  }
 }
 
 .dark {

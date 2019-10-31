@@ -1,0 +1,31 @@
+If you can view plan A
+
+Clone
+New plan B from plan A given plan A's url
+
+Import
+Import existing plan A into existing plan B from url of A
+
+Save a Copy
+Make changes to A on your client, that won't get PATCH'd back to the server
+Create a new plan B given your client side changes to A
+
+
+If you can edit plan A
+
+Changes made will be PATCH'd to server
+
+If you own plan A
+
+Generate edit/view links
+
+Delete
+
+
+User config:
+change username/email/password
+
+change default party
+
+for PATCHes, put the state we need in the jwt, 
+so we don't have to read from the database to authenticate patches
