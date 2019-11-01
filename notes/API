@@ -29,3 +29,19 @@ change default party
 
 for PATCHes, put the state we need in the jwt, 
 so we don't have to read from the database to authenticate patches
+separate patch token?
+
+JWT with 20 minute expiry
+stored in local storage instead of cookie
+claims: {
+  name,
+  last 4 encounters that player has sent a patch request for
+}
+
+endpoint to request this token?
+endpoint to add an encounter to the token?
+
+endpoint to request edit tokens for a fight
+tokens last 20 minutes
+
+3 middlewares

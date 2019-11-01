@@ -21,6 +21,7 @@ class MenuHover extends React.Component {
       this.props.radio.active = false;
     }
     this.setState({ active: false });
+    this.props.close();
   };
 
   render() {

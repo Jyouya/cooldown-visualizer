@@ -22,6 +22,13 @@ class PartySetup extends React.Component {
     this.reset();
   }
 
+  componentDidUpdate({isShown: wasShown}) {
+    const {isShown} = this.props
+    if (isShown !== wasShown) {
+      this.reset();
+    }
+  }
+
   reset() {
     this.setState({ views: [this.props.party] });
   }

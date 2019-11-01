@@ -1,0 +1,64 @@
+.signin {
+  margin-top: 1.5rem;
+  border: 1px solid #fff2;
+  padding: 2rem 2rem 2rem;
+  border-radius: 15px;
+  .input {
+    text-align: right;
+    margin-bottom: 1.5rem;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    input {
+      margin-left: 1rem;
+      outline: none;
+      border: none;
+      border-radius: 5px;
+      box-sizing: border-box;
+      padding: 0.3rem 0.5rem;
+    }
+    .invalid {
+      box-shadow: 0 0 2px 3px red;
+    }
+  }
+
+  button {
+    background: inherit;
+    color: inherit;
+    border: solid #fff2 1px;
+    border-radius: 15px;
+    padding: 10px;
+    user-select: none;
+    min-width: 5rem;
+
+    &:hover {
+      background: #fff2;
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    &:active {
+      box-shadow: 0 0 10px #fff9;
+    }
+
+    .spinning {
+      animation: spin 1.5s linear infinite;
+    }
+  }
+
+  &-wrapper {
+    max-width: 21.25rem;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

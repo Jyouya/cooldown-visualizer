@@ -10,7 +10,7 @@ export default {
   },
 
   logout: function() {
-    return axios.get('/logout');
+    return axios.post('/logout', {});
   },
 
   getFights: function() {
@@ -19,5 +19,9 @@ export default {
 
   getFight: function(fight) {
     return axios.get('/api/fights/' + fight);
+  },
+
+  getDefaultParty: function() {
+    return axios.get('/api/user/defaultParty');
   }
 };

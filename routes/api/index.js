@@ -1,4 +1,4 @@
-module.exports = function(app, db) {
-  require('./fights')(app, db);
-  require('./user')(app, db);
+module.exports = function(app, db, auth) {
+  require('./fights')(app, db, auth);
+  require('./user')(app, db, auth);
 };

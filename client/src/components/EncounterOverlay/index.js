@@ -39,7 +39,7 @@ class EncounterOverlay extends React.Component {
     const { left, right } = this.myRef.current.getClientRects()[0];
     const timeline = this.props.encounter.timeline;
     let { shown, mirror } = this.state;
-    if (event.clientX > left && event.clientX < right) {
+    if (timeline.length && event.clientX > left && event.clientX < right) {
       // Binary search timeline
       const time = this.getTime(event);
 

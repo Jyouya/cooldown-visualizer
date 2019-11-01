@@ -1,6 +1,7 @@
 import React from 'react';
 import { MenuButton } from '../Menu';
 import Signup from '../Signup';
+import SignIn from '../SignIn';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
@@ -9,36 +10,50 @@ import {
   faUser
 } from '@fortawesome/free-solid-svg-icons';
 
-class AccountMenu extends React.Component {
-  state = { signupIsOpen: false };
-  render() {
-    // if logged in, have a button for their username
-    // and a logout button
+import Cookies from 'js-cookie';
+import API from '../../utils/API';
 
-    // if not logged in
-    // Sign in
-    // Register
-    return this.props.isLoggedIn ? (
+class AccountMenu extends React.Component {
+  state = { showSignUp: false, showSignIn: false };
+
+  logout = () => {
+    // API.logout();
+    Cookies.remove('user', { path: '/' });
+    this.props.login(false);
+  };
+
+  render() {
+    const { isLoggedIn, login } = this.props;
+    return isLoggedIn ? (
       <>
         <button>
-          <FontAwesomeIcon icon={faUser} /> Username
+          <FontAwesomeIcon icon={faUser} /> {isLoggedIn}
         </button>
-        <button>
+        <button onClick={() => this.logout(false)}>
           <FontAwesomeIcon icon={faSignOutAlt} /> Logout
         </button>
       </>
     ) : (
       <>
-        <button>
+        <button onClick={() => this.setState({ showSignIn: true })}>
           <FontAwesomeIcon icon={faSignInAlt} /> Sign In
         </button>
-        <button onClick={() => this.setState({ signupIsOpen: true })}>
+        <button onClick={() => this.setState({ showSignUp: true })}>
           <FontAwesomeIcon icon={faPenSquare} /> Register
         </button>
         <Signup
-          isShown={this.state.signupIsOpen}
+          isShown={this.state.showSignUp}
+          login={login}
           close={() => {
-            this.setState({ signupIsOpen: false });
+            this.setState({ showSignUp: false });
+          }}
+        />
+        <SignIn
+          isShown={this.state.showSignIn}
+          login={login}
+          close={() => {
+            console.log('closing signin modal');
+            this.setState({ showSignIn: false });
           }}
         />
       </>

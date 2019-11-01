@@ -25,6 +25,9 @@ import closestResource from './utils/closestResource';
 import closestCharge from './utils/closestCharge';
 import timestamp from './utils/timestamp';
 import API from './utils/API';
+
+import Cookies from 'js-cookie';
+import uuid4 from 'uuid/v4';
 // import dummyCooldown from './utils/dummyCooldown';
 import './App.scss';
 
@@ -47,322 +50,13 @@ class App extends React.Component {
   cooldownId = 0;
 
   state = {
-    party: [
-      {
-        enabled: true,
-        job: 'GNB',
-        cooldowns: [],
-        id: 1
-      },
-      {
-        enabled: true,
-        job: 'PLD',
-        cooldowns: [],
-        id: 2
-      },
-      // {
-      //   enabled: true,
-      //   job: 'WHM',
-      //   cooldowns: []
-      // },
-      {
-        enabled: true,
-        job: 'SCH',
-        cooldowns: [],
-        id: 3
-      },
-      {
-        enabled: true,
-        job: 'AST',
-        cooldowns: [],
-        id: 4
-      },
-      {
-        enabled: true,
-        job: 'MNK',
-        cooldowns: [],
-        id: 5
-      },
-      {
-        enabled: true,
-        job: 'DRG',
-        cooldowns: [],
-        id: 6
-      },
-      {
-        enabled: true,
-        job: 'BRD',
-        cooldowns: [],
-        id: 7
-      },
-      {
-        enabled: true,
-        job: 'SMN',
-        cooldowns: [],
-        id: 8
-      }
-    ],
+    loggedIn: false,
+    party: [],
     encounter: {
-      duration: 63500,
+      duration: 12000,
       startOfTime: -2500,
-      mechanics: {
-        'Doomvoid Cleaver': {
-          style: { color: 'yellow' },
-          description:
-            "Narrow Cone AoE's to all players; must avoid clipping; spawns 8 Nyxes@Nyx after damage"
-        },
-        'Doomvoid Slicer': {
-          style: { color: 'green' },
-          description:
-            'Donut shaped AoE with safe area under the boss; spawns 8 Nyxes@Nyx after AoE'
-        },
-        'Doomvoid Guillotine': {
-          style: { color: 'green' },
-          description:
-            "Big Line AoE through the boss's front and back; spawns 8 Nyxes@Nyx after AoE"
-        },
-        Nyx: {
-          style: { color: 'purple' },
-          description:
-            'Spawnd by Doomvoid spells; cannot be targetted; touching inflicts Diabolic Curse and Damage Down debuffs'
-        },
-        'Dark Fire III': {
-          style: { color: 'cadetblue' },
-          description: 'Circle AoE on random players'
-        },
-        'Spell-in-Waiting': {
-          style: { color: '#1A5276' },
-          description: 'Delays next spell cast'
-        },
-        'Unholy Darkness': {
-          style: { color: 'cadetblue' },
-          description: 'Stacking AoE on a random player'
-        },
-        'Punishing Ray': {
-          style: { color: 'yellow' },
-          description:
-            '8 dark meteor circles spawn; requires all players inside every circle'
-        },
-        Shadowflame: {
-          style: { color: 'orange' },
-          description: 'Tankbuster hits both tanks'
-        },
-        'Hell Wind': {
-          style: { color: 'cadetblue' },
-          description: 'Brings target player to 1 HP'
-        },
-        Entropy: {
-          style: { color: 'red' },
-          description: 'High raid damage'
-        },
-        Shadoweye: {
-          style: { color: '#1A5276' },
-          description: 'Petrifies any player looking toward the target'
-        },
-        'Hand of Erebos': {
-          style: { color: '#1A5276' },
-          description:
-            'Boss tethers to The Hand of Erebos and readies either @Empty_Rage or @Empty_Hate'
-        },
-        'Empty Rage': {
-          style: { color: 'green' },
-          description:
-            'Huge AoE around Hand of Erebos; indicated by Orange Tether'
-        },
-        'Empty Hate': {
-          style: { color: 'red' },
-          description:
-            'Knockback with mid raid damage; indicated by Black Tether'
-        },
-        Equillibrium: {
-          style: { color: '#1A5276' },
-          description:
-            '4 players marked with Darkness, 4 marked with light; make pairs of light and darkness'
-        },
-        Flare: {
-          style: { color: 'cadetblue' },
-          description: 'Proximity-based damage from target'
-        },
-        Quietus: {
-          style: { color: 'red' },
-          description: 'High raid damage'
-        },
-        'Cycle of Retribution': {
-          style: { color: '#1A5276' },
-          description:
-            'A combination of Doomvoid Slicer@Doomvoid_Slicer > Cleaver@Doomvoid_Cleaver > Guillotine@Doomvoid_Guillotine'
-        },
-        'Cycle of Chaos': {
-          style: { color: '#1A5276' },
-          description:
-            'A combination of Doomvoid Guillotine@Doomvoid_Guillotine > Slicer@Doomvoid_Slicer > Cleaver@Doomvoid_Cleaver'
-        }
-      },
-      timeline: [
-        // { time: 0, phase: 1, text: ''},
-        { time: 0, text: ['Pull'] },
-        { time: 900, text: ['Doomvoid Cleaver'] },
-        { time: 2400, text: ['Unholy Darkness'] },
-        { time: 3000, text: ['Doomvoid Slicer', 'or', 'Doomvoid Guillotine'] },
-        { time: 4200, text: ['Dark Fire III', 'x4'] },
-        [
-          { time: 5800, text: ['Spell-in-Waiting'] },
-          { time: 5800, text: ['Punishing Ray', 'appears'] }
-        ],
-        { time: 6100, text: ['Unholy Darkness', '(delayed)'] },
-        { time: 6800, text: ['Punishing Ray', 'resolves'] },
-        { time: 7100, text: ['Spell-in-Waiting'] },
-        { time: 7400, text: ['Dark Fire III', 'x4 (delayed)'] },
-        { time: 8400, text: ['Spell-in-Waiting'] },
-        { time: 8800, text: ['Shadoweye', '(delayed)'] },
-        { time: 9400, text: ['Dark Fire III', 'x4 resolves'] },
-        { time: 10400, text: ['Hell Wind', 'x2'] },
-        { time: 10500, text: ['Unholy Darkness', '+', 'Shadoweye', 'resolve'] },
-        { time: 11900, text: ['Shadowflame'] },
-        { time: 13100, text: ['Entropy'] },
-
-        [
-          { time: 14100, text: ['Hand of Erebos'] },
-          { time: 14100, text: ['Empty Rage'] }
-        ],
-        { time: 14600, text: ['Doomvoid Guillotine'] },
-        { time: 15400, text: ['Doomvoid Slicer'] },
-        [
-          { time: 16200, text: ['Hand of Erebos'] },
-          { time: 16200, text: ['Empty Hate'] }
-        ],
-        { time: 17300, text: ['Doomvoid Cleaver'] },
-        { time: 18800, text: ['Shadowflame'] },
-        { time: 20000, text: ['Entropy'] },
-
-        { time: 20600, text: ['Spell-in-Waiting'] },
-        { time: 20900, text: ['Hell Wind', 'x2 (delayed)'] },
-        { time: 22300, text: ['Flare', 'x3'] },
-        { time: 22700, text: ['Spell-in-Waiting'] },
-        { time: 23100, text: ['Shadoweye', '(delayed)'] },
-        { time: 23500, text: ['Punishing Ray', 'appears'] },
-        { time: 24100, text: ['Hell Wind', 'x2 resolves'] },
-        { time: 24700, text: ['Punishing Ray', '+', 'Shadoweye', 'resolve'] },
-        { time: 25900, text: ['Shadowflame'] },
-        { time: 27000, text: ['Entropy'] },
-
-        { time: 28100, text: ['Equillibrium'] },
-        { time: 28300, text: ['Doomvoid Cleaver'] },
-        { time: 29300, text: ['Unholy Darkness'] },
-        { time: 30100, text: ['Doomvoid Slicer', 'or', 'Doomvoid Guillotine'] },
-        { time: 32800, text: ['Shadowflame'] },
-        { time: 33900, text: ['Entropy'] },
-
-        { time: 34600, text: ['Spell-in-Waiting'] },
-        { time: 34900, text: ['Flare', 'x3 (delayed)'] },
-        [
-          { time: 35600, text: ['Hand of Erebos'] },
-          { time: 35600, text: ['Empty Rage', 'or', 'Empty Hate'] }
-        ],
-        { time: 36000, text: ['Spell-in-Waiting'] },
-        { time: 36300, text: ['Unholy Darkness', '(delayed)'] },
-        { time: 37300, text: ['Spell-in-Waiting'] },
-        { time: 37600, text: ['Flare', 'x3 (delayed)'] },
-        { time: 37900, text: ['1st', 'Flare', 'x3 resolves'] },
-        { time: 38500, text: ['Unholy Darkness', 'resolves'] },
-        { time: 39800, text: ['Shadowflame'] },
-        { time: 40700, text: ['Spell-in-Waiting'] },
-        { time: 41000, text: ['Shadoweye', 'x2 (delayed)'] },
-        { time: 42000, text: ['Spell-in-Waiting'] },
-        { time: 42300, text: ['Dark Fire III', 'x4 (delayed)'] },
-        { time: 42400, text: ['Flare', 'x3', '+', 'Shadoweye', 'x2 resolve'] },
-        { time: 43600, text: ['Dark Fire III', 'x4 resolves'] },
-        { time: 43800, text: ['Punishing Ray', 'appears'] },
-        { time: 44300, text: ['Equillibrium'] },
-        { time: 44900, text: ['Punishing Ray', 'resolves'] },
-        { time: 45300, text: ['Doomvoid Cleaver'] },
-        { time: 46800, text: ['Shadowflame'] },
-
-        { time: 49800, text: ['Quietus'] },
-        [
-          {
-            time: 50600,
-            text: ['Cycle of Retribution', 'or', 'Chaos@Cycle_of_Chaos']
-          },
-          {
-            time: 50600,
-            text: [
-              'Slicer@Doomvoid_Slicer',
-              '|',
-              'Guillotine@Doomvoid_Guillotine'
-            ]
-          }
-        ],
-        {
-          time: 50900,
-          text: ['Cleaver@Doomvoid_Cleaver', '|', 'Slicer@Doomvoid_Slicer']
-        },
-        {
-          time: 51200,
-          text: [
-            'Guillotine@Doomvoid_Guillotine',
-            '|',
-            'Cleaver@Doomvoid_Cleaver'
-          ]
-        },
-        [
-          {
-            time: 53000,
-            text: ['Cycle of Retribution', 'or', 'Chaos@Cycle_of_Chaos']
-          },
-          {
-            time: 53000,
-            text: [
-              'Slicer@Doomvoid_Slicer',
-              '|',
-              'Guillotine@Doomvoid_Guillotine'
-            ]
-          }
-        ],
-        {
-          time: 53300,
-          text: ['Cleaver@Doomvoid_Cleaver', '|', 'Slicer@Doomvoid_Slicer']
-        },
-        {
-          time: 53600,
-          text: [
-            'Guillotine@Doomvoid_Guillotine',
-            '|',
-            'Cleaver@Doomvoid_Cleaver'
-          ]
-        },
-        { time: 55700, text: ['Quietus'] },
-        [
-          {
-            time: 56700,
-            text: ['Cycle of Retribution', 'or', 'Chaos@Cycle_of_Chaos']
-          },
-          {
-            time: 56700,
-            text: [
-              'Slicer@Doomvoid_Slicer',
-              '|',
-              'Guillotine@Doomvoid_Guillotine'
-            ]
-          }
-        ],
-        {
-          time: 57000,
-          text: ['Cleaver@Doomvoid_Cleaver', '|', 'Slicer@Doomvoid_Slicer']
-        },
-        {
-          time: 57300,
-          text: [
-            'Guillotine@Doomvoid_Guillotine',
-            '|',
-            'Cleaver@Doomvoid_Cleaver'
-          ]
-        },
-        { time: 59200, text: ['Quietus'] },
-        { time: 60100, text: ['Quietus'] },
-        { time: 61000, text: ['Quietus'] },
-        { time: 63000, text: ['Quietus', '(Enrage)'] }
-      ]
+      mechanics: {},
+      timeline: []
     },
     encounterDuration: 63500,
     startOfTime: -2500,
@@ -412,15 +106,52 @@ class App extends React.Component {
   componentDidMount() {
     // add ids to the dummy encounter
     // ! probably needs to be removed at some point
-    const party = [...this.state.party];
-    party.forEach(member =>
-      member.cooldowns.forEach(cd => {
-        if (!cd.id) cd.id = ++this.cooldownId;
-      })
-    );
+    // const party = [...this.state.party];
+    // party.forEach(member =>
+    //   member.cooldowns.forEach(cd => {
+    //     if (!cd.id) cd.id = ++this.cooldownId;
+    //   })
+    // );
+    // this.setState({ party });
+    // console.log(Cookie.get('user'));
 
-    this.setState({ party });
+    const cookie = Cookies.get('user');
+
+    if (cookie) {
+      const user = JSON.parse(atob(cookie.split('.')[1]));
+
+      if (Date.now() > user.exp * 1000) {
+        // Token is expired
+        Cookies.remove('user');
+      } else {
+        this.setState({ loggedIn: user.username });
+      }
+    }
   }
+
+  buildDefaultParty = async () => {
+    const username = this.state.loggedIn;
+    if (username) {
+      const { data: jobs } = await API.getDefaultParty();
+      this.setState({
+        party: jobs.map(job => ({
+          enabled: true,
+          job,
+          cooldowns: [],
+          id: uuid4()
+        }))
+      });
+    } else {
+      this.setState({
+        party: this.state.party.map(({ job }) => ({
+          enabled: true,
+          job,
+          cooldowns: [],
+          id: uuid4()
+        }))
+      });
+    }
+  };
 
   loadFile = () => {};
 
@@ -709,7 +440,7 @@ class App extends React.Component {
   };
 
   getTimestamp = json => {
-    if (!json) return;
+    if (!json || this.state.party.length === 0) return;
     const cd = JSON.parse(json);
     const which = this.state.party[cd.who].cooldowns.find(x => x.id === cd.id);
     const time = which && which.time;
@@ -742,7 +473,11 @@ class App extends React.Component {
             <div className="App">
               <Navbar>
                 <div className="nav-left">
-                  <EncounterMenu radio={this.radio} />
+                  <EncounterMenu
+                    radio={this.radio}
+                    setEncounter={encounter => this.setState({ encounter })}
+                    buildDefaultParty={this.buildDefaultParty}
+                  />
                   <Settings
                     radio={this.radio}
                     settings={this.state}
@@ -753,7 +488,10 @@ class App extends React.Component {
                   <Zoom setZoom={value => this.setState({ zoom: value })} />
                 </div>
                 <div className="nav-right">
-                  <AccountMenu />
+                  <AccountMenu
+                    isLoggedIn={this.state.loggedIn}
+                    login={username => this.setState({ loggedIn: username })}
+                  />
                 </div>
               </Navbar>
               <ContextMenu ref={this.contextRef} />

@@ -37,10 +37,20 @@ class EncounterMenu extends React.Component {
     });
   }
 
+  newEncounter = async url => {
+    const { data } = await API.getFight(url);
+    this.props.setEncounter(data);
+    this.props.buildDefaultParty();
+  };
+
   generateMenu(encounters) {
     return Object.entries(encounters).map(([type, encounters], i) =>
       encounters.map(({ name, url }, j) => (
-        <MenuItem key={10 * i + j + 1} onClick={() => this.newEncounter(url)}>
+        <MenuItem
+          key={10 * i + j + 1}
+          onClick={() => this.newEncounter(url)}
+          closeOnClick
+        >
           {name}
         </MenuItem>
       ))
@@ -56,12 +66,16 @@ class EncounterMenu extends React.Component {
             <MenuHover label="New" arrow>
               <Menu side>
                 {this.generateMenu(current)}
-                <MenuSeparator />
-                <MenuItem>
-                  <MenuHover label="Older Content" arrow>
-                    <Menu side>{this.generateMenu(old)}</Menu>
-                  </MenuHover>
-                </MenuItem>
+                {old.length ? (
+                  <>
+                    <MenuSeparator />
+                    <MenuItem>
+                      <MenuHover label="Older Content" arrow>
+                        <Menu side>{this.generateMenu(old)}</Menu>
+                      </MenuHover>
+                    </MenuItem>
+                  </>
+                ) : null}
               </Menu>
             </MenuHover>
           </MenuItem>

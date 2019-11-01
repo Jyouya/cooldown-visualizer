@@ -31,7 +31,8 @@ class MenuItem extends React.Component {
       React.isValidElement(child)
         ? React.cloneElement(child, {
             hover: this.state.active,
-            menuClass: this.props.menuClass
+            menuClass: this.props.menuClass,
+            close: this.props.close
           })
         : child
     );

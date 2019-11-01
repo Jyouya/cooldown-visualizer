@@ -9,7 +9,7 @@ const passwordRules = [
   /(?=.*[a-z])(?=.*\d)/i
 ];
 
-module.exports = (app, db) => {
+module.exports = (app, db, auth) => {
   async function login(user, res) {
     const jwt = await signP(
       {
@@ -19,21 +19,28 @@ module.exports = (app, db) => {
       process.env.JWT_SECRET_KEY,
       { expiresIn: '30d' }
     );
-    res.cookie('user', jwt);
+    res.cookie('user', jwt, { sameSite: true });
   }
 
   app.post('/login', async function(req, res) {
     const { email, password } = req.body;
     const user = await db.User.findOne({ email });
 
-    const match = await bcrypt.compare(password, user.passHash);
+    if (user) {
+      const match = await bcrypt.compare(password, user.passHash);
 
-    if (user && match) {
-      await login(user, res);
-      res.json({ msg: 'Login successful' });
-    } else {
-      res.json({ msg: 'E-mail or Password is invalid' });
+      if (user && match) {
+        await login(user, res);
+        return res.json({ msg: 'Login successful' });
+      }
     }
+    res.status(401).json({ msg: 'E-mail or Password is invalid' });
+  });
+
+  app.post('/logout', function(req, res) {
+    console.log('logout');
+    res.clearCookie('user');
+    res.json({ msg: 'Logout successful' });
   });
 
   app.post('/register', async function(req, res) {
@@ -76,5 +83,10 @@ module.exports = (app, db) => {
     await login(user, res);
 
     res.json({ msg: 'Account creation successful' });
+  });
+
+  app.get('/api/user/defaultParty', auth, async function(req, res) {
+    if (req.user) res.json((await db.User.findById(req.user._id)).defaultParty);
+    else res.status(401).json({ msg: "You're not logged in" });
   });
 };
