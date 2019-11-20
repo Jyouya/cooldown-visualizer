@@ -2,13 +2,22 @@ module.exports = function(app, db, auth) {
   app
     .route('/api/plans')
     .get(function(req, res) {})
-    .post(async function(req, res, auth) {
+    .post(auth, async function(req, res) {
+      console.log(req.user);
       if (!req.user._id) return res.status(401);
       const { encounter, party } = req.body;
       const newEncounter = await db.Encounter.create({
-        encounter,
-        party,
-        users: [req.user._id],
+        mechanicURL: encounter,
+        users: [
+          {
+            user: req.user._id,
+            permissions: {
+              edit: true,
+              view: true
+            }
+          }
+        ],
+        owner: req.user._id,
         name: 'Demo Encounter',
         timelines: party
       });
