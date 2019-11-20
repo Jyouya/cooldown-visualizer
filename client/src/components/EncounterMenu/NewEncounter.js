@@ -1,21 +1,21 @@
-import React from "react";
-import "./index.scss";
-import PartyView from "./PartyView";
-import JobPalette from "./JobPalette";
-import Modal from "../Modal";
+import React from 'react';
+import PartyView from '../PartySetup/PartyView';
+import JobPalette from '../PartySetup/JobPalette';
+import Modal from '../Modal';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import EventEmitter from "eventemitter3";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import EventEmitter from 'eventemitter3';
+import API from '../../utils/API';
 
-class PartySetup extends React.Component {
+class NewEncounter extends React.Component {
   constructor(props) {
     super(props);
 
     this.dragAndDrop = new EventEmitter();
   }
 
-  state = { views: [] };
+  state = { views: [[]], party: {}, encounter: 'e2s' };
 
   componentDidMount() {
     // this.setState({ views: this.props.views });
@@ -29,11 +29,18 @@ class PartySetup extends React.Component {
     }
   }
 
+  encounterChange = event => {
+    const { value } = event.target;
+
+    this.setState({ encounter: value });
+  };
+
   reset() {
-    this.setState({ views: this.props.views, party: this.props.party });
+    this.setState({ views: [[]], party: {} });
   }
 
   render() {
+    console.log(this.state.party);
     // TODO: Add a view that shows members not currently in any views
     return (
       <Modal close={this.props.close} isShown={this.props.isShown}>
@@ -42,12 +49,17 @@ class PartySetup extends React.Component {
             {this.state.views.map((view, i, views) => (
               <PartyView
                 key={i}
-                party={this.props.party}
-                view
+                party={this.state.party}
+                view={view}
                 dnd={this.dragAndDrop}
                 setView={view => {
                   this.setState({
                     views: [...views.slice(0, i), view, ...views.slice(i + 1)]
+                  });
+                }}
+                setParty={party => {
+                  this.setState({
+                    party: party
                   });
                 }}
               />
@@ -57,16 +69,28 @@ class PartySetup extends React.Component {
             </div>
           </div>
           <div className="job-palette-wrapper">
+            <select className="encounter-select" value={this.state.encounter}>
+              {this.props.options.map(option => (
+                <option value={option.url}>{option.name}</option>
+              ))}
+            </select>
+
             <JobPalette dnd={this.dragAndDrop} />
             <div className="buttons">
               <button
-                onClick={() => {
-                  this.props.setParty(this.state.party);
-                  this.props.setViews(this.state.views);
+                onClick={async () => {
+                  // this.props.setParty(this.state.party);
+                  // this.props.setViews(this.state.views);
+                  const { data } = await API.newEncounter(
+                    this.state.encounter,
+                    this.state.party
+                  );
+                  const planURL = data.newURL;
+                  // TODO: redirect to the url
                   this.props.close();
                 }}
               >
-                Save
+                Create
               </button>
               <button
                 onClick={() => {
@@ -84,4 +108,4 @@ class PartySetup extends React.Component {
   }
 }
 
-export default PartySetup;
+export default NewEncounter;

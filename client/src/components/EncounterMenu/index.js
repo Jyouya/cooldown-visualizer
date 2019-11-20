@@ -1,13 +1,15 @@
 import React from 'react';
 import { Menu, MenuButton, MenuItem, MenuHover, MenuSeparator } from '../Menu';
 import API from '../../utils/API';
+import NewEncounter from './NewEncounter.js';
 
 class EncounterMenu extends React.Component {
   state = {
     encounters: {
       current: { ultimate: [], savage: [], extreme: [] },
       old: { ultimate: [], savage: [], extreme: [] }
-    }
+    },
+    showNewEncounterMenu: false
   };
 
   componentDidMount() {
@@ -40,30 +42,32 @@ class EncounterMenu extends React.Component {
   newEncounter = async url => {
     const { data } = await API.getFight(url);
     this.props.setEncounter(data);
-    this.props.buildDefaultParty();
   };
 
   generateMenu(encounters) {
-    return Object.entries(encounters).map(([type, encounters], i) =>
-      encounters.map(({ name, url }, j) => (
-        <MenuItem
-          key={10 * i + j + 1}
-          onClick={() => this.newEncounter(url)}
-          closeOnClick
-        >
-          {name}
-        </MenuItem>
-      ))
+    const a = Object.entries(encounters).flatMap(([type, encounters], i) =>
+      encounters.map(({ name, url }, j) => ({
+        key: 10 * i + j + 1,
+        name,
+        url
+      }))
     );
+    console.log(a);
+    return a;
   }
 
   render() {
     const { current, old } = this.state.encounters;
     return (
-      <MenuButton label="Encounter" radio={this.props.radio}>
-        <Menu menuClass="dark" bottom radioDelay={300}>
-          <MenuItem>
-            <MenuHover label="New" arrow>
+      <>
+        <MenuButton label="Encounter" radio={this.props.radio}>
+          <Menu menuClass="dark" bottom radioDelay={300}>
+            <MenuItem
+              onClick={() => this.setState({ showNewEncounterMenu: true })}
+              closeOnClick
+            >
+              New
+              {/* <MenuHover label="New" arrow>
               <Menu side>
                 {this.generateMenu(current)}
                 {old.length ? (
@@ -77,10 +81,16 @@ class EncounterMenu extends React.Component {
                   </>
                 ) : null}
               </Menu>
-            </MenuHover>
-          </MenuItem>
-        </Menu>
-      </MenuButton>
+            </MenuHover> */}
+            </MenuItem>
+          </Menu>
+        </MenuButton>
+        <NewEncounter
+          isShown={this.state.showNewEncounterMenu}
+          options={this.generateMenu(this.state.encounters.current)}
+          close={() => this.setState({ showNewEncounterMenu: false })}
+        />
+      </>
     );
   }
 }

@@ -3,6 +3,7 @@ import Modal from '../Modal';
 import './index.scss';
 
 import API from '../../utils/API';
+import Cookies from 'js-cookie';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -19,7 +20,7 @@ const validate = {
       : true
 };
 
-class Signup extends React.Component {
+class SignUp extends React.Component {
   state = {
     username: '',
     email: '',
@@ -58,6 +59,11 @@ class Signup extends React.Component {
 
       if (data.msg === 'Account creation successful') {
         this.setState({ message: data.msg, successful: true });
+        const cookie = Cookies.get('user');
+        if (cookie) {
+          const user = JSON.parse(atob(cookie.split('.')[1]));
+          this.props.login(user);
+        }
       } else {
         this.setState({ message: data.msg });
       }
@@ -136,4 +142,4 @@ class Signup extends React.Component {
   }
 }
 
-export default Signup;
+export default SignUp;

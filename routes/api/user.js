@@ -89,4 +89,24 @@ module.exports = (app, db, auth) => {
     if (req.user) res.json((await db.User.findById(req.user._id)).defaultParty);
     else res.status(401).json({ msg: "You're not logged in" });
   });
+
+  app.get('/api/myFiles', auth, async function(req, res) {
+    if (req.user) {
+      // TODO: optimize database so we're only getting metadata here rather than full encounter data
+      const user = await db.User.findById(req.user._id).populate(
+        'savedEncounters'
+      );
+      const files = user.savedEncounters;
+      res.json(
+        files.map(encounter => ({
+          fight: encounter.mechanicURL,
+          name,
+          modified: encounter.updated_at,
+          id: encounter._id
+        }))
+      );
+    } else {
+      res.status(401).json({ msg: "You're not logged in" });
+    }
+  });
 };

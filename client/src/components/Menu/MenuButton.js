@@ -1,4 +1,5 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class MenuButton extends React.Component {
   state = { active: false };
@@ -49,7 +50,13 @@ class MenuButton extends React.Component {
         onClick={this.handleClick}
         onMouseEnter={this.handleHover}
       >
-        {this.props.label}
+        {this.props.icon ? (
+          <span>
+            <FontAwesomeIcon icon={this.props.icon} /> {this.props.label}
+          </span>
+        ) : (
+          this.props.label
+        )}
         {this.state.active ? childrenWithProps : null}
       </div>
     );

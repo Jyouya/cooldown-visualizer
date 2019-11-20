@@ -1,7 +1,7 @@
 import React from 'react';
 import { MenuButton } from '../Menu';
-import Signup from '../Signup';
-import SignIn from '../SignIn';
+import SignUp from '../../containers/SignUp';
+import SignIn from '../../containers/SignIn';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faSignOutAlt,
@@ -16,20 +16,34 @@ import API from '../../utils/API';
 class AccountMenu extends React.Component {
   state = { showSignUp: false, showSignIn: false };
 
+  componentDidMount() {
+    const cookie = Cookies.get('user');
+
+    if (cookie) {
+      const user = JSON.parse(atob(cookie.split('.')[1]));
+
+      if (Date.now() > user.exp * 1000) {
+        // Token is expired
+        Cookies.remove('user', { path: '/' });
+      } else {
+        this.props.login(user);
+      }
+    }
+  }
+
   logout = () => {
-    // API.logout();
     Cookies.remove('user', { path: '/' });
-    this.props.login(false);
+    this.props.logout();
   };
 
   render() {
-    const { isLoggedIn, login } = this.props;
+    const { isLoggedIn, login, user } = this.props;
     return isLoggedIn ? (
       <>
         <button>
-          <FontAwesomeIcon icon={faUser} /> {isLoggedIn}
+          <FontAwesomeIcon icon={faUser} /> {user.username}
         </button>
-        <button onClick={() => this.logout(false)}>
+        <button onClick={() => this.logout()}>
           <FontAwesomeIcon icon={faSignOutAlt} /> Logout
         </button>
       </>
@@ -41,7 +55,7 @@ class AccountMenu extends React.Component {
         <button onClick={() => this.setState({ showSignUp: true })}>
           <FontAwesomeIcon icon={faPenSquare} /> Register
         </button>
-        <Signup
+        <SignUp
           isShown={this.state.showSignUp}
           login={login}
           close={() => {

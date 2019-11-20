@@ -1,6 +1,6 @@
-import React from 'react';
-import cooldowns from '../../data/cooldowns';
-import './index.scss';
+import React from "react";
+import cooldowns from "../../data/cooldowns";
+import "./index.scss";
 
 class Resize extends React.Component {
   state = {
@@ -9,23 +9,23 @@ class Resize extends React.Component {
   };
 
   componentDidMount() {
-    document.addEventListener('mouseup', this.handleMouseUp, true);
-    document.addEventListener('mousemove', this.handleMouseMove, true);
+    document.addEventListener("mouseup", this.handleMouseUp, true);
+    document.addEventListener("mousemove", this.handleMouseMove, true);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('mouseup', this.handleMouseUp, true);
-    document.removeEventListener('mousemove', this.handleMouseMove, true);
+    document.removeEventListener("mouseup", this.handleMouseUp, true);
+    document.removeEventListener("mousemove", this.handleMouseMove, true);
   }
 
   handleMouseDown = event => {
     event.stopPropagation();
     const {
-      functions,
+      getTime,
       cooldown: { time, duration }
     } = this.props;
-    const dragOffset =
-      functions.getTime({ nativeEvent: event }) - (time + duration);
+    const dragOffset = getTime({ nativeEvent: event }) - (time + duration);
+
     this.setState({ drag: true, dragOffset });
   };
 
@@ -38,19 +38,20 @@ class Resize extends React.Component {
     event.stopPropagation();
     const {
       who,
-      functions,
+      getTime,
+      resizeCooldown,
       cooldown: { time, id }
     } = this.props;
     const duration =
-      functions.getTime({ nativeEvent: event }) - time - this.state.dragOffset;
-    functions.resizeCooldown(who, id, duration);
+      getTime({ nativeEvent: event }) - time - this.state.dragOffset;
+    resizeCooldown(who, id, duration);
   };
 
   render() {
     const detonate = cooldowns[this.props.cooldown.name].detonate;
     return (
       <div onMouseDown={this.handleMouseDown}>
-        <div className={'resize-handle'} />
+        <div className={"resize-handle"} />
         {detonate ? (
           <img className="icon" src={detonate} alt="" draggable="false" />
         ) : null}

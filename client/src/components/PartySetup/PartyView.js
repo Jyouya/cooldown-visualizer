@@ -1,9 +1,9 @@
-import React from 'react';
-import jobs from '../../data/jobs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faTrash } from '@fortawesome/free-solid-svg-icons';
-import Draggable from 'react-draggable';
-import uuid4 from 'uuid/v4';
+import React from "react";
+import jobs from "../../data/jobs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash, faTrash } from "@fortawesome/free-solid-svg-icons";
+import Draggable from "react-draggable";
+import uuid4 from "uuid/v4";
 
 class PartyView extends React.Component {
   constructor(props) {
@@ -11,17 +11,18 @@ class PartyView extends React.Component {
     this.myRef = React.createRef();
   }
 
-  state = { party: [] };
-
   addMember = event => {
     const { x, y, ...member } = event;
     if (!this.isInside(x, y)) return;
+
     member.cooldowns = member.cooldowns || [];
     member.id = member.id || uuid4();
     member.enabled = member.enabled !== undefined ? member.enabled : true;
 
-    const party = [...this.props.party, member];
+    const party = { ...this.props.party, [member.id]: member };
+    const view = [...this.props.view, member.id];
     this.props.setParty(party);
+    this.props.setView(view);
   };
 
   isInside(x, y) {
@@ -39,80 +40,60 @@ class PartyView extends React.Component {
     //   party: [...this.props.party],
     //   positions: this.props.party.map(x => [{ x: 0, y: 0 }])
     // });
-    this.props.dnd.on('drop', this.addMember);
+    this.props.dnd.on("drop", this.addMember);
   }
 
   componentWillUnmount() {
-    this.props.dnd.removeListener('drop', this.addMember);
+    this.props.dnd.removeListener("drop", this.addMember);
   }
 
   render() {
-    const party = [...this.props.party];
+    const party = {...this.props.party};
+    console.log("party", party)
+    console.log(this.props.view)
+    const view = [...this.props.view];
     return (
       <div className="party-view" ref={this.myRef}>
-        {party.map((member, i) => (
+        {view.map((id, i) => (
           <Draggable
-            key={member.id}
+            key={id}
             onStop={(e, data) => {
               const dIndex = data.y / data.node.clientHeight;
               const sign = dIndex > 0 ? 1 : -1;
-              const newParty = [...party.slice(0, i), ...party.slice(i + 1)];
-              newParty.splice(
+              const newView = [...view.slice(0, i), ...view.slice(i + 1)];
+              newView.splice(
                 i + sign * Math.floor(Math.abs(dIndex)),
                 0,
-                member
+                id
               );
 
-              this.props.setParty(newParty);
+              this.props.setView(newView);
             }}
-            // onDrag={(e, data) => {
-            //   const rdIndex = data.y / data.node.clientHeight;
-            //   if (Math.abs(rdIndex) >= 1) {
-            //     const dIndex =
-            //       Math.floor(Math.abs(rdIndex)) * Math.sign(rdIndex);
-            //     const newParty = [...party.slice(0, i), ...party.slice(i + 1)];
-            //     newParty.splice(i + dIndex, 0, member);
-            //     console.log(
-            //       (data.y % data.node.clientHeight) * data.node.clientHeight
-            //     );
-            //     this.setState({
-            //       party: newParty,
-            //       controlledPosition: {
-            //         x: 0,
-            //         y:
-            //           (data.y % data.node.clientHeight) -
-            //           Math.sign(rdIndex) *
-            //             Math.floor(data.y / data.node.clientHeight)
-            //       }
-            //     });
-            //   }
-            // }}
             position={{ x: 0, y: 0 }}
-            // axis="y"
             handle=".job-icon"
             bounds=".party-view"
           >
             <div className="player-symbols">
               <img
                 className="job-icon"
-                src={jobs[member.job].img}
-                alt={jobs[member.job].name}
+                src={jobs[party[id].job].img}
+                alt={jobs[party[id].job].name}
                 draggable="false"
               />
               <span
                 className="eye"
                 onClick={() => {
-                  member.enabled = !member.enabled;
+                  party[id].enabled = !party[id].enabled;
                   this.props.setParty(party);
                 }}
               >
-                <FontAwesomeIcon icon={member.enabled ? faEye : faEyeSlash} />
+                <FontAwesomeIcon icon={party[id].enabled ? faEye : faEyeSlash} />
               </span>
               <span
                 className="delete"
                 onClick={() => {
-                  party.splice(i, 1);
-                  this.props.setParty(party);
+                  view.splice(i, 1);
+                  this.props.setView(view);
                 }}
               >
                 <FontAwesomeIcon icon={faTrash} />

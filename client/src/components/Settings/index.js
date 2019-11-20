@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Menu,
   MenuButton,
@@ -6,22 +6,27 @@ import {
   MenuHover,
   MenuToggle,
   MenuSeparator
-} from '../Menu';
+} from "../Menu";
 
-import PartySetup from '../PartySetup';
+import PartySetup from "../../containers/PartySetup";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 
 class Settings extends React.Component {
   state = {
     showPartySettupModal: false
   };
 
+  set(settings) {
+    this.props.setViewSettings({ ...this.props.settings, ...settings });
+  }
+
   render() {
-    const { updateSettings: set, settings } = this.props;
+    const { settings } = this.props;
     return (
       <>
-        <MenuButton label="Settings" radio={this.props.radio}>
+        <MenuButton label="Settings" icon={faCog} radio={this.props.radio}>
           <Menu menuClass="dark" bottom radioDelay={300}>
-            <MenuToggle set={s => set({ snap: s })} on={settings.snap}>
+            <MenuToggle set={s => this.set({ snap: s })} on={settings.snap}>
               Snap
             </MenuToggle>
             <MenuSeparator />
@@ -40,7 +45,7 @@ class Settings extends React.Component {
                         key={i}
                         on={settings.partyViewFilters[filter].include}
                         set={s =>
-                          set({
+                          this.set({
                             partyViewFilters: {
                               ...settings.partyViewFilters,
                               [filter]: { ...obj, include: s }
@@ -64,7 +69,7 @@ class Settings extends React.Component {
                         key={i}
                         on={settings.playerViewFilters[filter].include}
                         set={s =>
-                          set({
+                          this.set({
                             playerViewFilters: {
                               ...settings.playerViewFilters,
                               [filter]: { ...obj, include: s }
@@ -84,8 +89,6 @@ class Settings extends React.Component {
         <PartySetup
           isShown={this.state.showPartySettupModal}
           close={() => this.setState({ showPartySettupModal: false })}
-          save={party => set({ party })}
-          party={this.props.settings.party}
         />
       </>
     );
@@ -94,9 +97,9 @@ class Settings extends React.Component {
 
 function titleCase(str) {
   return str
-    .split(' ')
+    .split(" ")
     .map(word => word[0].toUpperCase() + word.slice(1))
-    .join(' ');
+    .join(" ");
 }
 
 export default Settings;

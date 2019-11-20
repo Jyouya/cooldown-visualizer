@@ -40,7 +40,7 @@ class SignIn extends React.Component {
         const cookie = Cookies.get('user');
         if (cookie) {
           const user = JSON.parse(atob(cookie.split('.')[1]));
-          this.props.login(user.username);
+          this.props.login(user);
         }
         this.props.close();
       } else {

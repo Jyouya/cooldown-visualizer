@@ -1,0 +1,12 @@
+/ - See list of encounters you can access, or create a new encounters
+  - Login page if not logged in
+
+  - new creates a new plan server side, then goes to /view/:id for the new plan
+
+  cards for 12 recently accessed
+
+  new encounter dialog provides party setup
+
+/view/:id
+
+  - see a particular encounter

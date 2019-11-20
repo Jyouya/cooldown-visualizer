@@ -23,5 +23,13 @@ export default {
 
   getDefaultParty: function() {
     return axios.get('/api/user/defaultParty');
+  },
+
+  getEncounterPlan: function(id) {
+    return axios.get('/api/plans/' + id);
+  },
+
+  getFiles: function() {
+    return axios.get('/api/myFiles');
   }
 };
