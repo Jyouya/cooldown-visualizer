@@ -83,7 +83,11 @@ class NewEncounter extends React.Component {
                   // this.props.setViews(this.state.views);
                   const { data } = await API.newEncounter(
                     this.state.encounter,
-                    this.state.party
+                    Object.keys(this.state.party).map(id => ({
+                      id,
+                      job: this.state.party[id].job,
+                      cooldowns: []
+                    }))
                   );
                   const planURL = data.newURL;
                   // TODO: redirect to the url

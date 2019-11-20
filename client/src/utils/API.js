@@ -31,5 +31,9 @@ export default {
 
   getFiles: function() {
     return axios.get('/api/myFiles');
+  },
+
+  newEncounter: function(encounter, party) {
+    return axios.post('/api/plans', {encounter, party})
   }
 };
