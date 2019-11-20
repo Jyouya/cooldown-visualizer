@@ -22,6 +22,8 @@ module.exports = function(app, db, auth) {
         timelines: party
       });
 
+      db.User.findOneAndUpdate({_id: req.user._id}, {$push: {savedEncounters: newEncounter._id}})
+
       // TODO: push new encounter's ID to users's saved encounters
 
       // create
