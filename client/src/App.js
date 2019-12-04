@@ -44,9 +44,14 @@ class App extends React.Component {
           <Switch>
             <Route
               path="/plan/:id"
-              render={encounterId => <Encounter encounterId={encounterId} />}
+              render={({ history, match }) => (
+                <Encounter history={history} encounterId={match.params.id} />
+              )}
             />
-            <Route path="/" render={() => <Home />} />
+            <Route
+              path="/"
+              render={({ history }) => <Home history={history} />}
+            />
           </Switch>
           <ContextMenu ref={this.contextRef} />
         </Context.Provider>

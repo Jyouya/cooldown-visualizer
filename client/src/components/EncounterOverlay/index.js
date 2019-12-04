@@ -36,8 +36,9 @@ class EncounterOverlay extends React.Component {
   }
 
   onMouseMove = event => {
+    if (!this.myRef.current) return;
     const { left, right } = this.myRef.current.getClientRects()[0];
-    const timeline = this.props.encounter.timeline;
+    const timeline = this.props.encounter.mechanicTimeline;
     let { shown, mirror } = this.state;
     if (timeline.length && event.clientX > left && event.clientX < right) {
       // Binary search timeline
@@ -77,7 +78,7 @@ class EncounterOverlay extends React.Component {
           ref={this.myRef}
           disabled
         >
-          {this.props.encounter.timeline.map((event, i) => {
+          {this.props.encounter.mechanicTimeline.map((event, i) => {
             const e = Array.isArray(event) ? event[0] : event;
             const top =
               ((e.time - startOfTime) / (encounterDuration - startOfTime)) *

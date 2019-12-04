@@ -100,7 +100,7 @@ module.exports = (app, db, auth) => {
       res.json(
         files.map(encounter => ({
           fight: encounter.mechanicURL,
-          name,
+          name: encounter.name,
           modified: encounter.updated_at,
           id: encounter._id
         }))

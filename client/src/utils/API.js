@@ -26,14 +26,14 @@ export default {
   },
 
   getEncounterPlan: function(id) {
-    return axios.get('/api/plans/' + id);
+    return axios.get('/api/plan/' + id);
   },
 
   getFiles: function() {
     return axios.get('/api/myFiles');
   },
 
-  newEncounter: function(encounter, party) {
-    return axios.post('/api/plans', {encounter, party})
+  newEncounter: function(encounter, title, party) {
+    return axios.post('/api/plans', {encounter, title, party})
   }
 };

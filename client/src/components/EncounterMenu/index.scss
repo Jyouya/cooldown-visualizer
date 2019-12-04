@@ -1,0 +1,43 @@
+.new-encounter {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-input {
+  border: solid #fff2 1px;
+  border-radius: 15px;
+  padding: 10px;
+  appearance: none;
+  background: #0000;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+
+.encounter-select {
+  width: 100%;
+  color: #ccc;
+  border: solid #fff2 1px;
+  background: #0000;
+  border-radius: 15px;
+  padding: 10px;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+  }
+
+  option {
+    padding: 5px;
+
+    &:hover {
+      background: #fff2;
+    }
+    
+    &:active {
+      background: #fff4;
+    }
+    &:last-chid {
+      border-bottom-left-radius: 15px;
+    }
+  }
+}

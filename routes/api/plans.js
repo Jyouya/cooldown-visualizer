@@ -1,3 +1,6 @@
+const mongoose = require('mongoose');
+const fights = require('../../fights');
+
 module.exports = function(app, db, auth) {
   app
     .route('/api/plans')
@@ -18,16 +21,49 @@ module.exports = function(app, db, auth) {
           }
         ],
         owner: req.user._id,
-        name: 'Demo Encounter',
+        name: req.body.title || 'Untitled',
         timelines: party
       });
+      console.log(req.body);
 
-      db.User.findOneAndUpdate({_id: req.user._id}, {$push: {savedEncounters: newEncounter._id}})
+      db.User.findByIdAndUpdate(
+        req.user._id,
+        {
+          $push: { savedEncounters: mongoose.Types.ObjectId(newEncounter._id) }
+        },
+        function(error, success) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log(success);
+          }
+        }
+      );
 
-      // TODO: push new encounter's ID to users's saved encounters
-
-      // create
-      // respond with players default party setup
+      res.json({ encounterId: newEncounter._id });
     })
     .patch(function(req, res) {});
+
+  app.get('/api/plan/:id', auth, async function(req, res) {
+    console.log(req.params.id);
+    const plan = await db.Encounter.findById(req.params.id);
+    if (!plan) return res.status(404).end();
+    console.log(plan);
+
+    if (plan.private) {
+      const permissions = plan.users.find(({ user }) => (user = req.user._id));
+      if (!(permissions && permissions.view)) return res.status(401).end();
+    }
+
+    const { timelines, _id, owner, name, updated_at } = plan;
+
+    res.json({
+      timelines,
+      _id,
+      owner,
+      name,
+      updated_at,
+      mechanics: fights[plan.mechanicURL]
+    });
+  });
 };

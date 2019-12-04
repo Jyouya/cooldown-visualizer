@@ -57,8 +57,8 @@ class View extends React.Component {
   };
 
   buildJobTimelines = () => {
-    const { party } = this.state;
-    const filter = this.filterCooldowns(this.state.partyViewFilters);
+    const { party } = this.props;
+    const filter = this.filterCooldowns(this.props.partyViewFilters);
     return Object.entries(party)
       .map(([memberId, member]) => ({
         name: member.job,
@@ -67,7 +67,7 @@ class View extends React.Component {
         who: memberId,
         key: memberId
       }))
-      .filter((_, i) => party[i].enabled);
+      .filter(({ who }) => party[who].enabled);
   };
 
   buildTimelines = () => {
@@ -93,8 +93,8 @@ class View extends React.Component {
               height: this.props.height
             }}
           >
-            {this.buildTimelines().map(timeline => (
-              <Timeline {...timeline} contextMenuRef={value} />
+            {this.buildTimelines().map((timeline, i) => (
+              <Timeline {...timeline} contextMenuRef={value} key={i} />
             ))}
           </div>
         )}

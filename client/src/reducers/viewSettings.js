@@ -1,7 +1,7 @@
 import { SET_VIEW_SETTINGS } from '../actionTypes';
 
 const initialState = {
-  zoom: 120,
+  zoom: 12000,
   snap: true,
   snapTo: 25,
   partyViewFilters: {
@@ -47,7 +47,7 @@ const initialState = {
 export const viewSettings = (state = initialState, action) => {
   switch (action.type) {
     case SET_VIEW_SETTINGS:
-      return action.viewSettings;
+      return action.settings;
     default:
       return state;
   }

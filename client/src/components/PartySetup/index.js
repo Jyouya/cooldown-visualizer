@@ -1,12 +1,12 @@
-import React from "react";
-import "./index.scss";
-import PartyView from "./PartyView";
-import JobPalette from "./JobPalette";
-import Modal from "../Modal";
+import React from 'react';
+import './index.scss';
+import PartyView from './PartyView';
+import JobPalette from './JobPalette';
+import Modal from '../Modal';
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import EventEmitter from "eventemitter3";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import EventEmitter from 'eventemitter3';
 
 class PartySetup extends React.Component {
   constructor(props) {
@@ -30,7 +30,10 @@ class PartySetup extends React.Component {
   }
 
   reset() {
-    this.setState({ views: this.props.views, party: this.props.party });
+    this.setState({
+      views: this.props.views || [],
+      party: this.props.party || {}
+    });
   }
 
   render() {
@@ -43,7 +46,7 @@ class PartySetup extends React.Component {
               <PartyView
                 key={i}
                 party={this.props.party}
-                view
+                view={view}
                 dnd={this.dragAndDrop}
                 setView={view => {
                   this.setState({

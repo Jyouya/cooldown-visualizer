@@ -24,6 +24,7 @@ class EncounterTimeline extends React.Component {
 
   render() {
     const { encounterDuration, startOfTime, zoom, encounter } = this.props;
+    console.log(encounter);
     const lineHeight = this.state.lineHeight;
     let prev = -1000;
     return (
@@ -35,7 +36,7 @@ class EncounterTimeline extends React.Component {
             height: ((encounterDuration - startOfTime) / zoom) * 100 + '%'
           }}
         >
-          {encounter.timeline.flat().map((event, i) => {
+          {encounter.mechanicTimeline.flat().map((event, i) => {
             let top =
               (event.time - startOfTime) / (encounterDuration - startOfTime);
             if (top < prev + lineHeight) top = prev + lineHeight;

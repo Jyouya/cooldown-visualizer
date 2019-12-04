@@ -60,19 +60,28 @@ class Encounter extends React.Component {
     this.radio = new Radio();
   }
 
+  state = {
+    loaded: false
+  };
+
   componentDidMount() {
-    API.getEncounterPlan(this.props.encounterId).then(
-      ({ data: { mechanics, party } }) => {
-        this.props.setMechanics(mechanics);
-        this.props.setParty(party);
-        const view = Object.entries(party)
-          .sort(([, member1], [, member2]) =>
-            defaultPartySort[member1] > defaultPartySort[member2] ? 1 : -1
-          )
-          .map(([key]) => key);
-        this.props.setViews([view]);
-      }
-    );
+    console.log(this.props.encounterId);
+    API.getEncounterPlan(this.props.encounterId).then(({ data }) => {
+      console.log(data);
+      const { mechanics, timelines } = data;
+      const party = {};
+      timelines.forEach(member => (party[member.id] = member));
+
+      this.props.setMechanics(mechanics);
+      this.props.setParty(party);
+      const view = Object.entries(party)
+        .sort(([, member1], [, member2]) =>
+          defaultPartySort[member1] > defaultPartySort[member2] ? 1 : -1
+        )
+        .map(([key]) => key);
+      this.props.setViews([view]);
+      this.setState({ loaded: true });
+    });
   }
 
   componentDidUpdate() {
@@ -96,7 +105,9 @@ class Encounter extends React.Component {
   });
 
   render() {
-    const { encounterDuration, startOfTime } = this.props.mechanics;
+    const { duration: encounterDuration, startOfTime } = this.props.encounter;
+
+    console.log(this.props);
     const { zoom } = this.props.viewSettings;
     return (
       <ScrollSync>
@@ -111,96 +122,102 @@ class Encounter extends React.Component {
                 setEncounter={encounter => this.setState({ encounter })}
                 buildDefaultParty={this.buildDefaultParty}
               /> */}
-              <Settings radio={this.radio} />
+              {this.state.loaded ? <Settings radio={this.radio} /> : null}
             </div>
             <div className="nav-center">
-              <Zoom
-                setZoom={zoom =>
-                  this.props.setViewSettings({
-                    ...this.props.viewSettings,
-                    zoom
-                  })
-                }
-              />
+              {this.state.loaded ? (
+                <Zoom
+                  setZoom={zoom =>
+                    this.props.setViewSettings({
+                      ...this.props.viewSettings,
+                      zoom
+                    })
+                  }
+                />
+              ) : null}
             </div>
             <div className="nav-right">
               <AccountMenu />
             </div>
           </Navbar>
-          <ScrollSyncPane>
-            <div className="timeline-area">
-              {this.props.views.map((view, i) => (
-                <View party={view} key={i} />
-              ))}
-            </div>
-            <ReactToolTip
-              id="cooldown"
-              place="right"
-              getContent={this.getTimestamp}
-              overridePosition={(
-                { left: l, top: t },
-                event,
-                currentTarget,
-                node
-              ) => {
-                const rects = currentTarget.getClientRects();
-                if (!rects[0]) return { left: l, top: t };
-                const { right, top } = rects[0];
-                return {
-                  top: top - node.clientHeight / 2,
-                  left: right
-                };
-              }}
-            />
-          </ScrollSyncPane>
-          <ScrollSyncPane>
-            <EncounterOverlay
-              encounter={this.state.encounter}
-              {...{ zoom, encounterDuration, startOfTime }}
-            />
-          </ScrollSyncPane>
-          <ScrollSyncPane>
-            <EncounterTimeline
-              encounter={this.state.encounter}
-              {...{ zoom, encounterDuration, startOfTime }}
-            />
-            <ReactToolTip
-              id="mechanic"
-              place="right"
-              effect="solid"
-              type="info"
-              delayHide={300}
-              delayShow={300}
-              delayUpdate={300}
-              getContent={mechanic => (
-                <div>
-                  {mechanic &&
-                    this.state.encounter.mechanics[mechanic].description
-                      .split(/\s(?=\w*@)|(?<=@\w+)\s/)
-                      .map((str, i) => {
-                        const match = str.match(/(\w*)@(\w+)/);
-                        return match ? (
-                          <Mechanic
-                            encounter={this.state.encounter}
-                            name={match[2]}
-                            alt={match[1] || null}
-                            key={i}
-                          />
-                        ) : (
-                          (i > 0 ? ' ' : '') +
-                            str +
-                            (i <
-                            this.state.encounter.mechanics[mechanic].description
-                              .length -
-                              1
-                              ? ' '
-                              : '')
-                        );
-                      })}
+          {this.state.loaded ? (
+            <>
+              <ScrollSyncPane>
+                <div className="timeline-area">
+                  {this.props.views.map((view, i) => (
+                    <View players={view} key={i} />
+                  ))}
                 </div>
-              )}
-            />
-          </ScrollSyncPane>
+                <ReactToolTip
+                  id="cooldown"
+                  place="right"
+                  getContent={this.getTimestamp}
+                  overridePosition={(
+                    { left: l, top: t },
+                    event,
+                    currentTarget,
+                    node
+                  ) => {
+                    const rects = currentTarget.getClientRects();
+                    if (!rects[0]) return { left: l, top: t };
+                    const { right, top } = rects[0];
+                    return {
+                      top: top - node.clientHeight / 2,
+                      left: right
+                    };
+                  }}
+                />
+              </ScrollSyncPane>
+              <ScrollSyncPane>
+                <EncounterOverlay
+                  encounter={this.props.encounter}
+                  {...{ zoom, encounterDuration, startOfTime }}
+                />
+              </ScrollSyncPane>
+              <ScrollSyncPane>
+                <EncounterTimeline
+                  encounter={this.props.encounter}
+                  {...{ zoom, encounterDuration, startOfTime }}
+                />
+                <ReactToolTip
+                  id="mechanic"
+                  place="right"
+                  effect="solid"
+                  type="info"
+                  delayHide={300}
+                  delayShow={300}
+                  delayUpdate={300}
+                  getContent={mechanic => (
+                    <div>
+                      {mechanic &&
+                        this.props.encounter.mechanics[mechanic].description
+                          .split(/\s(?=\w*@)|(?<=@\w+)\s/)
+                          .map((str, i) => {
+                            const match = str.match(/(\w*)@(\w+)/);
+                            return match ? (
+                              <Mechanic
+                                encounter={this.props.encounter}
+                                name={match[2]}
+                                alt={match[1] || null}
+                                key={i}
+                              />
+                            ) : (
+                              (i > 0 ? ' ' : '') +
+                                str +
+                                (i <
+                                this.props.encounter.mechanics[mechanic]
+                                  .description.length -
+                                  1
+                                  ? ' '
+                                  : '')
+                            );
+                          })}
+                    </div>
+                  )}
+                />
+              </ScrollSyncPane>
+            </>
+          ) : null}
         </div>
       </ScrollSync>
     );

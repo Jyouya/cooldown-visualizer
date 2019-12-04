@@ -6,7 +6,8 @@ import Encounter from '../components/Encounter';
 const mapStateToProps = state => ({
   party: state.party,
   views: state.views,
-  viewSettings: state.viewSettings
+  viewSettings: state.viewSettings,
+  encounter: state.encounter
 });
 
 const mapDispatchToProps = dispatch => ({

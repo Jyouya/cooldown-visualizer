@@ -1,10 +1,10 @@
 import { SET_MECHANICS } from '../actionTypes';
 
 const initialState = {
-  mechanicTimeline: null,
-  startOfTime: null,
-  duration: null,
-  mechanics: null
+  mechanicTimeline: [],
+  startOfTime: 0,
+  duration: 1,
+  mechanics: []
 };
 
 export const encounter = (state = initialState, action) => {
