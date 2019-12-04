@@ -56,7 +56,7 @@ class Encounter extends React.Component {
       }
     }
 
-    this.contextRef = React.createRef();
+    // this.contextRef = React.createRef();
     this.radio = new Radio();
   }
 
@@ -70,7 +70,10 @@ class Encounter extends React.Component {
       console.log(data);
       const { mechanics, timelines } = data;
       const party = {};
-      timelines.forEach(member => (party[member.id] = member));
+      timelines.forEach(member => {
+        party[member.id] = member;
+        member.enabled = true;
+      });
 
       this.props.setMechanics(mechanics);
       this.props.setParty(party);

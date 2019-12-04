@@ -1,17 +1,17 @@
-import React from "react";
-import Cooldown from "../Cooldown";
-import { Option, Separator, Label } from "../ContextMenu";
-import "./index.scss";
-import { Link } from "react-router-dom";
+import React from 'react';
+import Cooldown from '../Cooldown';
+import { Option, Separator, Label } from '../ContextMenu';
+import './index.scss';
+import { Link } from 'react-router-dom';
 
-import cooldowns from "../../data/cooldowns";
-import jobs from "../../data/jobs";
-import resources from "../../data/resources";
+import cooldowns from '../../data/cooldowns';
+import jobs from '../../data/jobs';
+import resources from '../../data/resources';
 
-import getResource from "../../utils/getResource";
-import dummyCooldown from "../../utils/dummyCooldown";
-import getCharges from "../../utils/getCharges";
-import timestamp from "../../utils/timestamp";
+import getResource from '../../utils/getResource';
+import dummyCooldown from '../../utils/dummyCooldown';
+import getCharges from '../../utils/getCharges';
+import timestamp from '../../utils/timestamp';
 
 import {
   checkRecastCollision,
@@ -19,12 +19,12 @@ import {
   checkBusy,
   checkRequirements,
   checkCharges
-} from "../../utils/cooldownTests";
-import closestResource from "../../utils/closestResource";
-import closestCharge from "../../utils/closestCharge";
-import sortedInsert from "../../utils/sortedInsert";
+} from '../../utils/cooldownTests';
+import closestResource from '../../utils/closestResource';
+import closestCharge from '../../utils/closestCharge';
+import sortedInsert from '../../utils/sortedInsert';
 
-import uuid4 from "uuid/v4";
+import uuid4 from 'uuid/v4';
 
 class Timeline extends React.Component {
   constructor(props) {
@@ -42,8 +42,8 @@ class Timeline extends React.Component {
     if (Array.isArray(this.props.shared)) this.represents = this.props.shared;
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
 
-    document.addEventListener("mouseup", this.handleMouseUp, true);
-    document.addEventListener("mousemove", this.handleMouseMove, true);
+    document.addEventListener('mouseup', this.handleMouseUp, true);
+    document.addEventListener('mousemove', this.handleMouseMove, true);
   }
 
   componentDidUpdate() {
@@ -51,8 +51,8 @@ class Timeline extends React.Component {
     if (Array.isArray(this.props.shared)) this.represents = this.props.shared;
     else this.represents = [this.props.name, this.props.shared].filter(x => x);
 
-    document.removeEventListener("mouseup", this.hanldeMouseUp);
-    document.removeEventListener("mousemove", this.handleMouseMove);
+    document.removeEventListener('mouseup', this.hanldeMouseUp);
+    document.removeEventListener('mousemove', this.handleMouseMove);
   }
 
   snap(time) {
@@ -62,19 +62,21 @@ class Timeline extends React.Component {
   }
 
   addCooldown = (name, time, after) => {
-    const party = [...this.props.party];
+    const party = { ...this.props.party };
     const cd = cooldowns[name];
     const timeline = party[this.props.who].cooldowns;
 
     const duration = cd.variable ? cd.minMax(time, timeline)[0] : cd.duration;
 
-    party[this.props.who].cooldowns = sortedInsert(
+    const member = { ...party[this.props.who] };
+
+    member.cooldowns = sortedInsert(
       timeline,
       { name, time, id: uuid4(), duration },
       (a, b) => (a.time > b.time ? 1 : -1)
     );
 
-    this.props.updateMember(this.props.who, party[this.props.who]);
+    this.props.updateMember(member);
     after && after();
   };
 
@@ -84,7 +86,7 @@ class Timeline extends React.Component {
     if (time > encounterDuration - 100) time = encounterDuration - 100;
     time = this.snap(time);
 
-    const party = [...this.props.party];
+    const party = {...this.props.party};
     let timeline = party[this.props.who].cooldowns;
     const targetIndex = timeline.findIndex(cd => cd.id === id);
     const target = timeline[targetIndex];
@@ -197,7 +199,7 @@ class Timeline extends React.Component {
 
     party[this.props.who].cooldowns = timeline;
 
-    this.props.updateMember(this.props.who, party[this.props.who]);
+    this.props.updateMember(party[this.props.who]);
 
     after && after();
   };
@@ -205,13 +207,13 @@ class Timeline extends React.Component {
   // TODO: cds that are depended on by others (e.g. Aetherflow) need to cascade their deletion
   removeCooldown = (id, after) => {
     const { who } = this.props;
-    const party = [...this.props.party];
+    const party = {...this.props.parts};
 
     const i = party[who].cooldowns.findIndex(cd => cd.id === id);
 
     party[who].cooldowns.splice(i, 1);
 
-    this.props.updateMember(who, party[who]);
+    this.props.updateMember(party[who]);
 
     after && after();
   };
@@ -333,7 +335,7 @@ class Timeline extends React.Component {
     const mostRecent = Object.entries(activeTimes).reduce(
       (mostRecent, [name, time]) =>
         mostRecent[1] > time ? mostRecent : [name, time],
-      ["", -Infinity]
+      ['', -Infinity]
     );
 
     const dragOffset = mostRecent[1] - time;
@@ -374,99 +376,104 @@ class Timeline extends React.Component {
       cooldown => !active.includes(cooldown)
     );
 
-    this.props.contextMenuRef.current.show(
-      event,
-      <>
-        <Label>
-          <span className="symbol" role="img" aria-label="Time">
-            ⏱️{" "}
-          </span>
-          {timestamp(time)}
-        </Label>
-        <Separator />
-        {available.map((cooldown, i) => {
-          const baseData = cooldowns[cooldown];
-          const data =
-            (baseData.upgrade && {
-              ...baseData,
-              ...baseData.upgrade(
-                dummyCooldown(this.props.cooldowns, cooldown, time),
-                rawTimeline
-              )
-            }) ||
-            baseData;
-          return (
-            <Option
-              key={i}
-              disabled={unavailable.includes(cooldown)}
-              onClick={() => {
-                this.addCooldown(
-                  this.props.who,
-                  cooldown,
-                  time,
-                  this.props.contextMenuRef.current.hide
-                );
-              }}
-            >
-              <img src={data.img} alt="" />
-              <span>{data.name || cooldown}</span>
-              {(cooldowns[cooldown].resource &&
-                (cooldowns[cooldown].resource.cost ? (
-                  <span className="resource-info">
-                    <span
-                      className="symbol"
-                      role="img"
-                      aria-label={cooldowns[cooldown].resource.cost.name}
-                    >
-                      {resources[cooldowns[cooldown].resource.cost.name].symbol}
-                      :{" "}
-                    </span>
-                    {Math.max(
-                      Math.floor(
-                        getResource(
-                          dummyCooldown(rawTimeline, cooldown, time),
-                          cooldowns[cooldown].resource.cost.name,
-                          rawTimeline
-                        )
-                      ),
-                      0
-                    )}
-                  </span>
-                ) : null)) ||
-                (cooldowns[cooldown].charges ? (
-                  <span className="resource-info">
-                    <span className="symbol" role="img" aria-label="charges">
-                      ⚡:{" "}
-                    </span>
-                    {getCharges(this.props.cooldowns, cooldown, time)}
-                  </span>
-                ) : null)}
-            </Option>
-          );
-        })}
-        {active.length && available.length ? <Separator /> : null}
-        {!active.length
-          ? null
-          : active.map((cooldown, i) => (
+    const ref = this.props.contextMenuRef;
+
+    ref &&
+      ref.current.show(
+        event,
+        <>
+          <Label>
+            <span className="symbol" role="img" aria-label="Time">
+              ⏱️{' '}
+            </span>
+            {timestamp(time)}
+          </Label>
+          <Separator />
+          {available.map((cooldown, i) => {
+            const baseData = cooldowns[cooldown];
+            const data =
+              (baseData.upgrade && {
+                ...baseData,
+                ...baseData.upgrade(
+                  dummyCooldown(this.props.cooldowns, cooldown, time),
+                  rawTimeline
+                )
+              }) ||
+              baseData;
+            return (
               <Option
                 key={i}
+                disabled={unavailable.includes(cooldown)}
                 onClick={() => {
-                  this.removeCooldown(
-                    activeIds[cooldown],
+                  this.addCooldown(
+                    cooldown,
+                    time,
                     this.props.contextMenuRef.current.hide
                   );
                 }}
               >
-                <img src={cooldowns[cooldown].img} alt="" />
-                <span>{cooldown}</span>
-                <span className="red-x" role="img" aria-label="remove">
-                  ❌
-                </span>
+                <img src={data.img} alt="" />
+                <span>{data.name || cooldown}</span>
+                {(cooldowns[cooldown].resource &&
+                  (cooldowns[cooldown].resource.cost ? (
+                    <span className="resource-info">
+                      <span
+                        className="symbol"
+                        role="img"
+                        aria-label={cooldowns[cooldown].resource.cost.name}
+                      >
+                        {
+                          resources[cooldowns[cooldown].resource.cost.name]
+                            .symbol
+                        }
+                        :{' '}
+                      </span>
+                      {Math.max(
+                        Math.floor(
+                          getResource(
+                            dummyCooldown(rawTimeline, cooldown, time),
+                            cooldowns[cooldown].resource.cost.name,
+                            rawTimeline
+                          )
+                        ),
+                        0
+                      )}
+                    </span>
+                  ) : null)) ||
+                  (cooldowns[cooldown].charges ? (
+                    <span className="resource-info">
+                      <span className="symbol" role="img" aria-label="charges">
+                        ⚡:{' '}
+                      </span>
+                      {getCharges(this.props.cooldowns, cooldown, time)}
+                    </span>
+                  ) : null)}
               </Option>
-            ))}
-      </>
-      // if the click is on a cooldown, show a separator, then a delete button for cds it's on
-    );
+            );
+          })}
+          {active.length && available.length ? <Separator /> : null}
+          {!active.length
+            ? null
+            : active.map((cooldown, i) => (
+                <Option
+                  key={i}
+                  onClick={() => {
+                    this.removeCooldown(
+                      activeIds[cooldown],
+                      this.props.contextMenuRef.current.hide
+                    );
+                  }}
+                >
+                  <img src={cooldowns[cooldown].img} alt="" />
+                  <span>{cooldown}</span>
+                  <span className="red-x" role="img" aria-label="remove">
+                    ❌
+                  </span>
+                </Option>
+              ))}
+        </>
+        // if the click is on a cooldown, show a separator, then a delete button for cds it's on
+      );
   };
 
   /*

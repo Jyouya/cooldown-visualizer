@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { updateMember } from "../actions/party";
 
-import Timeline from "../components/SignUp";
+import Timeline from "../components/Timeline";
 
 const mapStateToProps = state => ({
   party: state.party,
@@ -12,7 +12,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  updateMember: (memberId, member) => dispatch(updateMember(memberId, member))
+  updateMember: (member) => dispatch(updateMember(member))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Timeline);

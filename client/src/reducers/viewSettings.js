@@ -47,7 +47,7 @@ const initialState = {
 export const viewSettings = (state = initialState, action) => {
   switch (action.type) {
     case SET_VIEW_SETTINGS:
-      return action.settings;
+      return { ...state, ...action.settings };
     default:
       return state;
   }

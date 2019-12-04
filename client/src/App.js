@@ -31,6 +31,11 @@ import uuid4 from 'uuid/v4';
 import './App.scss';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.contextRef = React.createRef();
+  }
+
   componentDidUpdate() {
     ReactToolTip.rebuild();
   }

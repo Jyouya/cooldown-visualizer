@@ -2,7 +2,7 @@ import React from 'react';
 import { Context } from '../ContextMenu';
 import jobs from '../../data/jobs';
 import cooldowns from '../../data/cooldowns';
-import Timeline from '../Timeline';
+import Timeline from '../../containers/Timeline';
 import uuid4 from 'uuid/v4';
 
 // TODO: generate timelines
@@ -59,6 +59,7 @@ class View extends React.Component {
   buildJobTimelines = () => {
     const { party } = this.props;
     const filter = this.filterCooldowns(this.props.partyViewFilters);
+    console.log(party);
     return Object.entries(party)
       .map(([memberId, member]) => ({
         name: member.job,

@@ -1,7 +1,7 @@
 {
   "GNB": {
     "name": "Gunbreaker",
-    "img": "./icons/GNB.png",
+    "img": "/icons/GNB.png",
     "role": "tank",
     "cooldowns": [
       "Rampart",
@@ -17,7 +17,7 @@
   },
   "WAR": {
     "name": "Warrior",
-    "img": "./icons/WAR.png",
+    "img": "/icons/WAR.png",
     "role": "tank",
     "cooldowns": [
       "Rampart",
@@ -33,7 +33,7 @@
   },
   "DRK": {
     "name": "Dark Knight",
-    "img": "./icons/DRK.png",
+    "img": "/icons/DRK.png",
     "role": "tank",
     "cooldowns": [
       "Rampart",
@@ -48,7 +48,7 @@
   },
   "PLD": {
     "name": "Paladin",
-    "img": "./icons/PLD.png",
+    "img": "/icons/PLD.png",
     "role": "tank",
     "cooldowns": [
       "Rampart",
@@ -66,7 +66,7 @@
 
   "WHM": {
     "name": "White Mage",
-    "img": "./icons/WHM.png",
+    "img": "/icons/WHM.png",
     "role": "healer",
     "cooldowns": [
       "Temperance",
@@ -86,7 +86,7 @@
   },
   "SCH": {
     "name": "Scholar",
-    "img": "./icons/SCH.png",
+    "img": "/icons/SCH.png",
     "role": "healer",
     "cooldowns": [
       "Aetherflow",
@@ -113,7 +113,7 @@
   },
   "AST": {
     "name": "Astrologian",
-    "img": "./icons/AST.png",
+    "img": "/icons/AST.png",
     "role": "healer",
     "cooldowns": [
       "Aspected Benefic",
@@ -135,19 +135,19 @@
 
   "MNK": {
     "name": "Monk",
-    "img": "./icons/MNK.png",
+    "img": "/icons/MNK.png",
     "role": "melee",
     "cooldowns": ["Mantra", "Feint", "Arm's Length", "Second Wind", "Bloodbath"]
   },
   "DRG": {
     "name": "Dragoon",
-    "img": "./icons/DRG.png",
+    "img": "/icons/DRG.png",
     "role": "melee",
     "cooldowns": ["Feint", "Arm's Length", "Second Wind", "Bloodbath"]
   },
   "NIN": {
     "name": "Ninja",
-    "img": "./icons/NIN.png",
+    "img": "/icons/NIN.png",
     "role": "melee",
     "cooldowns": [
       "Shade Shift",
@@ -159,7 +159,7 @@
   },
   "SAM": {
     "name": "Samurai",
-    "img": "./icons/SAM.png",
+    "img": "/icons/SAM.png",
     "role": "melee",
     "cooldowns": [
       "Third Eye",
@@ -172,38 +172,38 @@
 
   "BRD": {
     "name": "Bard",
-    "img": "./icons/BRD.png",
+    "img": "/icons/BRD.png",
     "role": "ranged",
     "cooldowns": ["Troubadour", "Nature's Minne", "Arm's Length", "Second Wind"]
   },
   "MCH": {
     "name": "Machinist",
-    "img": "./icons/MCH.png",
+    "img": "/icons/MCH.png",
     "role": "ranged",
     "cooldowns": ["Tactician", "Arm's Length", "Second Wind"]
   },
   "DNC": {
     "name": "Dancer",
-    "img": "./icons/DNC.png",
+    "img": "/icons/DNC.png",
     "role": "ranged",
     "cooldowns": ["Shield Samba", "Curing Waltz", "Arm's Length", "Second Wind"]
   },
 
   "BLM": {
     "name": "Black Mage",
-    "img": "./icons/BLM.png",
+    "img": "/icons/BLM.png",
     "role": "caster",
     "cooldowns": ["Manaward", "Addle", "Swiftcast", "Surecast"]
   },
   "SMN": {
     "name": "Summoner",
-    "img": "./icons/SMN.png",
+    "img": "/icons/SMN.png",
     "role": "caster",
     "cooldowns": ["Everlasting Flight", "Addle", "Swiftcast", "Surecast"]
   },
   "RDM": {
     "name": "Red Mage",
-    "img": "./icons/RDM.png",
+    "img": "/icons/RDM.png",
     "role": "caster",
     "cooldowns": ["Addle", "Swiftcast", "Surecast"]
   }
