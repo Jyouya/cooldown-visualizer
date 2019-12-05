@@ -86,7 +86,7 @@ class Timeline extends React.Component {
     if (time > encounterDuration - 100) time = encounterDuration - 100;
     time = this.snap(time);
 
-    const party = {...this.props.party};
+    const party = { ...this.props.party };
     let timeline = party[this.props.who].cooldowns;
     const targetIndex = timeline.findIndex(cd => cd.id === id);
     const target = timeline[targetIndex];
@@ -207,7 +207,7 @@ class Timeline extends React.Component {
   // TODO: cds that are depended on by others (e.g. Aetherflow) need to cascade their deletion
   removeCooldown = (id, after) => {
     const { who } = this.props;
-    const party = {...this.props.parts};
+    const party = { ...this.props.parts };
 
     const i = party[who].cooldowns.findIndex(cd => cd.id === id);
 
@@ -491,14 +491,14 @@ class Timeline extends React.Component {
         // onMouseUp={this.handleMouseUp}
         // onMouseMove={this.handleMouseMove}
       >
-        <Link to={`/${this.props.who}`} draggable="false">
+        <a draggable="false" onClick={this.props.setPlayerView}>
           <img
             className="label-icon"
             src={(cooldowns[this.props.name] || jobs[this.props.name]).img}
             alt={this.props.name}
             draggable="false"
           />
-        </Link>
+        </a>
         <div className="timeline-wrapper">
           {this.props.cooldowns.map((cooldown, i) => (
             <Cooldown

@@ -95,7 +95,14 @@ class View extends React.Component {
             }}
           >
             {this.buildTimelines().map((timeline, i) => (
-              <Timeline {...timeline} contextMenuRef={value} key={i} />
+              <Timeline
+                {...timeline}
+                contextMenuRef={value}
+                key={i}
+                setPlayerView={() =>
+                  this.setState({ viewPlayer: true, player: timeline.who })
+                }
+              />
             ))}
           </div>
         )}
