@@ -89,6 +89,7 @@ class EncounterMenu extends React.Component {
           isShown={this.state.showNewEncounterMenu}
           options={this.generateMenu(this.state.encounters.current)}
           close={() => this.setState({ showNewEncounterMenu: false })}
+          history={this.props.history}
         />
       </>
     );

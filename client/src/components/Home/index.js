@@ -48,6 +48,7 @@ class Home extends React.Component {
             <EncounterMenu
               radio={this.radio}
               setEncounter={encounter => this.setState({ encounter })}
+              history={this.props.history}
             />
           </div>
           <div className="nav-center"></div>
@@ -61,7 +62,11 @@ class Home extends React.Component {
               this.state.files
                 .sort((a, b) => (a.modified < b.modified ? 1 : -1))
                 .map(file => (
-                  <div className="file" key={file.id}>
+                  <div
+                    className="file"
+                    key={file.id}
+                    onClick={() => this.props.history.push('/plan/' + file.id)}
+                  >
                     <span className="fight">{file.fight}</span>
                     <span className="name">{file.name}</span>
                     <span className="modified">
